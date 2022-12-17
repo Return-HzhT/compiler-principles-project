@@ -1,13 +1,13 @@
-/project/sysy-make-template/build/main.cpp.o: \
-  /project/sysy-make-template/src/main.cpp \
-  /project/sysy-make-template/src/global.h /opt/include/koopa.h \
-  /project/sysy-make-template/src/ast.h \
-  /project/sysy-make-template/src/koopa2riscv.h
+/compiler-principles-project/build/main.cpp.o: \
+  /compiler-principles-project/src/main.cpp \
+  /compiler-principles-project/src/global.h /opt/include/koopa.h \
+  /compiler-principles-project/src/ast.h \
+  /compiler-principles-project/src/koopa2riscv.h
 
-/project/sysy-make-template/src/global.h:
+/compiler-principles-project/src/global.h:
 
 /opt/include/koopa.h:
 
-/project/sysy-make-template/src/ast.h:
+/compiler-principles-project/src/ast.h:
 
-/project/sysy-make-template/src/koopa2riscv.h:
+/compiler-principles-project/src/koopa2riscv.h:

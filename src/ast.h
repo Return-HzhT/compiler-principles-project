@@ -478,7 +478,7 @@ class SimpleStmtAST : public BaseAST {
           else {
             symbol_table[i][ident].val=exp->get_val();
             std::string tmp_id=exp->Dump();
-            koopa_ir+="  store "+tmp_id+", @"+ident+"_"+std::to_string(i)+"\n";
+            koopa_ir+="  store "+tmp_id+", @"+symbol_table[i][ident].name+"\n";
             symbol_table[i][ident].is_assigned=1;
           }
           flag=1;
@@ -1225,7 +1225,6 @@ class ConstDefAST : public BaseAST {
     if (symbol_table[now_symbol_table_id].count(ident)){
       std::cout<<"error: redefined.\n";
       exit(0);
-      // return "";
     }
     int val=const_init_val->get_val();
     symbol_table[now_symbol_table_id][ident]=symbol(val,1);
@@ -1254,17 +1253,20 @@ class VarDefAST : public BaseAST {
     if (symbol_table[now_symbol_table_id].count(ident)){
       std::cout<<"error: redefined.\n";
       exit(0);
-      // return "";
     }
     if (op==1){
-      symbol_table[now_symbol_table_id][ident]=symbol(0);
-      koopa_ir+="  @"+ident+"_"+std::to_string(now_symbol_table_id)+" = alloc i32\n";
+      std::string name=ident+"_"+std::to_string(var_def_id);
+      symbol_table[now_symbol_table_id][ident]=symbol(0,name);
+      koopa_ir+="  @"+name+" = alloc i32\n";
+      var_def_id++;
     }
     else if (op==2){
       int val=init_val->get_val();
-      symbol_table[now_symbol_table_id][ident]=symbol(val,0);
-      koopa_ir+="  @"+ident+"_"+std::to_string(now_symbol_table_id)+" = alloc i32\n";
-      koopa_ir+="  store "+std::to_string(val)+", @"+ident+"_"+std::to_string(now_symbol_table_id)+"\n";
+      std::string name=ident+"_"+std::to_string(var_def_id);
+      symbol_table[now_symbol_table_id][ident]=symbol(val,0,name);
+      koopa_ir+="  @"+name+" = alloc i32\n";
+      koopa_ir+="  store "+std::to_string(val)+", @"+name+"\n";
+      var_def_id++;
     }
     return "";
   }
@@ -1333,12 +1335,11 @@ class LValAST : public BaseAST {
           if (symbol_table[i][ident].is_assigned==0){
             std::cout<<"error: unassigned variable.\n";
             exit(0);
-            // return "";
           }
           else {
             std::string tmp_id="%"+std::to_string(koopa_tmp_id);
             koopa_tmp_id++;
-            koopa_ir+="  "+tmp_id+" = load @"+ident+"_"+std::to_string(i)+"\n";
+            koopa_ir+="  "+tmp_id+" = load @"+symbol_table[i][ident].name+"\n";
             return tmp_id;
           }
         }

@@ -1,12 +1,54 @@
 fun @main(): i32 {
 %entry:
-  jump %while_entry_0
-%while_entry_0:
-  br 1, %while_body_0, %while_end_0
-%while_body_0:
-  jump %while_end_0
-%unreachable_0:
-  jump %while_entry_0
-%while_end_0:
+  @a_0 = alloc i32
+  store 10, @a_0
+  %0 = load @a_0
+  %1 = gt %0, 1
+  br %1, %then_0, %end_0
+%then_0:
+  %2 = load @a_0
+  %3 = sub %2, 1
+  store %3, @a_0
+  @a_1 = alloc i32
+  store 5, @a_1
+  %4 = load @a_1
+  %5 = sub 0, 1
+  %6 = lt %4, %5
+  br %6, %then_1, %else_1
+%then_1:
+  ret 10
+%else_1:
+  @a_2 = alloc i32
+  store 98, @a_2
+  jump %end_1
+%end_1:
+  jump %end_0
+%end_0:
+  %7 = load @a_0
+  %8 = eq %7, 9
+  br %8, %then_2, %end_2
+%then_2:
+  @b_1 = alloc i32
+  store 8, @b_1
+  @a_1 = alloc i32
+  store 7, @a_1
+  %9 = load @a_1
+  %10 = load @b_1
+  %11 = ne %9, %10
+  br %11, %then_3, %else_3
+%then_3:
+  %12 = load @a_1
+  %13 = eq %12, 0
+  br %13, %then_4, %end_4
+%then_4:
   ret 0
+%end_4:
+  %14 = load @a_1
+  ret %14
+%else_3:
+  %15 = load @b_1
+  ret %15
+%end_2:
+  %16 = sub 0, 1
+  ret %16
 }

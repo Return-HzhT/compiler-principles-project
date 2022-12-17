@@ -36,17 +36,21 @@ extern int if_tmp_id;
 extern int while_tmp_id;
 extern int loop_num;
 extern int unreachable_tmp_id;
+extern int var_def_id;
 
 class symbol{
  public:
+  std::string name; // koopa代码中的变量名(a->a_x)
   int val;
   bool is_const; // 是否为常量
   bool is_assigned; // 是否已赋值
-  symbol(bool i_c){
+  symbol(bool i_c,std::string str=""){
+    name=str;
     is_const=i_c;
     is_assigned=0;
   }
-  symbol(int v,bool i_c){
+  symbol(int v,bool i_c,std::string str=""){
+    name=str;
     val=v;
     is_const=i_c;
     is_assigned=1;
