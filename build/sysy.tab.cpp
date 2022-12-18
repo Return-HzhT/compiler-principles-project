@@ -1,9 +1,8 @@
 /* A Bison parser, made by GNU Bison 3.5.1.  */
 
-/* Bison implementation for Yacc-like parsers in C
+/* Skeleton implementation for Bison GLR parsers in C
 
-   Copyright (C) 1984, 1989-1990, 2000-2015, 2018-2020 Free Software Foundation,
-   Inc.
+   Copyright (C) 2002-2015, 2018-2020 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -31,15 +30,7 @@
    This special exception was added by the Free Software Foundation in
    version 2.2 of Bison.  */
 
-/* C LALR(1) parser skeleton written by Richard Stallman, by
-   simplifying the original so-called "semantic" parser.  */
-
-/* All symbols defined below should begin with yy or YY, to avoid
-   infringing on user name space.  This should be done even for local
-   variables, as they might otherwise be expanded by user macros.
-   There are some unavoidable exceptions within include files to
-   define necessary library symbols; they are noted "INFRINGES ON
-   USER NAME SPACE" below.  */
+/* C GLR parser skeleton written by Paul Hilfinger.  */
 
 /* Undocumented macros, especially those whose name start with YY_,
    are private implementation details.  Do not rely on them.  */
@@ -51,22 +42,18 @@
 #define YYBISON_VERSION "3.5.1"
 
 /* Skeleton name.  */
-#define YYSKELETON_NAME "yacc.c"
+#define YYSKELETON_NAME "glr.c"
 
 /* Pure parsers.  */
 #define YYPURE 0
 
-/* Push parsers.  */
-#define YYPUSH 0
 
-/* Pull parsers.  */
-#define YYPULL 1
 
 
 
 
 /* First part of user prologue.  */
-#line 7 "/project/sysy-make-template/src/sysy.y"
+#line 7 "/compiler-principles-project/src/sysy.y"
 
 
 #include <iostream>
@@ -81,7 +68,7 @@ void yyerror(std::unique_ptr<BaseAST> &ast, const char *s);
 using namespace std;
 
 
-#line 85 "/project/sysy-make-template/build/sysy.tab.cpp"
+#line 72 "/compiler-principles-project/build/sysy.tab.cpp"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -104,6 +91,8 @@ using namespace std;
 #  endif
 # endif
 
+#include "sysy.tab.hpp"
+
 /* Enabling verbose error messages.  */
 #ifdef YYERROR_VERBOSE
 # undef YYERROR_VERBOSE
@@ -112,80 +101,19 @@ using namespace std;
 # define YYERROR_VERBOSE 0
 #endif
 
-/* Use api.header.include to #include this header
-   instead of duplicating it here.  */
-#ifndef YY_YY_PROJECT_SYSY_MAKE_TEMPLATE_BUILD_SYSY_TAB_HPP_INCLUDED
-# define YY_YY_PROJECT_SYSY_MAKE_TEMPLATE_BUILD_SYSY_TAB_HPP_INCLUDED
-/* Debug traces.  */
-#ifndef YYDEBUG
-# define YYDEBUG 0
-#endif
-#if YYDEBUG
-extern int yydebug;
-#endif
-/* "%code requires" blocks.  */
-#line 1 "/project/sysy-make-template/src/sysy.y"
-
-  #include <memory>
-  #include <string>
-  #include <ast.h>
-
-#line 134 "/project/sysy-make-template/build/sysy.tab.cpp"
-
-/* Token type.  */
-#ifndef YYTOKENTYPE
-# define YYTOKENTYPE
-  enum yytokentype
-  {
-    INT = 258,
-    RETURN = 259,
-    CONST = 260,
-    IF = 261,
-    ELSE = 262,
-    WHILE = 263,
-    BREAK = 264,
-    CONTINUE = 265,
-    IDENT = 266,
-    LEq = 267,
-    GEq = 268,
-    Eq = 269,
-    NEq = 270,
-    LAnd = 271,
-    LOr = 272,
-    INT_CONST = 273
-  };
-#endif
-
-/* Value type.  */
-#if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-union YYSTYPE
-{
-#line 33 "/project/sysy-make-template/src/sysy.y"
-
-  std::string *str_val;
-  int int_val;
-  BaseAST *ast_val;
-
-#line 170 "/project/sysy-make-template/build/sysy.tab.cpp"
-
-};
-typedef union YYSTYPE YYSTYPE;
-# define YYSTYPE_IS_TRIVIAL 1
-# define YYSTYPE_IS_DECLARED 1
-#endif
-
-
-extern YYSTYPE yylval;
-
-int yyparse (std::unique_ptr<BaseAST> &ast);
-
-#endif /* !YY_YY_PROJECT_SYSY_MAKE_TEMPLATE_BUILD_SYSY_TAB_HPP_INCLUDED  */
+/* Default (constant) value used for initialization for null
+   right-hand sides.  Unlike the standard yacc.c template, here we set
+   the default value of $$ to a zeroed-out value.  Since the default
+   value is undefined, this behavior is technically correct.  */
+static YYSTYPE yyval_default;
 
 
 
-#ifdef short
-# undef short
-#endif
+#include <stddef.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 /* On compilers that do not define __PTRDIFF_MAX__ etc., make sure
    <limits.h> and (if available) <stdint.h> are included
@@ -242,49 +170,6 @@ typedef unsigned short yytype_uint16;
 typedef int yytype_uint16;
 #endif
 
-#ifndef YYPTRDIFF_T
-# if defined __PTRDIFF_TYPE__ && defined __PTRDIFF_MAX__
-#  define YYPTRDIFF_T __PTRDIFF_TYPE__
-#  define YYPTRDIFF_MAXIMUM __PTRDIFF_MAX__
-# elif defined PTRDIFF_MAX
-#  ifndef ptrdiff_t
-#   include <stddef.h> /* INFRINGES ON USER NAME SPACE */
-#  endif
-#  define YYPTRDIFF_T ptrdiff_t
-#  define YYPTRDIFF_MAXIMUM PTRDIFF_MAX
-# else
-#  define YYPTRDIFF_T long
-#  define YYPTRDIFF_MAXIMUM LONG_MAX
-# endif
-#endif
-
-#ifndef YYSIZE_T
-# ifdef __SIZE_TYPE__
-#  define YYSIZE_T __SIZE_TYPE__
-# elif defined size_t
-#  define YYSIZE_T size_t
-# elif defined __STDC_VERSION__ && 199901 <= __STDC_VERSION__
-#  include <stddef.h> /* INFRINGES ON USER NAME SPACE */
-#  define YYSIZE_T size_t
-# else
-#  define YYSIZE_T unsigned
-# endif
-#endif
-
-#define YYSIZE_MAXIMUM                                  \
-  YY_CAST (YYPTRDIFF_T,                                 \
-           (YYPTRDIFF_MAXIMUM < YY_CAST (YYSIZE_T, -1)  \
-            ? YYPTRDIFF_MAXIMUM                         \
-            : YY_CAST (YYSIZE_T, -1)))
-
-#define YYSIZEOF(X) YY_CAST (YYPTRDIFF_T, sizeof (X))
-
-/* Stored state numbers (used for stacks). */
-typedef yytype_int8 yy_state_t;
-
-/* State numbers in computations.  */
-typedef int yy_state_fast_t;
-
 #ifndef YY_
 # if defined YYENABLE_NLS && YYENABLE_NLS
 #  if ENABLE_NLS
@@ -295,6 +180,42 @@ typedef int yy_state_fast_t;
 # ifndef YY_
 #  define YY_(Msgid) Msgid
 # endif
+#endif
+
+#ifndef YYFREE
+# define YYFREE free
+#endif
+#ifndef YYMALLOC
+# define YYMALLOC malloc
+#endif
+#ifndef YYREALLOC
+# define YYREALLOC realloc
+#endif
+
+#define YYSIZEMAX \
+  (PTRDIFF_MAX < SIZE_MAX ? PTRDIFF_MAX : YY_CAST (ptrdiff_t, SIZE_MAX))
+
+#ifdef __cplusplus
+  typedef bool yybool;
+# define yytrue true
+# define yyfalse false
+#else
+  /* When we move to stdbool, get rid of the various casts to yybool.  */
+  typedef signed char yybool;
+# define yytrue 1
+# define yyfalse 0
+#endif
+
+#ifndef YYSETJMP
+# include <setjmp.h>
+# define YYJMP_BUF jmp_buf
+# define YYSETJMP(Env) setjmp (Env)
+/* Pacify Clang and ICC.  */
+# define YYLONGJMP(Env, Val)                    \
+ do {                                           \
+   longjmp (Env, Val);                          \
+   YY_ASSERT (0);                               \
+ } while (yyfalse)
 #endif
 
 #ifndef YY_ATTRIBUTE_PURE
@@ -310,6 +231,25 @@ typedef int yy_state_fast_t;
 #  define YY_ATTRIBUTE_UNUSED __attribute__ ((__unused__))
 # else
 #  define YY_ATTRIBUTE_UNUSED
+# endif
+#endif
+
+/* The _Noreturn keyword of C11.  */
+#ifndef _Noreturn
+# if (defined __cplusplus \
+      && ((201103 <= __cplusplus && !(__GNUC__ == 4 && __GNUC_MINOR__ == 7)) \
+          || (defined _MSC_VER && 1900 <= _MSC_VER)))
+#  define _Noreturn [[noreturn]]
+# elif ((!defined __cplusplus || defined __clang__) \
+        && (201112 <= (defined __STDC_VERSION__ ? __STDC_VERSION__ : 0)  \
+            || 4 < __GNUC__ + (7 <= __GNUC_MINOR__)))
+   /* _Noreturn works as-is.  */
+# elif 2 < __GNUC__ + (8 <= __GNUC_MINOR__) || 0x5110 <= __SUNPRO_C
+#  define _Noreturn __attribute__ ((__noreturn__))
+# elif 1200 <= (defined _MSC_VER ? _MSC_VER : 0)
+#  define _Noreturn __declspec (noreturn)
+# else
+#  define _Noreturn
 # endif
 #endif
 
@@ -354,155 +294,34 @@ typedef int yy_state_fast_t;
 
 #define YY_ASSERT(E) ((void) (0 && (E)))
 
-#if ! defined yyoverflow || YYERROR_VERBOSE
-
-/* The parser invokes alloca or malloc; define the necessary symbols.  */
-
-# ifdef YYSTACK_USE_ALLOCA
-#  if YYSTACK_USE_ALLOCA
-#   ifdef __GNUC__
-#    define YYSTACK_ALLOC __builtin_alloca
-#   elif defined __BUILTIN_VA_ARG_INCR
-#    include <alloca.h> /* INFRINGES ON USER NAME SPACE */
-#   elif defined _AIX
-#    define YYSTACK_ALLOC __alloca
-#   elif defined _MSC_VER
-#    include <malloc.h> /* INFRINGES ON USER NAME SPACE */
-#    define alloca _alloca
-#   else
-#    define YYSTACK_ALLOC alloca
-#    if ! defined _ALLOCA_H && ! defined EXIT_SUCCESS
-#     include <stdlib.h> /* INFRINGES ON USER NAME SPACE */
-      /* Use EXIT_SUCCESS as a witness for stdlib.h.  */
-#     ifndef EXIT_SUCCESS
-#      define EXIT_SUCCESS 0
-#     endif
-#    endif
-#   endif
-#  endif
-# endif
-
-# ifdef YYSTACK_ALLOC
-   /* Pacify GCC's 'empty if-body' warning.  */
-#  define YYSTACK_FREE(Ptr) do { /* empty */; } while (0)
-#  ifndef YYSTACK_ALLOC_MAXIMUM
-    /* The OS might guarantee only one guard page at the bottom of the stack,
-       and a page size can be as small as 4096 bytes.  So we cannot safely
-       invoke alloca (N) if N exceeds 4096.  Use a slightly smaller number
-       to allow for a few compiler-allocated temporary stack slots.  */
-#   define YYSTACK_ALLOC_MAXIMUM 4032 /* reasonable circa 2006 */
-#  endif
-# else
-#  define YYSTACK_ALLOC YYMALLOC
-#  define YYSTACK_FREE YYFREE
-#  ifndef YYSTACK_ALLOC_MAXIMUM
-#   define YYSTACK_ALLOC_MAXIMUM YYSIZE_MAXIMUM
-#  endif
-#  if (defined __cplusplus && ! defined EXIT_SUCCESS \
-       && ! ((defined YYMALLOC || defined malloc) \
-             && (defined YYFREE || defined free)))
-#   include <stdlib.h> /* INFRINGES ON USER NAME SPACE */
-#   ifndef EXIT_SUCCESS
-#    define EXIT_SUCCESS 0
-#   endif
-#  endif
-#  ifndef YYMALLOC
-#   define YYMALLOC malloc
-#   if ! defined malloc && ! defined EXIT_SUCCESS
-void *malloc (YYSIZE_T); /* INFRINGES ON USER NAME SPACE */
-#   endif
-#  endif
-#  ifndef YYFREE
-#   define YYFREE free
-#   if ! defined free && ! defined EXIT_SUCCESS
-void free (void *); /* INFRINGES ON USER NAME SPACE */
-#   endif
-#  endif
-# endif
-#endif /* ! defined yyoverflow || YYERROR_VERBOSE */
-
-
-#if (! defined yyoverflow \
-     && (! defined __cplusplus \
-         || (defined YYSTYPE_IS_TRIVIAL && YYSTYPE_IS_TRIVIAL)))
-
-/* A type that is properly aligned for any stack member.  */
-union yyalloc
-{
-  yy_state_t yyss_alloc;
-  YYSTYPE yyvs_alloc;
-};
-
-/* The size of the maximum gap between one aligned stack and the next.  */
-# define YYSTACK_GAP_MAXIMUM (YYSIZEOF (union yyalloc) - 1)
-
-/* The size of an array large to enough to hold all stacks, each with
-   N elements.  */
-# define YYSTACK_BYTES(N) \
-     ((N) * (YYSIZEOF (yy_state_t) + YYSIZEOF (YYSTYPE)) \
-      + YYSTACK_GAP_MAXIMUM)
-
-# define YYCOPY_NEEDED 1
-
-/* Relocate STACK from its old location to the new one.  The
-   local variables YYSIZE and YYSTACKSIZE give the old and new number of
-   elements in the stack, and YYPTR gives the new location of the
-   stack.  Advance YYPTR to a properly aligned location for the next
-   stack.  */
-# define YYSTACK_RELOCATE(Stack_alloc, Stack)                           \
-    do                                                                  \
-      {                                                                 \
-        YYPTRDIFF_T yynewbytes;                                         \
-        YYCOPY (&yyptr->Stack_alloc, Stack, yysize);                    \
-        Stack = &yyptr->Stack_alloc;                                    \
-        yynewbytes = yystacksize * YYSIZEOF (*Stack) + YYSTACK_GAP_MAXIMUM; \
-        yyptr += yynewbytes / YYSIZEOF (*yyptr);                        \
-      }                                                                 \
-    while (0)
-
-#endif
-
-#if defined YYCOPY_NEEDED && YYCOPY_NEEDED
-/* Copy COUNT objects from SRC to DST.  The source and destination do
-   not overlap.  */
-# ifndef YYCOPY
-#  if defined __GNUC__ && 1 < __GNUC__
-#   define YYCOPY(Dst, Src, Count) \
-      __builtin_memcpy (Dst, Src, YY_CAST (YYSIZE_T, (Count)) * sizeof (*(Src)))
-#  else
-#   define YYCOPY(Dst, Src, Count)              \
-      do                                        \
-        {                                       \
-          YYPTRDIFF_T yyi;                      \
-          for (yyi = 0; yyi < (Count); yyi++)   \
-            (Dst)[yyi] = (Src)[yyi];            \
-        }                                       \
-      while (0)
-#  endif
-# endif
-#endif /* !YYCOPY_NEEDED */
-
 /* YYFINAL -- State number of the termination state.  */
-#define YYFINAL  5
+#define YYFINAL  15
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   141
+#define YYLAST   168
 
 /* YYNTOKENS -- Number of terminals.  */
-#define YYNTOKENS  34
+#define YYNTOKENS  35
 /* YYNNTS -- Number of nonterminals.  */
-#define YYNNTS  34
+#define YYNNTS  41
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  73
+#define YYNRULES  90
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  127
+#define YYNSTATES  151
+/* YYMAXRHS -- Maximum number of symbols on right-hand side of rule.  */
+#define YYMAXRHS 7
+/* YYMAXLEFT -- Maximum number of symbols to the left of a handle
+   accessed by $0, $-1, etc., in any rule.  */
+#define YYMAXLEFT 0
 
+/* YYMAXUTOK -- Last valid token number (for yychar).  */
+#define YYMAXUTOK   274
+/* YYUNDEFTOK -- Symbol number (for yytoken) that denotes an unknown
+   token.  */
 #define YYUNDEFTOK  2
-#define YYMAXUTOK   273
-
 
 /* YYTRANSLATE(TOKEN-NUM) -- Symbol number corresponding to TOKEN-NUM
    as returned by yylex, with out-of-bounds checking.  */
-#define YYTRANSLATE(YYX)                                                \
+#define YYTRANSLATE(YYX)                         \
   (0 <= (YYX) && (YYX) <= YYMAXUTOK ? yytranslate[YYX] : YYUNDEFTOK)
 
 /* YYTRANSLATE[TOKEN-NUM] -- Symbol number corresponding to TOKEN-NUM
@@ -512,16 +331,16 @@ static const yytype_int8 yytranslate[] =
        0,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,    33,     2,     2,     2,    29,     2,     2,
-      19,    20,    27,    25,    32,    26,     2,    28,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,    24,
-      30,    23,    31,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,    34,     2,     2,     2,    31,     2,     2,
+      20,    21,    29,    27,    22,    28,     2,    30,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     2,    26,
+      32,    25,    33,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,    21,     2,    22,     2,     2,     2,     2,
+       2,     2,     2,    23,     2,    24,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
@@ -536,21 +355,23 @@ static const yytype_int8 yytranslate[] =
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     1,     2,     3,     4,
        5,     6,     7,     8,     9,    10,    11,    12,    13,    14,
-      15,    16,    17,    18
+      15,    16,    17,    18,    19
 };
 
 #if YYDEBUG
-  /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
+/* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_int16 yyrline[] =
 {
-       0,    54,    54,    62,    72,    80,    84,    93,    99,   108,
-     114,   123,   129,   138,   145,   153,   163,   169,   177,   187,
-     194,   199,   205,   211,   216,   222,   227,   235,   243,   249,
-     257,   268,   274,   282,   290,   301,   307,   318,   324,   335,
-     341,   349,   360,   366,   374,   382,   390,   401,   407,   413,
-     422,   428,   438,   444,   453,   459,   470,   476,   487,   493,
-     502,   508,   517,   525,   534,   540,   550,   558,   566,   574,
-     582,   587,   592,   600
+       0,    56,    56,    65,    71,    80,    86,    95,   104,   116,
+     121,   129,   134,   144,   150,   159,   168,   173,   183,   189,
+     198,   202,   211,   217,   226,   232,   241,   247,   256,   263,
+     271,   281,   287,   295,   305,   312,   317,   323,   329,   334,
+     340,   345,   353,   361,   367,   375,   386,   392,   400,   408,
+     419,   425,   436,   442,   453,   459,   467,   478,   484,   492,
+     500,   508,   519,   525,   531,   540,   546,   553,   559,   569,
+     575,   584,   590,   601,   607,   618,   624,   633,   639,   648,
+     656,   665,   671,   681,   689,   697,   705,   713,   718,   723,
+     731
 };
 #endif
 
@@ -559,58 +380,44 @@ static const yytype_int16 yyrline[] =
    First, the terminals, then, starting at YYNTOKENS, nonterminals.  */
 static const char *const yytname[] =
 {
-  "$end", "error", "$undefined", "INT", "RETURN", "CONST", "IF", "ELSE",
-  "WHILE", "BREAK", "CONTINUE", "IDENT", "LEq", "GEq", "Eq", "NEq", "LAnd",
-  "LOr", "INT_CONST", "'('", "')'", "'{'", "'}'", "'='", "';'", "'+'",
-  "'-'", "'*'", "'/'", "'%'", "'<'", "'>'", "','", "'!'", "$accept",
-  "CompUnit", "FuncDef", "FuncType", "Block", "RestOfBlockItem",
-  "BlockItem", "Stmt", "OpenStmt", "ClosedStmt", "SimpleStmt", "Exp",
-  "AddExp", "MulExp", "LOrExp", "LAndExp", "EqExp", "RelExp", "PrimaryExp",
-  "UnaryExp", "Decl", "ConstDecl", "VarDecl", "RestOfConstDef",
-  "RestOfVarDef", "BType", "ConstDef", "VarDef", "ConstInitVal", "InitVal",
-  "ConstExp", "LVal", "UnaryOp", "Number", YY_NULLPTR
+  "$end", "error", "$undefined", "INT", "VOID", "RETURN", "CONST", "IF",
+  "ELSE", "WHILE", "BREAK", "CONTINUE", "IDENT", "LEq", "GEq", "Eq", "NEq",
+  "LAnd", "LOr", "INT_CONST", "'('", "')'", "','", "'{'", "'}'", "'='",
+  "';'", "'+'", "'-'", "'*'", "'/'", "'%'", "'<'", "'>'", "'!'", "$accept",
+  "CompUnit", "RestOfGlobalItem", "GlobalItem", "FuncDef", "FuncType",
+  "FuncFParams", "RestOfFuncFParam", "FuncFParam", "FuncRParams",
+  "RestOfFuncRParam", "Block", "RestOfBlockItem", "BlockItem", "Stmt",
+  "OpenStmt", "ClosedStmt", "SimpleStmt", "Exp", "AddExp", "MulExp",
+  "LOrExp", "LAndExp", "EqExp", "RelExp", "PrimaryExp", "UnaryExp", "Decl",
+  "ConstDecl", "VarDecl", "RestOfConstDef", "RestOfVarDef", "BType",
+  "ConstDef", "VarDef", "ConstInitVal", "InitVal", "ConstExp", "LVal",
+  "UnaryOp", "Number", YY_NULLPTR
 };
 #endif
 
-# ifdef YYPRINT
-/* YYTOKNUM[NUM] -- (External) token number corresponding to the
-   (internal) symbol number NUM (which must be that of a token).  */
-static const yytype_int16 yytoknum[] =
-{
-       0,   256,   257,   258,   259,   260,   261,   262,   263,   264,
-     265,   266,   267,   268,   269,   270,   271,   272,   273,    40,
-      41,   123,   125,    61,    59,    43,    45,    42,    47,    37,
-      60,    62,    44,    33
-};
-# endif
-
-#define YYPACT_NINF (-57)
-
-#define yypact_value_is_default(Yyn) \
-  ((Yyn) == YYPACT_NINF)
-
-#define YYTABLE_NINF (-1)
-
-#define yytable_value_is_error(Yyn) \
-  0
+#define YYPACT_NINF (-136)
+#define YYTABLE_NINF (-10)
 
   /* YYPACT[STATE-NUM] -- Index in YYTABLE of the portion describing
      STATE-NUM.  */
-static const yytype_int8 yypact[] =
+static const yytype_int16 yypact[] =
 {
-      15,   -57,    59,   -57,    49,   -57,    60,    44,    57,     2,
-     -57,   -57,    81,    77,    66,    71,    84,    85,   -57,   -57,
-      37,   -57,   -57,   -57,   -57,   -57,   -57,    88,    28,   -57,
-     -57,   -57,   -57,    87,     4,   -25,    95,    97,     1,    45,
-     -57,   -57,   -57,   -57,   -57,   105,    94,    37,   -57,   -57,
-      96,   -57,   107,    37,    37,   -57,   -57,    99,   -57,   -57,
-     -57,    37,    37,    37,    37,    37,    37,    37,    37,    37,
-      37,    37,    37,    37,    98,   -10,    37,   -57,   -57,   100,
-      -7,   102,   104,   -57,   -25,   -25,   -57,   -57,   -57,    97,
-       1,    45,    45,     4,     4,     4,     4,    37,   -57,   105,
-     101,   103,    37,   -57,   107,   106,    63,    63,   -57,   -57,
-     108,   -57,   -57,   -57,   -57,   -57,   109,   -57,   -57,   119,
-     -57,   -57,   -57,   -57,    63,   -57,   -57
+      14,    23,  -136,    38,    49,  -136,    14,  -136,    46,  -136,
+    -136,  -136,    72,  -136,    79,  -136,  -136,    73,    41,   -10,
+      74,    -3,     6,   102,    72,  -136,    76,   102,    79,  -136,
+      77,    75,    94,    84,   106,   100,  -136,   102,  -136,  -136,
+    -136,  -136,   -17,    56,   110,   120,    17,   113,  -136,  -136,
+    -136,  -136,   102,  -136,   116,  -136,  -136,  -136,  -136,   117,
+    -136,    19,  -136,    75,    38,  -136,  -136,    55,   119,   102,
+     102,   102,   102,   102,   102,   102,   102,   102,   102,   102,
+     102,   102,  -136,  -136,  -136,    97,   121,   122,   118,   123,
+    -136,  -136,  -136,   124,    45,  -136,  -136,  -136,  -136,   125,
+    -136,   127,  -136,    84,  -136,   126,   128,  -136,    56,    56,
+    -136,  -136,  -136,   120,    17,   113,   113,   -17,   -17,   -17,
+     -17,  -136,   129,   102,   102,  -136,  -136,  -136,  -136,  -136,
+     102,  -136,  -136,   102,  -136,  -136,   132,   133,   130,   128,
+      85,    85,  -136,  -136,  -136,   135,  -136,  -136,    85,  -136,
+    -136
 };
 
   /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -618,191 +425,272 @@ static const yytype_int8 yypact[] =
      means the default is an error.  */
 static const yytype_int8 yydefact[] =
 {
-       0,     4,     0,     2,     0,     1,     0,     0,     0,     0,
-       3,    62,     0,     0,     0,     0,     0,     0,    69,    73,
-       0,     5,    20,    70,    71,    72,    22,     0,     7,    10,
-      11,    12,    16,     0,    42,    28,    27,    35,    37,    39,
-      50,    31,     9,    52,    53,     0,    48,     0,    49,    23,
-       0,    48,     0,     0,     0,    25,    26,     0,     6,     8,
-      21,     0,     0,     0,     0,     0,     0,     0,     0,     0,
-       0,     0,     0,     0,    64,     0,     0,    51,    24,     0,
-       0,     0,     0,    47,    29,    30,    32,    33,    34,    36,
-      38,    40,    41,    45,    46,    43,    44,     0,    56,     0,
-       0,     0,     0,    54,     0,     0,     0,     0,    67,    65,
-      60,    57,    19,    68,    63,    66,    58,    55,    13,    12,
-      15,    18,    61,    59,     0,    14,    17
+       0,     9,    10,     0,     0,     2,     3,     6,     0,     5,
+      69,    70,     0,    79,     0,     1,     4,     0,    81,     0,
+       0,     0,     0,     0,     0,    73,     0,     0,     0,    71,
+       0,     0,     0,    11,     0,    86,    90,     0,    87,    88,
+      89,    84,    57,    43,    42,    50,    52,    54,    65,    46,
+      82,    63,     0,    64,    77,    74,    85,    80,    83,    75,
+      72,     0,     7,     0,     0,    12,    15,     0,     0,     0,
+       0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
+       0,     0,    66,    78,    76,     0,     0,     0,     0,     0,
+      20,    35,    37,     0,    22,    25,    26,    27,    31,     0,
+      24,    63,     8,    13,    67,     0,    16,    62,    44,    45,
+      47,    48,    49,    51,    53,    55,    56,    60,    61,    58,
+      59,    38,     0,     0,     0,    40,    41,    21,    23,    36,
+       0,    14,    68,     0,    17,    39,     0,     0,     0,    18,
+       0,     0,    34,    19,    28,    27,    30,    33,     0,    29,
+      32
 };
 
   /* YYPGOTO[NTERM-NUM].  */
-static const yytype_int8 yypgoto[] =
+static const yytype_int16 yypgoto[] =
 {
-     -57,   -57,   -57,   -57,   120,   110,   -57,    23,   -41,   -56,
-     -57,   -11,    31,   -21,   -57,    65,    67,   -24,   -57,    30,
-     -57,   -57,   -57,    16,    25,   123,    29,    38,   -57,   -57,
-     -57,    -9,   -57,   -57
+    -136,  -136,   151,  -136,  -136,  -136,  -136,    57,    95,  -136,
+      22,   -26,    64,  -136,    24,  -135,  -133,  -136,   -23,    54,
+       0,  -136,    88,    90,     1,  -136,   -12,   -58,  -136,  -136,
+     104,   112,    -1,   139,   144,  -136,  -136,  -136,   -60,  -136,
+    -136
 };
 
   /* YYDEFGOTO[NTERM-NUM].  */
-static const yytype_int8 yydefgoto[] =
+static const yytype_int16 yydefgoto[] =
 {
-      -1,     2,     3,     4,    26,    27,    28,    29,    30,    31,
-      32,    33,    34,    35,    36,    37,    38,    39,    40,    41,
-      42,    43,    44,   105,   100,    45,    80,    75,   114,   109,
-     115,    51,    47,    48
+      -1,     4,     5,     6,     7,     8,    32,    65,    33,   105,
+     134,    92,    93,    94,    95,    96,    97,    98,    99,    42,
+      43,    44,    45,    46,    47,    48,    49,     9,    10,    11,
+      30,    26,    12,    21,    19,    57,    50,    58,    51,    52,
+      53
 };
 
   /* YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
      positive, shift that token.  If negative, reduce the rule whose
      number is the opposite.  If YYTABLE_NINF, syntax error.  */
-static const yytype_int8 yytable[] =
+static const yytype_int16 yytable[] =
 {
-      46,    50,    63,    64,    65,    11,    12,    13,    14,    57,
-      15,    16,    17,    18,    98,    68,    69,   103,     1,    46,
-      19,    20,    99,     9,    21,   104,    22,    23,    24,    61,
-      62,    11,    12,    13,    14,    25,    15,    16,    17,    18,
-      84,    85,    81,    82,    91,    92,    19,    20,    18,     9,
-     119,   121,    22,    23,    24,    19,    20,    70,    71,     5,
-       6,    25,    23,    24,     8,   101,   120,    12,   126,    14,
-      25,    15,    16,    17,    18,    72,    73,    77,     9,     7,
-      11,    19,    20,   125,     9,    53,   108,    22,    23,    24,
-      54,   113,    18,    86,    87,    88,    25,    46,    46,    19,
-      20,    93,    94,    95,    96,    49,    23,    24,    55,    56,
-      58,    60,    66,    67,    25,    46,    74,    76,    79,    83,
-      78,    97,   106,   102,   107,   111,   124,   112,    10,   118,
-     117,    89,   123,   116,    90,   122,    52,   110,    59,     0,
-      99,   104
+      41,   101,    14,   100,    56,    62,   146,   145,   147,    13,
+      69,    70,    24,   149,    68,   150,    25,     1,     2,    28,
+       3,    34,    13,    29,    85,     3,    86,    31,    87,    88,
+      89,    35,    76,    77,   101,    -9,   100,   102,    36,    37,
+      82,    13,    61,    90,   106,    91,    38,    39,    13,    15,
+      85,     3,    86,    40,    87,    88,    89,    35,    17,   110,
+     111,   112,   122,    34,    36,    37,    23,    35,    61,   108,
+     109,    91,    38,    39,    36,    37,   104,   115,   116,    40,
+     101,   101,    38,    39,    18,    71,    72,    73,   101,    40,
+      85,    20,    86,    22,    87,    88,    89,    35,    61,    27,
+     136,   137,    55,    60,    36,    37,    64,   138,    61,    35,
+     139,    91,    38,    39,    35,    63,    36,    37,    66,    40,
+      67,    36,    37,   121,    38,    39,    78,    79,    74,    38,
+      39,    40,   117,   118,   119,   120,    40,    75,    24,    28,
+     107,   123,   124,   148,   125,    80,    81,   132,   127,   126,
+     133,   129,   130,   140,   141,   135,   142,    16,   128,   103,
+     131,   143,   113,    84,   144,   114,    83,    59,    54
 };
 
-static const yytype_int8 yycheck[] =
+static const yytype_uint8 yycheck[] =
 {
-       9,    12,    27,    28,    29,     3,     4,     5,     6,    20,
-       8,     9,    10,    11,    24,    14,    15,    24,     3,    28,
-      18,    19,    32,    21,    22,    32,    24,    25,    26,    25,
-      26,     3,     4,     5,     6,    33,     8,     9,    10,    11,
-      61,    62,    53,    54,    68,    69,    18,    19,    11,    21,
-     106,   107,    24,    25,    26,    18,    19,    12,    13,     0,
-      11,    33,    25,    26,    20,    76,   107,     4,   124,     6,
-      33,     8,     9,    10,    11,    30,    31,    47,    21,    19,
-       3,    18,    19,   124,    21,    19,    97,    24,    25,    26,
-      19,   102,    11,    63,    64,    65,    33,   106,   107,    18,
-      19,    70,    71,    72,    73,    24,    25,    26,    24,    24,
-      22,    24,    17,    16,    33,   124,    11,    23,    11,    20,
-      24,    23,    20,    23,    20,    24,     7,    24,     8,   106,
-      24,    66,   116,   104,    67,   110,    13,    99,    28,    -1,
-      32,    32
+      23,    61,     3,    61,    27,    31,   141,   140,   141,     3,
+      27,    28,    22,   148,    37,   148,    26,     3,     4,    22,
+       6,    22,     3,    26,     5,     6,     7,    21,     9,    10,
+      11,    12,    15,    16,    94,    12,    94,    63,    19,    20,
+      52,     3,    23,    24,    67,    26,    27,    28,     3,     0,
+       5,     6,     7,    34,     9,    10,    11,    12,    12,    71,
+      72,    73,    85,    64,    19,    20,    25,    12,    23,    69,
+      70,    26,    27,    28,    19,    20,    21,    76,    77,    34,
+     140,   141,    27,    28,    12,    29,    30,    31,   148,    34,
+       5,    12,     7,    20,     9,    10,    11,    12,    23,    25,
+     123,   124,    26,    26,    19,    20,    22,   130,    23,    12,
+     133,    26,    27,    28,    12,    21,    19,    20,    12,    34,
+      20,    19,    20,    26,    27,    28,    13,    14,    18,    27,
+      28,    34,    78,    79,    80,    81,    34,    17,    22,    22,
+      21,    20,    20,     8,    26,    32,    33,    21,    24,    26,
+      22,    26,    25,    21,    21,    26,    26,     6,    94,    64,
+     103,   139,    74,    59,   140,    75,    54,    28,    24
 };
 
   /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
      symbol of state STATE-NUM.  */
 static const yytype_int8 yystos[] =
 {
-       0,     3,    35,    36,    37,     0,    11,    19,    20,    21,
-      38,     3,     4,     5,     6,     8,     9,    10,    11,    18,
-      19,    22,    24,    25,    26,    33,    38,    39,    40,    41,
-      42,    43,    44,    45,    46,    47,    48,    49,    50,    51,
-      52,    53,    54,    55,    56,    59,    65,    66,    67,    24,
-      45,    65,    59,    19,    19,    24,    24,    45,    22,    39,
-      24,    25,    26,    27,    28,    29,    17,    16,    14,    15,
-      12,    13,    30,    31,    11,    61,    23,    53,    24,    11,
-      60,    45,    45,    20,    47,    47,    53,    53,    53,    49,
-      50,    51,    51,    46,    46,    46,    46,    23,    24,    32,
-      58,    45,    23,    24,    32,    57,    20,    20,    45,    63,
-      61,    24,    24,    45,    62,    64,    60,    24,    41,    43,
-      42,    43,    58,    57,     7,    42,    43
+       0,     3,     4,     6,    36,    37,    38,    39,    40,    62,
+      63,    64,    67,     3,    67,     0,    37,    12,    12,    69,
+      12,    68,    20,    25,    22,    26,    66,    25,    22,    26,
+      65,    21,    41,    43,    67,    12,    19,    20,    27,    28,
+      34,    53,    54,    55,    56,    57,    58,    59,    60,    61,
+      71,    73,    74,    75,    69,    26,    53,    70,    72,    68,
+      26,    23,    46,    21,    22,    42,    12,    20,    53,    27,
+      28,    29,    30,    31,    18,    17,    15,    16,    13,    14,
+      32,    33,    61,    66,    65,     5,     7,     9,    10,    11,
+      24,    26,    46,    47,    48,    49,    50,    51,    52,    53,
+      62,    73,    46,    43,    21,    44,    53,    21,    55,    55,
+      61,    61,    61,    57,    58,    59,    59,    54,    54,    54,
+      54,    26,    53,    20,    20,    26,    26,    24,    47,    26,
+      25,    42,    21,    22,    45,    26,    53,    53,    53,    53,
+      21,    21,    26,    45,    49,    51,    50,    51,     8,    50,
+      51
 };
 
   /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
 static const yytype_int8 yyr1[] =
 {
-       0,    34,    35,    36,    37,    38,    38,    39,    39,    40,
-      40,    41,    41,    42,    42,    42,    43,    43,    43,    44,
-      44,    44,    44,    44,    44,    44,    44,    45,    46,    46,
-      46,    47,    47,    47,    47,    48,    48,    49,    49,    50,
-      50,    50,    51,    51,    51,    51,    51,    52,    52,    52,
-      53,    53,    54,    54,    55,    55,    56,    56,    57,    57,
-      58,    58,    59,    60,    61,    61,    62,    63,    64,    65,
-      66,    66,    66,    67
+       0,    35,    36,    37,    37,    38,    38,    39,    39,    40,
+      40,    41,    41,    42,    42,    43,    44,    44,    45,    45,
+      46,    46,    47,    47,    48,    48,    49,    49,    50,    50,
+      50,    51,    51,    51,    52,    52,    52,    52,    52,    52,
+      52,    52,    53,    54,    54,    54,    55,    55,    55,    55,
+      56,    56,    57,    57,    58,    58,    58,    59,    59,    59,
+      59,    59,    60,    60,    60,    61,    61,    61,    61,    62,
+      62,    63,    63,    64,    64,    65,    65,    66,    66,    67,
+      68,    69,    69,    70,    71,    72,    73,    74,    74,    74,
+      75
 };
 
   /* YYR2[YYN] -- Number of symbols on the right hand side of rule YYN.  */
 static const yytype_int8 yyr2[] =
 {
-       0,     2,     1,     5,     1,     2,     3,     1,     2,     1,
-       1,     1,     1,     5,     7,     5,     1,     7,     5,     4,
-       1,     2,     1,     2,     3,     2,     2,     1,     1,     3,
-       3,     1,     3,     3,     3,     1,     3,     1,     3,     1,
-       3,     3,     1,     3,     3,     3,     3,     3,     1,     1,
-       1,     2,     1,     1,     4,     5,     3,     4,     2,     3,
-       2,     3,     1,     3,     1,     3,     1,     1,     1,     1,
-       1,     1,     1,     1
+       0,     2,     1,     1,     2,     1,     1,     5,     6,     1,
+       1,     1,     2,     2,     3,     2,     1,     2,     2,     3,
+       2,     3,     1,     2,     1,     1,     1,     1,     5,     7,
+       5,     1,     7,     5,     4,     1,     2,     1,     2,     3,
+       2,     2,     1,     1,     3,     3,     1,     3,     3,     3,
+       1,     3,     1,     3,     1,     3,     3,     1,     3,     3,
+       3,     3,     3,     1,     1,     1,     2,     3,     4,     1,
+       1,     4,     5,     3,     4,     2,     3,     2,     3,     1,
+       3,     1,     3,     1,     1,     1,     1,     1,     1,     1,
+       1
 };
 
 
-#define yyerrok         (yyerrstatus = 0)
-#define yyclearin       (yychar = YYEMPTY)
-#define YYEMPTY         (-2)
-#define YYEOF           0
+/* YYDPREC[RULE-NUM] -- Dynamic precedence of rule #RULE-NUM (0 if none).  */
+static const yytype_int8 yydprec[] =
+{
+       0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
+       0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
+       0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
+       0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
+       0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
+       0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
+       0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
+       0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
+       0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
+       0
+};
 
-#define YYACCEPT        goto yyacceptlab
-#define YYABORT         goto yyabortlab
-#define YYERROR         goto yyerrorlab
+/* YYMERGER[RULE-NUM] -- Index of merging function for rule #RULE-NUM.  */
+static const yytype_int8 yymerger[] =
+{
+       0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
+       0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
+       0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
+       0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
+       0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
+       0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
+       0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
+       0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
+       0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
+       0
+};
 
+/* YYIMMEDIATE[RULE-NUM] -- True iff rule #RULE-NUM is not to be deferred, as
+   in the case of predicates.  */
+static const yybool yyimmediate[] =
+{
+       0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
+       0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
+       0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
+       0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
+       0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
+       0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
+       0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
+       0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
+       0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
+       0
+};
 
-#define YYRECOVERING()  (!!yyerrstatus)
+/* YYCONFLP[YYPACT[STATE-NUM]] -- Pointer into YYCONFL of start of
+   list of conflicting reductions corresponding to action entry for
+   state STATE-NUM in yytable.  0 means no conflicts.  The list in
+   yyconfl is terminated by a rule number of 0.  */
+static const yytype_int8 yyconflp[] =
+{
+       0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
+       0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
+       0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
+       0,     0,     0,     0,     0,     1,     0,     0,     0,     0,
+       0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
+       0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
+       0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
+       0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
+       0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
+       0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
+       0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
+       0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
+       0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
+       0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
+       0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
+       0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
+       0,     0,     0,     0,     0,     0,     0,     0,     0
+};
 
-#define YYBACKUP(Token, Value)                                    \
-  do                                                              \
-    if (yychar == YYEMPTY)                                        \
-      {                                                           \
-        yychar = (Token);                                         \
-        yylval = (Value);                                         \
-        YYPOPSTACK (yylen);                                       \
-        yystate = *yyssp;                                         \
-        goto yybackup;                                            \
-      }                                                           \
-    else                                                          \
-      {                                                           \
-        yyerror (ast, YY_("syntax error: cannot back up")); \
-        YYERROR;                                                  \
-      }                                                           \
-  while (0)
+/* YYCONFL[I] -- lists of conflicting rule numbers, each terminated by
+   0, pointed into by YYCONFLP.  */
+static const short yyconfl[] =
+{
+       0,    79,     0
+};
 
 /* Error token number */
-#define YYTERROR        1
-#define YYERRCODE       256
+#define YYTERROR 1
 
 
 
-/* Enable debugging if requested.  */
+YYSTYPE yylval;
+
+int yynerrs;
+int yychar;
+
+static const int YYEOF = 0;
+static const int YYEMPTY = -2;
+
+typedef enum { yyok, yyaccept, yyabort, yyerr } YYRESULTTAG;
+
+#define YYCHK(YYE)                              \
+  do {                                          \
+    YYRESULTTAG yychk_flag = YYE;               \
+    if (yychk_flag != yyok)                     \
+      return yychk_flag;                        \
+  } while (0)
+
 #if YYDEBUG
 
 # ifndef YYFPRINTF
-#  include <stdio.h> /* INFRINGES ON USER NAME SPACE */
 #  define YYFPRINTF fprintf
 # endif
 
-# define YYDPRINTF(Args)                        \
-do {                                            \
-  if (yydebug)                                  \
+# define YY_FPRINTF                             \
+  YY_IGNORE_USELESS_CAST_BEGIN YY_FPRINTF_
+
+# define YY_FPRINTF_(Args)                      \
+  do {                                          \
     YYFPRINTF Args;                             \
-} while (0)
+    YY_IGNORE_USELESS_CAST_END                  \
+  } while (0)
+
+# define YY_DPRINTF                             \
+  YY_IGNORE_USELESS_CAST_BEGIN YY_DPRINTF_
+
+# define YY_DPRINTF_(Args)                      \
+  do {                                          \
+    if (yydebug)                                \
+      YYFPRINTF Args;                           \
+    YY_IGNORE_USELESS_CAST_END                  \
+  } while (0)
 
 /* This macro is provided for backward compatibility. */
 #ifndef YY_LOCATION_PRINT
 # define YY_LOCATION_PRINT(File, Loc) ((void) 0)
 #endif
 
-
-# define YY_SYMBOL_PRINT(Title, Type, Value, Location)                    \
-do {                                                                      \
-  if (yydebug)                                                            \
-    {                                                                     \
-      YYFPRINTF (stderr, "%s ", Title);                                   \
-      yy_symbol_print (stderr,                                            \
-                  Type, Value, ast); \
-      YYFPRINTF (stderr, "\n");                                           \
-    }                                                                     \
-} while (0)
 
 
 /*-----------------------------------.
@@ -817,10 +705,6 @@ yy_symbol_value_print (FILE *yyo, int yytype, YYSTYPE const * const yyvaluep, st
   YYUSE (ast);
   if (!yyvaluep)
     return;
-# ifdef YYPRINT
-  if (yytype < YYNTOKENS)
-    YYPRINT (yyo, yytoknum[yytype], *yyvaluep);
-# endif
   YY_IGNORE_MAYBE_UNINITIALIZED_BEGIN
   YYUSE (yytype);
   YY_IGNORE_MAYBE_UNINITIALIZED_END
@@ -841,70 +725,32 @@ yy_symbol_print (FILE *yyo, int yytype, YYSTYPE const * const yyvaluep, std::uni
   YYFPRINTF (yyo, ")");
 }
 
-/*------------------------------------------------------------------.
-| yy_stack_print -- Print the state stack from its BOTTOM up to its |
-| TOP (included).                                                   |
-`------------------------------------------------------------------*/
-
-static void
-yy_stack_print (yy_state_t *yybottom, yy_state_t *yytop)
-{
-  YYFPRINTF (stderr, "Stack now");
-  for (; yybottom <= yytop; yybottom++)
-    {
-      int yybot = *yybottom;
-      YYFPRINTF (stderr, " %d", yybot);
-    }
-  YYFPRINTF (stderr, "\n");
-}
-
-# define YY_STACK_PRINT(Bottom, Top)                            \
-do {                                                            \
-  if (yydebug)                                                  \
-    yy_stack_print ((Bottom), (Top));                           \
-} while (0)
-
-
-/*------------------------------------------------.
-| Report that the YYRULE is going to be reduced.  |
-`------------------------------------------------*/
-
-static void
-yy_reduce_print (yy_state_t *yyssp, YYSTYPE *yyvsp, int yyrule, std::unique_ptr<BaseAST> &ast)
-{
-  int yylno = yyrline[yyrule];
-  int yynrhs = yyr2[yyrule];
-  int yyi;
-  YYFPRINTF (stderr, "Reducing stack by rule %d (line %d):\n",
-             yyrule - 1, yylno);
-  /* The symbols being reduced.  */
-  for (yyi = 0; yyi < yynrhs; yyi++)
-    {
-      YYFPRINTF (stderr, "   $%d = ", yyi + 1);
-      yy_symbol_print (stderr,
-                       yystos[+yyssp[yyi + 1 - yynrhs]],
-                       &yyvsp[(yyi + 1) - (yynrhs)]
-                                              , ast);
-      YYFPRINTF (stderr, "\n");
-    }
-}
-
-# define YY_REDUCE_PRINT(Rule)          \
-do {                                    \
-  if (yydebug)                          \
-    yy_reduce_print (yyssp, yyvsp, Rule, ast); \
-} while (0)
+# define YY_SYMBOL_PRINT(Title, Type, Value, Location)                  \
+  do {                                                                  \
+    if (yydebug)                                                        \
+      {                                                                 \
+        YY_FPRINTF ((stderr, "%s ", Title));                            \
+        yy_symbol_print (stderr, Type, Value, ast);        \
+        YY_FPRINTF ((stderr, "\n"));                                    \
+      }                                                                 \
+  } while (0)
 
 /* Nonzero means print parse trace.  It is left uninitialized so that
    multiple parsers can coexist.  */
 int yydebug;
-#else /* !YYDEBUG */
-# define YYDPRINTF(Args)
-# define YY_SYMBOL_PRINT(Title, Type, Value, Location)
-# define YY_STACK_PRINT(Bottom, Top)
-# define YY_REDUCE_PRINT(Rule)
-#endif /* !YYDEBUG */
 
+struct yyGLRStack;
+static void yypstack (struct yyGLRStack* yystackp, ptrdiff_t yyk)
+  YY_ATTRIBUTE_UNUSED;
+static void yypdumpstack (struct yyGLRStack* yystackp)
+  YY_ATTRIBUTE_UNUSED;
+
+#else /* !YYDEBUG */
+
+# define YY_DPRINTF(Args) do {} while (yyfalse)
+# define YY_SYMBOL_PRINT(Title, Type, Value, Location)
+
+#endif /* !YYDEBUG */
 
 /* YYINITDEPTH -- initial size of the parser's stacks.  */
 #ifndef YYINITDEPTH
@@ -915,31 +761,40 @@ int yydebug;
    if the built-in stack extension method is used).
 
    Do not make this value too large; the results are undefined if
-   YYSTACK_ALLOC_MAXIMUM < YYSTACK_BYTES (YYMAXDEPTH)
+   SIZE_MAX < YYMAXDEPTH * sizeof (GLRStackItem)
    evaluated with infinite-precision integer arithmetic.  */
 
 #ifndef YYMAXDEPTH
 # define YYMAXDEPTH 10000
 #endif
 
+/* Minimum number of free items on the stack allowed after an
+   allocation.  This is to allow allocation and initialization
+   to be completed by functions that call yyexpandGLRStack before the
+   stack is expanded, thus insuring that all necessary pointers get
+   properly redirected to new data.  */
+#define YYHEADROOM 2
+
+#ifndef YYSTACKEXPANDABLE
+#  define YYSTACKEXPANDABLE 1
+#endif
+
+#if YYSTACKEXPANDABLE
+# define YY_RESERVE_GLRSTACK(Yystack)                   \
+  do {                                                  \
+    if (Yystack->yyspaceLeft < YYHEADROOM)              \
+      yyexpandGLRStack (Yystack);                       \
+  } while (0)
+#else
+# define YY_RESERVE_GLRSTACK(Yystack)                   \
+  do {                                                  \
+    if (Yystack->yyspaceLeft < YYHEADROOM)              \
+      yyMemoryExhausted (Yystack);                      \
+  } while (0)
+#endif
+
 
 #if YYERROR_VERBOSE
-
-# ifndef yystrlen
-#  if defined __GLIBC__ && defined _STRING_H
-#   define yystrlen(S) (YY_CAST (YYPTRDIFF_T, strlen (S)))
-#  else
-/* Return the length of YYSTR.  */
-static YYPTRDIFF_T
-yystrlen (const char *yystr)
-{
-  YYPTRDIFF_T yylen;
-  for (yylen = 0; yystr[yylen]; yylen++)
-    continue;
-  return yylen;
-}
-#  endif
-# endif
 
 # ifndef yystpcpy
 #  if defined __GLIBC__ && defined _STRING_H && defined _GNU_SOURCE
@@ -969,12 +824,12 @@ yystpcpy (char *yydest, const char *yysrc)
    backslash-backslash).  YYSTR is taken from yytname.  If YYRES is
    null, do not copy; instead, return the length of what the result
    would have been.  */
-static YYPTRDIFF_T
+static ptrdiff_t
 yytnamerr (char *yyres, const char *yystr)
 {
   if (*yystr == '"')
     {
-      YYPTRDIFF_T yyn = 0;
+      ptrdiff_t yyn = 0;
       char const *yyp = yystr;
 
       for (;;)
@@ -1008,22 +863,2366 @@ yytnamerr (char *yyres, const char *yystr)
   if (yyres)
     return yystpcpy (yyres, yystr) - yyres;
   else
-    return yystrlen (yystr);
+    return YY_CAST (ptrdiff_t, strlen (yystr));
 }
 # endif
 
-/* Copy into *YYMSG, which is of size *YYMSG_ALLOC, an error message
-   about the unexpected token YYTOKEN for the state stack whose top is
-   YYSSP.
+#endif /* !YYERROR_VERBOSE */
 
-   Return 0 if *YYMSG was successfully written.  Return 1 if *YYMSG is
-   not large enough to hold the message.  In that case, also set
-   *YYMSG_ALLOC to the required number of bytes.  Return 2 if the
-   required number of bytes is too large to store.  */
-static int
-yysyntax_error (YYPTRDIFF_T *yymsg_alloc, char **yymsg,
-                yy_state_t *yyssp, int yytoken)
+/** State numbers. */
+typedef int yyStateNum;
+
+/** Rule numbers. */
+typedef int yyRuleNum;
+
+/** Grammar symbol. */
+typedef int yySymbol;
+
+/** Item references. */
+typedef short yyItemNum;
+
+typedef struct yyGLRState yyGLRState;
+typedef struct yyGLRStateSet yyGLRStateSet;
+typedef struct yySemanticOption yySemanticOption;
+typedef union yyGLRStackItem yyGLRStackItem;
+typedef struct yyGLRStack yyGLRStack;
+
+struct yyGLRState {
+  /** Type tag: always true.  */
+  yybool yyisState;
+  /** Type tag for yysemantics.  If true, yysval applies, otherwise
+   *  yyfirstVal applies.  */
+  yybool yyresolved;
+  /** Number of corresponding LALR(1) machine state.  */
+  yyStateNum yylrState;
+  /** Preceding state in this stack */
+  yyGLRState* yypred;
+  /** Source position of the last token produced by my symbol */
+  ptrdiff_t yyposn;
+  union {
+    /** First in a chain of alternative reductions producing the
+     *  nonterminal corresponding to this state, threaded through
+     *  yynext.  */
+    yySemanticOption* yyfirstVal;
+    /** Semantic value for this state.  */
+    YYSTYPE yysval;
+  } yysemantics;
+};
+
+struct yyGLRStateSet {
+  yyGLRState** yystates;
+  /** During nondeterministic operation, yylookaheadNeeds tracks which
+   *  stacks have actually needed the current lookahead.  During deterministic
+   *  operation, yylookaheadNeeds[0] is not maintained since it would merely
+   *  duplicate yychar != YYEMPTY.  */
+  yybool* yylookaheadNeeds;
+  ptrdiff_t yysize;
+  ptrdiff_t yycapacity;
+};
+
+struct yySemanticOption {
+  /** Type tag: always false.  */
+  yybool yyisState;
+  /** Rule number for this reduction */
+  yyRuleNum yyrule;
+  /** The last RHS state in the list of states to be reduced.  */
+  yyGLRState* yystate;
+  /** The lookahead for this reduction.  */
+  int yyrawchar;
+  YYSTYPE yyval;
+  /** Next sibling in chain of options.  To facilitate merging,
+   *  options are chained in decreasing order by address.  */
+  yySemanticOption* yynext;
+};
+
+/** Type of the items in the GLR stack.  The yyisState field
+ *  indicates which item of the union is valid.  */
+union yyGLRStackItem {
+  yyGLRState yystate;
+  yySemanticOption yyoption;
+};
+
+struct yyGLRStack {
+  int yyerrState;
+
+
+  YYJMP_BUF yyexception_buffer;
+  yyGLRStackItem* yyitems;
+  yyGLRStackItem* yynextFree;
+  ptrdiff_t yyspaceLeft;
+  yyGLRState* yysplitPoint;
+  yyGLRState* yylastDeleted;
+  yyGLRStateSet yytops;
+};
+
+#if YYSTACKEXPANDABLE
+static void yyexpandGLRStack (yyGLRStack* yystackp);
+#endif
+
+_Noreturn static void
+yyFail (yyGLRStack* yystackp, std::unique_ptr<BaseAST> &ast, const char* yymsg)
 {
+  if (yymsg != YY_NULLPTR)
+    yyerror (ast, yymsg);
+  YYLONGJMP (yystackp->yyexception_buffer, 1);
+}
+
+_Noreturn static void
+yyMemoryExhausted (yyGLRStack* yystackp)
+{
+  YYLONGJMP (yystackp->yyexception_buffer, 2);
+}
+
+#if YYDEBUG || YYERROR_VERBOSE
+/** A printable representation of TOKEN.  */
+static inline const char*
+yytokenName (yySymbol yytoken)
+{
+  return yytoken == YYEMPTY ? "" : yytname[yytoken];
+}
+#endif
+
+/** Fill in YYVSP[YYLOW1 .. YYLOW0-1] from the chain of states starting
+ *  at YYVSP[YYLOW0].yystate.yypred.  Leaves YYVSP[YYLOW1].yystate.yypred
+ *  containing the pointer to the next state in the chain.  */
+static void yyfillin (yyGLRStackItem *, int, int) YY_ATTRIBUTE_UNUSED;
+static void
+yyfillin (yyGLRStackItem *yyvsp, int yylow0, int yylow1)
+{
+  int i;
+  yyGLRState *s = yyvsp[yylow0].yystate.yypred;
+  for (i = yylow0-1; i >= yylow1; i -= 1)
+    {
+#if YYDEBUG
+      yyvsp[i].yystate.yylrState = s->yylrState;
+#endif
+      yyvsp[i].yystate.yyresolved = s->yyresolved;
+      if (s->yyresolved)
+        yyvsp[i].yystate.yysemantics.yysval = s->yysemantics.yysval;
+      else
+        /* The effect of using yysval or yyloc (in an immediate rule) is
+         * undefined.  */
+        yyvsp[i].yystate.yysemantics.yyfirstVal = YY_NULLPTR;
+      s = yyvsp[i].yystate.yypred = s->yypred;
+    }
+}
+
+
+/** If yychar is empty, fetch the next token.  */
+static inline yySymbol
+yygetToken (int *yycharp, std::unique_ptr<BaseAST> &ast)
+{
+  yySymbol yytoken;
+  YYUSE (ast);
+  if (*yycharp == YYEMPTY)
+    {
+      YY_DPRINTF ((stderr, "Reading a token: "));
+      *yycharp = yylex ();
+    }
+  if (*yycharp <= YYEOF)
+    {
+      *yycharp = yytoken = YYEOF;
+      YY_DPRINTF ((stderr, "Now at end of input.\n"));
+    }
+  else
+    {
+      yytoken = YYTRANSLATE (*yycharp);
+      YY_SYMBOL_PRINT ("Next token is", yytoken, &yylval, &yylloc);
+    }
+  return yytoken;
+}
+
+/* Do nothing if YYNORMAL or if *YYLOW <= YYLOW1.  Otherwise, fill in
+ * YYVSP[YYLOW1 .. *YYLOW-1] as in yyfillin and set *YYLOW = YYLOW1.
+ * For convenience, always return YYLOW1.  */
+static inline int yyfill (yyGLRStackItem *, int *, int, yybool)
+     YY_ATTRIBUTE_UNUSED;
+static inline int
+yyfill (yyGLRStackItem *yyvsp, int *yylow, int yylow1, yybool yynormal)
+{
+  if (!yynormal && yylow1 < *yylow)
+    {
+      yyfillin (yyvsp, *yylow, yylow1);
+      *yylow = yylow1;
+    }
+  return yylow1;
+}
+
+/** Perform user action for rule number YYN, with RHS length YYRHSLEN,
+ *  and top stack item YYVSP.  YYLVALP points to place to put semantic
+ *  value ($$), and yylocp points to place for location information
+ *  (@$).  Returns yyok for normal return, yyaccept for YYACCEPT,
+ *  yyerr for YYERROR, yyabort for YYABORT.  */
+static YYRESULTTAG
+yyuserAction (yyRuleNum yyn, int yyrhslen, yyGLRStackItem* yyvsp,
+              yyGLRStack* yystackp,
+              YYSTYPE* yyvalp, std::unique_ptr<BaseAST> &ast)
+{
+  yybool yynormal YY_ATTRIBUTE_UNUSED = yystackp->yysplitPoint == YY_NULLPTR;
+  int yylow;
+  YYUSE (yyvalp);
+  YYUSE (ast);
+  YYUSE (yyrhslen);
+# undef yyerrok
+# define yyerrok (yystackp->yyerrState = 0)
+# undef YYACCEPT
+# define YYACCEPT return yyaccept
+# undef YYABORT
+# define YYABORT return yyabort
+# undef YYERROR
+# define YYERROR return yyerrok, yyerr
+# undef YYRECOVERING
+# define YYRECOVERING() (yystackp->yyerrState != 0)
+# undef yyclearin
+# define yyclearin (yychar = YYEMPTY)
+# undef YYFILL
+# define YYFILL(N) yyfill (yyvsp, &yylow, (N), yynormal)
+# undef YYBACKUP
+# define YYBACKUP(Token, Value)                                              \
+  return yyerror (ast, YY_("syntax error: cannot back up")),     \
+         yyerrok, yyerr
+
+  yylow = 1;
+  if (yyrhslen == 0)
+    *yyvalp = yyval_default;
+  else
+    *yyvalp = yyvsp[YYFILL (1-yyrhslen)].yystate.yysemantics.yysval;
+  switch (yyn)
+    {
+  case 2:
+#line 56 "/compiler-principles-project/src/sysy.y"
+                     {
+    auto comp_unit = make_unique<CompUnitAST>();
+    comp_unit->rest_of_global_item = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (0)].yystate.yysemantics.yysval.ast_val));
+    comp_unit->get_global_item_vec();
+    ast = move(comp_unit);
+  }
+#line 1101 "/compiler-principles-project/build/sysy.tab.cpp"
+    break;
+
+  case 3:
+#line 65 "/compiler-principles-project/src/sysy.y"
+               {
+    auto ast = new RestOfGlobalItemAST();
+    ast->rest_of_global_item = NULL;
+    ast->global_item=unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (0)].yystate.yysemantics.yysval.ast_val));
+    ((*yyvalp).ast_val) = ast;
+  }
+#line 1112 "/compiler-principles-project/build/sysy.tab.cpp"
+    break;
+
+  case 4:
+#line 71 "/compiler-principles-project/src/sysy.y"
+                                {
+    auto ast = new RestOfGlobalItemAST();
+    ast->global_item=unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (-1)].yystate.yysemantics.yysval.ast_val));
+    ast->rest_of_global_item = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (0)].yystate.yysemantics.yysval.ast_val));
+    ((*yyvalp).ast_val) = ast;
+  }
+#line 1123 "/compiler-principles-project/build/sysy.tab.cpp"
+    break;
+
+  case 5:
+#line 80 "/compiler-principles-project/src/sysy.y"
+         {
+    auto ast = new GlobalItemAST();
+    ast->op = 1;
+    ast->decl = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (0)].yystate.yysemantics.yysval.ast_val));
+    ((*yyvalp).ast_val) = ast;
+  }
+#line 1134 "/compiler-principles-project/build/sysy.tab.cpp"
+    break;
+
+  case 6:
+#line 86 "/compiler-principles-project/src/sysy.y"
+            {
+    auto ast = new GlobalItemAST();
+    ast->op = 2;
+    ast->func_def = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (0)].yystate.yysemantics.yysval.ast_val));
+    ((*yyvalp).ast_val) = ast;
+  }
+#line 1145 "/compiler-principles-project/build/sysy.tab.cpp"
+    break;
+
+  case 7:
+#line 95 "/compiler-principles-project/src/sysy.y"
+                                 {
+    auto ast = new FuncDefAST();
+    ast->op = 1;
+    ast->func_type = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (-4)].yystate.yysemantics.yysval.ast_val));
+    ast->ident = *unique_ptr<string>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (-3)].yystate.yysemantics.yysval.str_val));
+    ast->func_f_params = NULL;
+    ast->block = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (0)].yystate.yysemantics.yysval.ast_val));
+    ((*yyvalp).ast_val) = ast;
+  }
+#line 1159 "/compiler-principles-project/build/sysy.tab.cpp"
+    break;
+
+  case 8:
+#line 104 "/compiler-principles-project/src/sysy.y"
+                                             {
+    auto ast = new FuncDefAST();
+    ast->op = 2;
+    ast->func_type = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (-5)].yystate.yysemantics.yysval.ast_val));
+    ast->ident = *unique_ptr<string>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (-4)].yystate.yysemantics.yysval.str_val));
+    ast->func_f_params = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (-2)].yystate.yysemantics.yysval.ast_val));
+    ast->block = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (0)].yystate.yysemantics.yysval.ast_val));
+    ((*yyvalp).ast_val) = ast;
+  }
+#line 1173 "/compiler-principles-project/build/sysy.tab.cpp"
+    break;
+
+  case 9:
+#line 116 "/compiler-principles-project/src/sysy.y"
+        {
+    auto ast = new FuncTypeAST();
+    ast->func_type = "int";
+    ((*yyvalp).ast_val) = ast;
+  }
+#line 1183 "/compiler-principles-project/build/sysy.tab.cpp"
+    break;
+
+  case 10:
+#line 121 "/compiler-principles-project/src/sysy.y"
+         {
+    auto ast = new FuncTypeAST();
+    ast->func_type = "void";
+    ((*yyvalp).ast_val) = ast;
+  }
+#line 1193 "/compiler-principles-project/build/sysy.tab.cpp"
+    break;
+
+  case 11:
+#line 129 "/compiler-principles-project/src/sysy.y"
+               {
+    auto ast = new FuncFParamsAST();
+    ast->param.push_back(unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (0)].yystate.yysemantics.yysval.ast_val)));
+    ((*yyvalp).ast_val) = ast;
+  }
+#line 1203 "/compiler-principles-project/build/sysy.tab.cpp"
+    break;
+
+  case 12:
+#line 134 "/compiler-principles-project/src/sysy.y"
+                                {
+    auto ast = new FuncFParamsAST();
+    ast->first_param = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (-1)].yystate.yysemantics.yysval.ast_val));
+    ast->rest_of_param = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (0)].yystate.yysemantics.yysval.ast_val));
+    ast->get_param_vec();
+    ((*yyvalp).ast_val) = ast;
+  }
+#line 1215 "/compiler-principles-project/build/sysy.tab.cpp"
+    break;
+
+  case 13:
+#line 144 "/compiler-principles-project/src/sysy.y"
+                   {
+    auto ast = new RestOfFuncFParamAST();
+    ast->rest_of_param = NULL;
+    ast->param = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (0)].yystate.yysemantics.yysval.ast_val));
+    ((*yyvalp).ast_val) = ast;
+  }
+#line 1226 "/compiler-principles-project/build/sysy.tab.cpp"
+    break;
+
+  case 14:
+#line 150 "/compiler-principles-project/src/sysy.y"
+                                    {
+    auto ast = new RestOfFuncFParamAST();
+    ast->param = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (-1)].yystate.yysemantics.yysval.ast_val));
+    ast->rest_of_param = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (0)].yystate.yysemantics.yysval.ast_val));
+    ((*yyvalp).ast_val) = ast;
+  }
+#line 1237 "/compiler-principles-project/build/sysy.tab.cpp"
+    break;
+
+  case 15:
+#line 159 "/compiler-principles-project/src/sysy.y"
+                {
+    auto ast = new FuncFParamAST();
+    ast->btype = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (-1)].yystate.yysemantics.yysval.ast_val));
+    ast->ident = *unique_ptr<string>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (0)].yystate.yysemantics.yysval.str_val));
+    ((*yyvalp).ast_val) = ast;
+  }
+#line 1248 "/compiler-principles-project/build/sysy.tab.cpp"
+    break;
+
+  case 16:
+#line 168 "/compiler-principles-project/src/sysy.y"
+        {
+    auto ast = new FuncRParamsAST();
+    ast->exp.push_back(unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (0)].yystate.yysemantics.yysval.ast_val)));
+    ((*yyvalp).ast_val) = ast;
+  }
+#line 1258 "/compiler-principles-project/build/sysy.tab.cpp"
+    break;
+
+  case 17:
+#line 173 "/compiler-principles-project/src/sysy.y"
+                         {
+    auto ast = new FuncRParamsAST();
+    ast->first_exp = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (-1)].yystate.yysemantics.yysval.ast_val));
+    ast->rest_of_exp = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (0)].yystate.yysemantics.yysval.ast_val));
+    ast->get_exp_vec();
+    ((*yyvalp).ast_val) = ast;
+  }
+#line 1270 "/compiler-principles-project/build/sysy.tab.cpp"
+    break;
+
+  case 18:
+#line 183 "/compiler-principles-project/src/sysy.y"
+            {
+    auto ast = new RestOfFuncRParamAST();
+    ast->rest_of_exp = NULL;
+    ast->exp = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (0)].yystate.yysemantics.yysval.ast_val));
+    ((*yyvalp).ast_val) = ast;
+  }
+#line 1281 "/compiler-principles-project/build/sysy.tab.cpp"
+    break;
+
+  case 19:
+#line 189 "/compiler-principles-project/src/sysy.y"
+                             {
+    auto ast = new RestOfFuncRParamAST();
+    ast->exp = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (-1)].yystate.yysemantics.yysval.ast_val));
+    ast->rest_of_exp = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (0)].yystate.yysemantics.yysval.ast_val));
+    ((*yyvalp).ast_val) = ast;
+  }
+#line 1292 "/compiler-principles-project/build/sysy.tab.cpp"
+    break;
+
+  case 20:
+#line 198 "/compiler-principles-project/src/sysy.y"
+            {
+    auto ast = new BlockAST();
+    ((*yyvalp).ast_val) = ast;
+  }
+#line 1301 "/compiler-principles-project/build/sysy.tab.cpp"
+    break;
+
+  case 21:
+#line 202 "/compiler-principles-project/src/sysy.y"
+                           {
+    auto ast = new BlockAST();
+    ast->rest_of_block_item = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (-1)].yystate.yysemantics.yysval.ast_val));
+    ast->get_block_item_vec();
+    ((*yyvalp).ast_val) = ast;
+  }
+#line 1312 "/compiler-principles-project/build/sysy.tab.cpp"
+    break;
+
+  case 22:
+#line 211 "/compiler-principles-project/src/sysy.y"
+              {
+    auto ast = new RestOfBlockItemAST();
+    ast->rest_of_block_item = NULL;
+    ast->block_item=unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (0)].yystate.yysemantics.yysval.ast_val));
+    ((*yyvalp).ast_val) = ast;
+  }
+#line 1323 "/compiler-principles-project/build/sysy.tab.cpp"
+    break;
+
+  case 23:
+#line 217 "/compiler-principles-project/src/sysy.y"
+                              {
+    auto ast = new RestOfBlockItemAST();
+    ast->block_item=unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (-1)].yystate.yysemantics.yysval.ast_val));
+    ast->rest_of_block_item = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (0)].yystate.yysemantics.yysval.ast_val));
+    ((*yyvalp).ast_val) = ast;
+  }
+#line 1334 "/compiler-principles-project/build/sysy.tab.cpp"
+    break;
+
+  case 24:
+#line 226 "/compiler-principles-project/src/sysy.y"
+         {
+    auto ast = new BlockItemAST();
+    ast->op = 1;
+    ast->decl = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (0)].yystate.yysemantics.yysval.ast_val));
+    ((*yyvalp).ast_val) = ast;
+  }
+#line 1345 "/compiler-principles-project/build/sysy.tab.cpp"
+    break;
+
+  case 25:
+#line 232 "/compiler-principles-project/src/sysy.y"
+         {
+    auto ast = new BlockItemAST();
+    ast->op = 2;
+    ast->stmt = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (0)].yystate.yysemantics.yysval.ast_val));
+    ((*yyvalp).ast_val) = ast;
+  }
+#line 1356 "/compiler-principles-project/build/sysy.tab.cpp"
+    break;
+
+  case 26:
+#line 241 "/compiler-principles-project/src/sysy.y"
+             {
+    auto ast = new StmtAST();
+    ast->op = 1;
+    ast->open_stmt = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (0)].yystate.yysemantics.yysval.ast_val));
+    ((*yyvalp).ast_val) = ast;
+  }
+#line 1367 "/compiler-principles-project/build/sysy.tab.cpp"
+    break;
+
+  case 27:
+#line 247 "/compiler-principles-project/src/sysy.y"
+               {
+    auto ast = new StmtAST();
+    ast->op = 2;
+    ast->closed_stmt = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (0)].yystate.yysemantics.yysval.ast_val));
+    ((*yyvalp).ast_val) = ast;
+  }
+#line 1378 "/compiler-principles-project/build/sysy.tab.cpp"
+    break;
+
+  case 28:
+#line 256 "/compiler-principles-project/src/sysy.y"
+                        {
+    auto ast = new OpenStmtAST();
+    ast->op = 1;
+    ast->exp = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (-2)].yystate.yysemantics.yysval.ast_val));
+    ast->stmt = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (0)].yystate.yysemantics.yysval.ast_val));
+    ((*yyvalp).ast_val) = ast;
+  }
+#line 1390 "/compiler-principles-project/build/sysy.tab.cpp"
+    break;
+
+  case 29:
+#line 263 "/compiler-principles-project/src/sysy.y"
+                                            {
+    auto ast = new OpenStmtAST();
+    ast->op = 2;
+    ast->exp = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (-4)].yystate.yysemantics.yysval.ast_val));
+    ast->if_stmt = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (-2)].yystate.yysemantics.yysval.ast_val));
+    ast->else_stmt = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (0)].yystate.yysemantics.yysval.ast_val));
+    ((*yyvalp).ast_val) = ast;
+  }
+#line 1403 "/compiler-principles-project/build/sysy.tab.cpp"
+    break;
+
+  case 30:
+#line 271 "/compiler-principles-project/src/sysy.y"
+                               {
+    auto ast = new OpenStmtAST();
+    ast->op = 3;
+    ast->exp = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (-2)].yystate.yysemantics.yysval.ast_val));
+    ast->open_stmt = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (0)].yystate.yysemantics.yysval.ast_val));
+    ((*yyvalp).ast_val) = ast;
+  }
+#line 1415 "/compiler-principles-project/build/sysy.tab.cpp"
+    break;
+
+  case 31:
+#line 281 "/compiler-principles-project/src/sysy.y"
+               {
+    auto ast = new ClosedStmtAST();
+    ast->op = 1;
+    ast->simple_stmt = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (0)].yystate.yysemantics.yysval.ast_val));
+    ((*yyvalp).ast_val) = ast;
+  }
+#line 1426 "/compiler-principles-project/build/sysy.tab.cpp"
+    break;
+
+  case 32:
+#line 287 "/compiler-principles-project/src/sysy.y"
+                                              {
+    auto ast = new ClosedStmtAST();
+    ast->op = 2;
+    ast->exp = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (-4)].yystate.yysemantics.yysval.ast_val));
+    ast->if_stmt = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (-2)].yystate.yysemantics.yysval.ast_val));
+    ast->else_stmt = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (0)].yystate.yysemantics.yysval.ast_val));
+    ((*yyvalp).ast_val) = ast;
+  }
+#line 1439 "/compiler-principles-project/build/sysy.tab.cpp"
+    break;
+
+  case 33:
+#line 295 "/compiler-principles-project/src/sysy.y"
+                                 {
+    auto ast = new ClosedStmtAST();
+    ast->op = 3;
+    ast->exp = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (-2)].yystate.yysemantics.yysval.ast_val));
+    ast->closed_stmt = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (0)].yystate.yysemantics.yysval.ast_val));
+    ((*yyvalp).ast_val) = ast;
+  }
+#line 1451 "/compiler-principles-project/build/sysy.tab.cpp"
+    break;
+
+  case 34:
+#line 305 "/compiler-principles-project/src/sysy.y"
+                     {
+    auto ast = new SimpleStmtAST();
+    ast->op = 1;
+    ast->lval = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (-3)].yystate.yysemantics.yysval.ast_val));
+    ast->exp = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (-1)].yystate.yysemantics.yysval.ast_val));    
+    ((*yyvalp).ast_val) = ast;
+  }
+#line 1463 "/compiler-principles-project/build/sysy.tab.cpp"
+    break;
+
+  case 35:
+#line 312 "/compiler-principles-project/src/sysy.y"
+        {
+    auto ast=new SimpleStmtAST();
+    ast->op = 2;
+    ((*yyvalp).ast_val) = ast;
+  }
+#line 1473 "/compiler-principles-project/build/sysy.tab.cpp"
+    break;
+
+  case 36:
+#line 317 "/compiler-principles-project/src/sysy.y"
+            {
+    auto ast = new SimpleStmtAST();
+    ast->op = 3;
+    ast->exp = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (-1)].yystate.yysemantics.yysval.ast_val));    
+    ((*yyvalp).ast_val) = ast;
+  }
+#line 1484 "/compiler-principles-project/build/sysy.tab.cpp"
+    break;
+
+  case 37:
+#line 323 "/compiler-principles-project/src/sysy.y"
+          {
+    auto ast = new SimpleStmtAST();
+    ast->op = 4;
+    ast->block = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (0)].yystate.yysemantics.yysval.ast_val));    
+    ((*yyvalp).ast_val) = ast;
+  }
+#line 1495 "/compiler-principles-project/build/sysy.tab.cpp"
+    break;
+
+  case 38:
+#line 329 "/compiler-principles-project/src/sysy.y"
+               {
+    auto ast = new SimpleStmtAST();
+    ast->op = 5;
+    ((*yyvalp).ast_val) = ast;
+  }
+#line 1505 "/compiler-principles-project/build/sysy.tab.cpp"
+    break;
+
+  case 39:
+#line 334 "/compiler-principles-project/src/sysy.y"
+                   {
+    auto ast = new SimpleStmtAST();
+    ast->op = 6;
+    ast->exp = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (-1)].yystate.yysemantics.yysval.ast_val));
+    ((*yyvalp).ast_val) = ast;
+  }
+#line 1516 "/compiler-principles-project/build/sysy.tab.cpp"
+    break;
+
+  case 40:
+#line 340 "/compiler-principles-project/src/sysy.y"
+              {
+    auto ast = new SimpleStmtAST();
+    ast->op = 7;
+    ((*yyvalp).ast_val) = ast;
+  }
+#line 1526 "/compiler-principles-project/build/sysy.tab.cpp"
+    break;
+
+  case 41:
+#line 345 "/compiler-principles-project/src/sysy.y"
+                {
+    auto ast = new SimpleStmtAST();
+    ast->op = 8;
+    ((*yyvalp).ast_val) = ast;
+  }
+#line 1536 "/compiler-principles-project/build/sysy.tab.cpp"
+    break;
+
+  case 42:
+#line 353 "/compiler-principles-project/src/sysy.y"
+           {
+    auto ast = new ExpAST();
+    ast->lor_exp = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (0)].yystate.yysemantics.yysval.ast_val));
+    ((*yyvalp).ast_val) = ast;
+  }
+#line 1546 "/compiler-principles-project/build/sysy.tab.cpp"
+    break;
+
+  case 43:
+#line 361 "/compiler-principles-project/src/sysy.y"
+           {
+    auto ast = new AddExpAST();
+    ast->op = 1;
+    ast->mul_exp = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (0)].yystate.yysemantics.yysval.ast_val));
+    ((*yyvalp).ast_val) = ast;
+  }
+#line 1557 "/compiler-principles-project/build/sysy.tab.cpp"
+    break;
+
+  case 44:
+#line 367 "/compiler-principles-project/src/sysy.y"
+                      {
+    auto ast = new AddExpAST();
+    ast->op = 2;
+    ast->add_exp = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (-2)].yystate.yysemantics.yysval.ast_val));
+    ast->add_op = "+";
+    ast->mul_exp = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (0)].yystate.yysemantics.yysval.ast_val));
+    ((*yyvalp).ast_val) = ast;
+  }
+#line 1570 "/compiler-principles-project/build/sysy.tab.cpp"
+    break;
+
+  case 45:
+#line 375 "/compiler-principles-project/src/sysy.y"
+                      {
+    auto ast = new AddExpAST();
+    ast->op = 2;
+    ast->add_exp = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (-2)].yystate.yysemantics.yysval.ast_val));
+    ast->add_op = "-";
+    ast->mul_exp = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (0)].yystate.yysemantics.yysval.ast_val));
+    ((*yyvalp).ast_val) = ast;
+  }
+#line 1583 "/compiler-principles-project/build/sysy.tab.cpp"
+    break;
+
+  case 46:
+#line 386 "/compiler-principles-project/src/sysy.y"
+             {
+    auto ast = new MulExpAST();
+    ast->op = 1;
+    ast-> unary_exp = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (0)].yystate.yysemantics.yysval.ast_val));
+    ((*yyvalp).ast_val) = ast;
+  }
+#line 1594 "/compiler-principles-project/build/sysy.tab.cpp"
+    break;
+
+  case 47:
+#line 392 "/compiler-principles-project/src/sysy.y"
+                        {
+    auto ast = new MulExpAST();
+    ast->op = 2;
+    ast->mul_exp = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (-2)].yystate.yysemantics.yysval.ast_val));
+    ast->mul_op = "*";
+    ast->unary_exp = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (0)].yystate.yysemantics.yysval.ast_val));
+    ((*yyvalp).ast_val) = ast;
+  }
+#line 1607 "/compiler-principles-project/build/sysy.tab.cpp"
+    break;
+
+  case 48:
+#line 400 "/compiler-principles-project/src/sysy.y"
+                        {
+    auto ast = new MulExpAST();
+    ast->op = 2;
+    ast->mul_exp = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (-2)].yystate.yysemantics.yysval.ast_val));
+    ast->mul_op = "/";
+    ast->unary_exp = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (0)].yystate.yysemantics.yysval.ast_val));
+    ((*yyvalp).ast_val) = ast;
+  }
+#line 1620 "/compiler-principles-project/build/sysy.tab.cpp"
+    break;
+
+  case 49:
+#line 408 "/compiler-principles-project/src/sysy.y"
+                        {
+    auto ast = new MulExpAST();
+    ast->op = 2;
+    ast->mul_exp = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (-2)].yystate.yysemantics.yysval.ast_val));
+    ast->mul_op = "%";
+    ast->unary_exp = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (0)].yystate.yysemantics.yysval.ast_val));
+    ((*yyvalp).ast_val) = ast;
+  }
+#line 1633 "/compiler-principles-project/build/sysy.tab.cpp"
+    break;
+
+  case 50:
+#line 419 "/compiler-principles-project/src/sysy.y"
+            {
+    auto ast = new LOrExpAST();
+    ast->op = 1;
+    ast->land_exp = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (0)].yystate.yysemantics.yysval.ast_val));
+    ((*yyvalp).ast_val) = ast;
+  }
+#line 1644 "/compiler-principles-project/build/sysy.tab.cpp"
+    break;
+
+  case 51:
+#line 425 "/compiler-principles-project/src/sysy.y"
+                       {
+    auto ast = new LOrExpAST();
+    ast->op = 2;
+    ast->lor_exp = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (-2)].yystate.yysemantics.yysval.ast_val));
+    ast->lor_op = "||";
+    ast->land_exp = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (0)].yystate.yysemantics.yysval.ast_val));
+    ((*yyvalp).ast_val) = ast;
+  }
+#line 1657 "/compiler-principles-project/build/sysy.tab.cpp"
+    break;
+
+  case 52:
+#line 436 "/compiler-principles-project/src/sysy.y"
+          {
+    auto ast = new LAndExpAST();
+    ast->op = 1;
+    ast->eq_exp = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (0)].yystate.yysemantics.yysval.ast_val));
+    ((*yyvalp).ast_val) = ast;
+  }
+#line 1668 "/compiler-principles-project/build/sysy.tab.cpp"
+    break;
+
+  case 53:
+#line 442 "/compiler-principles-project/src/sysy.y"
+                       {
+    auto ast = new LAndExpAST();
+    ast->op = 2;
+    ast->land_exp = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (-2)].yystate.yysemantics.yysval.ast_val));
+    ast->land_op = "&&";
+    ast->eq_exp = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (0)].yystate.yysemantics.yysval.ast_val));
+    ((*yyvalp).ast_val) = ast;
+  }
+#line 1681 "/compiler-principles-project/build/sysy.tab.cpp"
+    break;
+
+  case 54:
+#line 453 "/compiler-principles-project/src/sysy.y"
+           {
+    auto ast = new EqExpAST();
+    ast->op = 1;
+    ast->rel_exp = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (0)].yystate.yysemantics.yysval.ast_val));
+    ((*yyvalp).ast_val) = ast;
+  }
+#line 1692 "/compiler-principles-project/build/sysy.tab.cpp"
+    break;
+
+  case 55:
+#line 459 "/compiler-principles-project/src/sysy.y"
+                    {
+    auto ast = new EqExpAST();
+    ast->op = 2;
+    ast->eq_exp = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (-2)].yystate.yysemantics.yysval.ast_val));
+    ast->eq_op = "==";
+    ast->rel_exp = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (0)].yystate.yysemantics.yysval.ast_val));
+    ((*yyvalp).ast_val) = ast;
+  }
+#line 1705 "/compiler-principles-project/build/sysy.tab.cpp"
+    break;
+
+  case 56:
+#line 467 "/compiler-principles-project/src/sysy.y"
+                     {
+    auto ast = new EqExpAST();
+    ast->op = 2;
+    ast->eq_exp = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (-2)].yystate.yysemantics.yysval.ast_val));
+    ast->eq_op = "!=";
+    ast->rel_exp = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (0)].yystate.yysemantics.yysval.ast_val));
+    ((*yyvalp).ast_val) = ast;
+  }
+#line 1718 "/compiler-principles-project/build/sysy.tab.cpp"
+    break;
+
+  case 57:
+#line 478 "/compiler-principles-project/src/sysy.y"
+           {
+    auto ast = new RelExpAST();
+    ast->op = 1;
+    ast->add_exp = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (0)].yystate.yysemantics.yysval.ast_val));
+    ((*yyvalp).ast_val) = ast;
+  }
+#line 1729 "/compiler-principles-project/build/sysy.tab.cpp"
+    break;
+
+  case 58:
+#line 484 "/compiler-principles-project/src/sysy.y"
+                      {
+    auto ast = new RelExpAST();
+    ast->op = 2;
+    ast->rel_exp = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (-2)].yystate.yysemantics.yysval.ast_val));
+    ast->rel_op = "<";
+    ast->add_exp = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (0)].yystate.yysemantics.yysval.ast_val));
+    ((*yyvalp).ast_val) = ast;
+  }
+#line 1742 "/compiler-principles-project/build/sysy.tab.cpp"
+    break;
+
+  case 59:
+#line 492 "/compiler-principles-project/src/sysy.y"
+                      {
+    auto ast = new RelExpAST();
+    ast->op = 2;
+    ast->rel_exp = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (-2)].yystate.yysemantics.yysval.ast_val));
+    ast->rel_op = ">";
+    ast->add_exp = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (0)].yystate.yysemantics.yysval.ast_val));
+    ((*yyvalp).ast_val) = ast;
+  }
+#line 1755 "/compiler-principles-project/build/sysy.tab.cpp"
+    break;
+
+  case 60:
+#line 500 "/compiler-principles-project/src/sysy.y"
+                      {
+    auto ast = new RelExpAST();
+    ast->op = 2;
+    ast->rel_exp = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (-2)].yystate.yysemantics.yysval.ast_val));
+    ast->rel_op = "<=";
+    ast->add_exp = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (0)].yystate.yysemantics.yysval.ast_val));
+    ((*yyvalp).ast_val) = ast;
+  }
+#line 1768 "/compiler-principles-project/build/sysy.tab.cpp"
+    break;
+
+  case 61:
+#line 508 "/compiler-principles-project/src/sysy.y"
+                      {
+    auto ast = new RelExpAST();
+    ast->op = 2;
+    ast->rel_exp = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (-2)].yystate.yysemantics.yysval.ast_val));
+    ast->rel_op = ">=";
+    ast->add_exp = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (0)].yystate.yysemantics.yysval.ast_val));
+    ((*yyvalp).ast_val) = ast;
+  }
+#line 1781 "/compiler-principles-project/build/sysy.tab.cpp"
+    break;
+
+  case 62:
+#line 519 "/compiler-principles-project/src/sysy.y"
+                {
+    auto ast = new PrimaryExpAST();
+    ast->op = 1;
+    ast->exp = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (-1)].yystate.yysemantics.yysval.ast_val));
+    ((*yyvalp).ast_val) = ast;
+  }
+#line 1792 "/compiler-principles-project/build/sysy.tab.cpp"
+    break;
+
+  case 63:
+#line 525 "/compiler-principles-project/src/sysy.y"
+         {
+    auto ast = new PrimaryExpAST();
+    ast->op = 2;
+    ast->lval = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (0)].yystate.yysemantics.yysval.ast_val));
+    ((*yyvalp).ast_val) = ast;
+  }
+#line 1803 "/compiler-principles-project/build/sysy.tab.cpp"
+    break;
+
+  case 64:
+#line 531 "/compiler-principles-project/src/sysy.y"
+           {
+    auto ast = new PrimaryExpAST();
+    ast->op = 3;
+    ast->number = int((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (0)].yystate.yysemantics.yysval.int_val));
+    ((*yyvalp).ast_val) = ast;
+  }
+#line 1814 "/compiler-principles-project/build/sysy.tab.cpp"
+    break;
+
+  case 65:
+#line 540 "/compiler-principles-project/src/sysy.y"
+               {
+    auto ast = new UnaryExpAST();
+    ast->op = 1;
+    ast->primary_exp = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (0)].yystate.yysemantics.yysval.ast_val));
+    ((*yyvalp).ast_val) = ast;
+  }
+#line 1825 "/compiler-principles-project/build/sysy.tab.cpp"
+    break;
+
+  case 66:
+#line 546 "/compiler-principles-project/src/sysy.y"
+                     {
+    auto ast = new UnaryExpAST();
+    ast->op = 2;
+    ast->unary_op = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (-1)].yystate.yysemantics.yysval.ast_val));
+    ast->unary_exp = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (0)].yystate.yysemantics.yysval.ast_val));
+    ((*yyvalp).ast_val) = ast;
+  }
+#line 1837 "/compiler-principles-project/build/sysy.tab.cpp"
+    break;
+
+  case 67:
+#line 553 "/compiler-principles-project/src/sysy.y"
+                  {
+    auto ast = new UnaryExpAST();
+    ast->op = 3;
+    ast->ident = *unique_ptr<string>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (-2)].yystate.yysemantics.yysval.str_val));
+    ((*yyvalp).ast_val) = ast;
+  }
+#line 1848 "/compiler-principles-project/build/sysy.tab.cpp"
+    break;
+
+  case 68:
+#line 559 "/compiler-principles-project/src/sysy.y"
+                              {
+    auto ast = new UnaryExpAST();
+    ast->op = 4;
+    ast->ident = *unique_ptr<string>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (-3)].yystate.yysemantics.yysval.str_val));
+    ast->func_r_params = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (-1)].yystate.yysemantics.yysval.ast_val));
+    ((*yyvalp).ast_val) = ast;
+  }
+#line 1860 "/compiler-principles-project/build/sysy.tab.cpp"
+    break;
+
+  case 69:
+#line 569 "/compiler-principles-project/src/sysy.y"
+              {
+    auto ast = new DeclAST();
+    ast->op = 1;
+    ast->const_decl = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (0)].yystate.yysemantics.yysval.ast_val));
+    ((*yyvalp).ast_val) = ast;
+  }
+#line 1871 "/compiler-principles-project/build/sysy.tab.cpp"
+    break;
+
+  case 70:
+#line 575 "/compiler-principles-project/src/sysy.y"
+            {
+    auto ast = new DeclAST();
+    ast->op = 2;
+    ast->var_decl = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (0)].yystate.yysemantics.yysval.ast_val));
+    ((*yyvalp).ast_val) = ast;
+  }
+#line 1882 "/compiler-principles-project/build/sysy.tab.cpp"
+    break;
+
+  case 71:
+#line 584 "/compiler-principles-project/src/sysy.y"
+                            {
+    auto ast = new ConstDeclAST();
+    ast->btype = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (-2)].yystate.yysemantics.yysval.ast_val));
+    ast->const_def.push_back(unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (-1)].yystate.yysemantics.yysval.ast_val)));
+    ((*yyvalp).ast_val) = ast;
+  }
+#line 1893 "/compiler-principles-project/build/sysy.tab.cpp"
+    break;
+
+  case 72:
+#line 590 "/compiler-principles-project/src/sysy.y"
+                                           {
+    auto ast = new ConstDeclAST();
+    ast->btype = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (-3)].yystate.yysemantics.yysval.ast_val));
+    ast->first_const_def = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (-2)].yystate.yysemantics.yysval.ast_val));
+    ast->rest_of_const_def = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (-1)].yystate.yysemantics.yysval.ast_val));
+    ast->get_const_def_vec();
+    ((*yyvalp).ast_val) = ast;
+  }
+#line 1906 "/compiler-principles-project/build/sysy.tab.cpp"
+    break;
+
+  case 73:
+#line 601 "/compiler-principles-project/src/sysy.y"
+                    {
+    auto ast = new VarDeclAST();
+    ast->btype = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (-2)].yystate.yysemantics.yysval.ast_val));
+    ast->var_def.push_back(unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (-1)].yystate.yysemantics.yysval.ast_val)));
+    ((*yyvalp).ast_val) = ast;
+  }
+#line 1917 "/compiler-principles-project/build/sysy.tab.cpp"
+    break;
+
+  case 74:
+#line 607 "/compiler-principles-project/src/sysy.y"
+                                 {
+    auto ast = new VarDeclAST();
+    ast->btype = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (-3)].yystate.yysemantics.yysval.ast_val));
+    ast->first_var_def = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (-2)].yystate.yysemantics.yysval.ast_val));
+    ast->rest_of_var_def = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (-1)].yystate.yysemantics.yysval.ast_val));
+    ast->get_var_def_vec();
+    ((*yyvalp).ast_val) = ast;
+  }
+#line 1930 "/compiler-principles-project/build/sysy.tab.cpp"
+    break;
+
+  case 75:
+#line 618 "/compiler-principles-project/src/sysy.y"
+                 {
+    auto ast = new RestOfConstDefAST();
+    ast->rest_of_const_def = NULL;
+    ast->const_def = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (0)].yystate.yysemantics.yysval.ast_val));
+    ((*yyvalp).ast_val) = ast;
+  }
+#line 1941 "/compiler-principles-project/build/sysy.tab.cpp"
+    break;
+
+  case 76:
+#line 624 "/compiler-principles-project/src/sysy.y"
+                                {
+    auto ast = new RestOfConstDefAST();
+    ast->const_def = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (-1)].yystate.yysemantics.yysval.ast_val));
+    ast->rest_of_const_def = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (0)].yystate.yysemantics.yysval.ast_val));
+    ((*yyvalp).ast_val) = ast;
+  }
+#line 1952 "/compiler-principles-project/build/sysy.tab.cpp"
+    break;
+
+  case 77:
+#line 633 "/compiler-principles-project/src/sysy.y"
+               {
+    auto ast = new RestOfVarDefAST();
+    ast->rest_of_var_def = NULL;
+    ast->var_def = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (0)].yystate.yysemantics.yysval.ast_val));
+    ((*yyvalp).ast_val) = ast;
+  }
+#line 1963 "/compiler-principles-project/build/sysy.tab.cpp"
+    break;
+
+  case 78:
+#line 639 "/compiler-principles-project/src/sysy.y"
+                            {
+    auto ast = new RestOfVarDefAST();
+    ast->var_def = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (-1)].yystate.yysemantics.yysval.ast_val));
+    ast->rest_of_var_def = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (0)].yystate.yysemantics.yysval.ast_val));
+    ((*yyvalp).ast_val) = ast;
+  }
+#line 1974 "/compiler-principles-project/build/sysy.tab.cpp"
+    break;
+
+  case 79:
+#line 648 "/compiler-principles-project/src/sysy.y"
+        {
+    auto ast = new BTypeAST();
+    ast->btype = "int";
+    ((*yyvalp).ast_val) = ast;
+  }
+#line 1984 "/compiler-principles-project/build/sysy.tab.cpp"
+    break;
+
+  case 80:
+#line 656 "/compiler-principles-project/src/sysy.y"
+                           {
+    auto ast = new ConstDefAST();
+    ast->ident = *unique_ptr<string>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (-2)].yystate.yysemantics.yysval.str_val));
+    ast->const_init_val = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (0)].yystate.yysemantics.yysval.ast_val));
+    ((*yyvalp).ast_val) = ast;
+  }
+#line 1995 "/compiler-principles-project/build/sysy.tab.cpp"
+    break;
+
+  case 81:
+#line 665 "/compiler-principles-project/src/sysy.y"
+          {
+    auto ast = new VarDefAST();
+    ast->op = 1;
+    ast->ident = *unique_ptr<string>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (0)].yystate.yysemantics.yysval.str_val));
+    ((*yyvalp).ast_val) = ast;
+  }
+#line 2006 "/compiler-principles-project/build/sysy.tab.cpp"
+    break;
+
+  case 82:
+#line 671 "/compiler-principles-project/src/sysy.y"
+                      {
+    auto ast = new VarDefAST();
+    ast->op = 2;
+    ast->ident = *unique_ptr<string>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (-2)].yystate.yysemantics.yysval.str_val));
+    ast->init_val = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (0)].yystate.yysemantics.yysval.ast_val));
+    ((*yyvalp).ast_val) = ast;
+  }
+#line 2018 "/compiler-principles-project/build/sysy.tab.cpp"
+    break;
+
+  case 83:
+#line 681 "/compiler-principles-project/src/sysy.y"
+             {
+    auto ast = new ConstInitValAST();
+    ast->const_exp = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (0)].yystate.yysemantics.yysval.ast_val));
+    ((*yyvalp).ast_val) = ast;
+  }
+#line 2028 "/compiler-principles-project/build/sysy.tab.cpp"
+    break;
+
+  case 84:
+#line 689 "/compiler-principles-project/src/sysy.y"
+        {
+    auto ast = new InitValAST();
+    ast->exp = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (0)].yystate.yysemantics.yysval.ast_val));
+    ((*yyvalp).ast_val) = ast;
+  }
+#line 2038 "/compiler-principles-project/build/sysy.tab.cpp"
+    break;
+
+  case 85:
+#line 697 "/compiler-principles-project/src/sysy.y"
+        {
+    auto ast = new ConstExpAST();
+    ast->exp = unique_ptr<BaseAST>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (0)].yystate.yysemantics.yysval.ast_val));
+    ((*yyvalp).ast_val) = ast;
+  }
+#line 2048 "/compiler-principles-project/build/sysy.tab.cpp"
+    break;
+
+  case 86:
+#line 705 "/compiler-principles-project/src/sysy.y"
+          {
+    auto ast = new LValAST();
+    ast->ident = *unique_ptr<string>((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (0)].yystate.yysemantics.yysval.str_val));
+    ((*yyvalp).ast_val) = ast;
+  }
+#line 2058 "/compiler-principles-project/build/sysy.tab.cpp"
+    break;
+
+  case 87:
+#line 713 "/compiler-principles-project/src/sysy.y"
+        {
+    auto ast = new UnaryOpAST();
+    ast->op = "+";
+    ((*yyvalp).ast_val)=ast;
+  }
+#line 2068 "/compiler-principles-project/build/sysy.tab.cpp"
+    break;
+
+  case 88:
+#line 718 "/compiler-principles-project/src/sysy.y"
+        {
+    auto ast = new UnaryOpAST();
+    ast->op = "-";
+    ((*yyvalp).ast_val)=ast;
+  }
+#line 2078 "/compiler-principles-project/build/sysy.tab.cpp"
+    break;
+
+  case 89:
+#line 723 "/compiler-principles-project/src/sysy.y"
+         {
+    auto ast = new UnaryOpAST();
+    ast->op = "!";
+    ((*yyvalp).ast_val)=ast;
+  }
+#line 2088 "/compiler-principles-project/build/sysy.tab.cpp"
+    break;
+
+  case 90:
+#line 731 "/compiler-principles-project/src/sysy.y"
+              {
+    ((*yyvalp).int_val) = int((YY_CAST (yyGLRStackItem const *, yyvsp)[YYFILL (0)].yystate.yysemantics.yysval.int_val));
+  }
+#line 2096 "/compiler-principles-project/build/sysy.tab.cpp"
+    break;
+
+
+#line 2100 "/compiler-principles-project/build/sysy.tab.cpp"
+
+      default: break;
+    }
+
+  return yyok;
+# undef yyerrok
+# undef YYABORT
+# undef YYACCEPT
+# undef YYERROR
+# undef YYBACKUP
+# undef yyclearin
+# undef YYRECOVERING
+}
+
+
+static void
+yyuserMerge (int yyn, YYSTYPE* yy0, YYSTYPE* yy1)
+{
+  YYUSE (yy0);
+  YYUSE (yy1);
+
+  switch (yyn)
+    {
+
+      default: break;
+    }
+}
+
+                              /* Bison grammar-table manipulation.  */
+
+/*-----------------------------------------------.
+| Release the memory associated to this symbol.  |
+`-----------------------------------------------*/
+
+static void
+yydestruct (const char *yymsg, int yytype, YYSTYPE *yyvaluep, std::unique_ptr<BaseAST> &ast)
+{
+  YYUSE (yyvaluep);
+  YYUSE (ast);
+  if (!yymsg)
+    yymsg = "Deleting";
+  YY_SYMBOL_PRINT (yymsg, yytype, yyvaluep, yylocationp);
+
+  YY_IGNORE_MAYBE_UNINITIALIZED_BEGIN
+  YYUSE (yytype);
+  YY_IGNORE_MAYBE_UNINITIALIZED_END
+}
+
+/** Number of symbols composing the right hand side of rule #RULE.  */
+static inline int
+yyrhsLength (yyRuleNum yyrule)
+{
+  return yyr2[yyrule];
+}
+
+static void
+yydestroyGLRState (char const *yymsg, yyGLRState *yys, std::unique_ptr<BaseAST> &ast)
+{
+  if (yys->yyresolved)
+    yydestruct (yymsg, yystos[yys->yylrState],
+                &yys->yysemantics.yysval, ast);
+  else
+    {
+#if YYDEBUG
+      if (yydebug)
+        {
+          if (yys->yysemantics.yyfirstVal)
+            YY_FPRINTF ((stderr, "%s unresolved", yymsg));
+          else
+            YY_FPRINTF ((stderr, "%s incomplete", yymsg));
+          YY_SYMBOL_PRINT ("", yystos[yys->yylrState], YY_NULLPTR, &yys->yyloc);
+        }
+#endif
+
+      if (yys->yysemantics.yyfirstVal)
+        {
+          yySemanticOption *yyoption = yys->yysemantics.yyfirstVal;
+          yyGLRState *yyrh;
+          int yyn;
+          for (yyrh = yyoption->yystate, yyn = yyrhsLength (yyoption->yyrule);
+               yyn > 0;
+               yyrh = yyrh->yypred, yyn -= 1)
+            yydestroyGLRState (yymsg, yyrh, ast);
+        }
+    }
+}
+
+/** Left-hand-side symbol for rule #YYRULE.  */
+static inline yySymbol
+yylhsNonterm (yyRuleNum yyrule)
+{
+  return yyr1[yyrule];
+}
+
+#define yypact_value_is_default(Yyn) \
+  ((Yyn) == YYPACT_NINF)
+
+/** True iff LR state YYSTATE has only a default reduction (regardless
+ *  of token).  */
+static inline yybool
+yyisDefaultedState (yyStateNum yystate)
+{
+  return yypact_value_is_default (yypact[yystate]);
+}
+
+/** The default reduction for YYSTATE, assuming it has one.  */
+static inline yyRuleNum
+yydefaultAction (yyStateNum yystate)
+{
+  return yydefact[yystate];
+}
+
+#define yytable_value_is_error(Yyn) \
+  0
+
+/** The action to take in YYSTATE on seeing YYTOKEN.
+ *  Result R means
+ *    R < 0:  Reduce on rule -R.
+ *    R = 0:  Error.
+ *    R > 0:  Shift to state R.
+ *  Set *YYCONFLICTS to a pointer into yyconfl to a 0-terminated list
+ *  of conflicting reductions.
+ */
+static inline int
+yygetLRActions (yyStateNum yystate, yySymbol yytoken, const short** yyconflicts)
+{
+  int yyindex = yypact[yystate] + yytoken;
+  if (yyisDefaultedState (yystate)
+      || yyindex < 0 || YYLAST < yyindex || yycheck[yyindex] != yytoken)
+    {
+      *yyconflicts = yyconfl;
+      return -yydefact[yystate];
+    }
+  else if (! yytable_value_is_error (yytable[yyindex]))
+    {
+      *yyconflicts = yyconfl + yyconflp[yyindex];
+      return yytable[yyindex];
+    }
+  else
+    {
+      *yyconflicts = yyconfl + yyconflp[yyindex];
+      return 0;
+    }
+}
+
+/** Compute post-reduction state.
+ * \param yystate   the current state
+ * \param yysym     the nonterminal to push on the stack
+ */
+static inline yyStateNum
+yyLRgotoState (yyStateNum yystate, yySymbol yysym)
+{
+  int yyr = yypgoto[yysym - YYNTOKENS] + yystate;
+  if (0 <= yyr && yyr <= YYLAST && yycheck[yyr] == yystate)
+    return yytable[yyr];
+  else
+    return yydefgoto[yysym - YYNTOKENS];
+}
+
+static inline yybool
+yyisShiftAction (int yyaction)
+{
+  return 0 < yyaction;
+}
+
+static inline yybool
+yyisErrorAction (int yyaction)
+{
+  return yyaction == 0;
+}
+
+                                /* GLRStates */
+
+/** Return a fresh GLRStackItem in YYSTACKP.  The item is an LR state
+ *  if YYISSTATE, and otherwise a semantic option.  Callers should call
+ *  YY_RESERVE_GLRSTACK afterwards to make sure there is sufficient
+ *  headroom.  */
+
+static inline yyGLRStackItem*
+yynewGLRStackItem (yyGLRStack* yystackp, yybool yyisState)
+{
+  yyGLRStackItem* yynewItem = yystackp->yynextFree;
+  yystackp->yyspaceLeft -= 1;
+  yystackp->yynextFree += 1;
+  yynewItem->yystate.yyisState = yyisState;
+  return yynewItem;
+}
+
+/** Add a new semantic action that will execute the action for rule
+ *  YYRULE on the semantic values in YYRHS to the list of
+ *  alternative actions for YYSTATE.  Assumes that YYRHS comes from
+ *  stack #YYK of *YYSTACKP. */
+static void
+yyaddDeferredAction (yyGLRStack* yystackp, ptrdiff_t yyk, yyGLRState* yystate,
+                     yyGLRState* yyrhs, yyRuleNum yyrule)
+{
+  yySemanticOption* yynewOption =
+    &yynewGLRStackItem (yystackp, yyfalse)->yyoption;
+  YY_ASSERT (!yynewOption->yyisState);
+  yynewOption->yystate = yyrhs;
+  yynewOption->yyrule = yyrule;
+  if (yystackp->yytops.yylookaheadNeeds[yyk])
+    {
+      yynewOption->yyrawchar = yychar;
+      yynewOption->yyval = yylval;
+    }
+  else
+    yynewOption->yyrawchar = YYEMPTY;
+  yynewOption->yynext = yystate->yysemantics.yyfirstVal;
+  yystate->yysemantics.yyfirstVal = yynewOption;
+
+  YY_RESERVE_GLRSTACK (yystackp);
+}
+
+                                /* GLRStacks */
+
+/** Initialize YYSET to a singleton set containing an empty stack.  */
+static yybool
+yyinitStateSet (yyGLRStateSet* yyset)
+{
+  yyset->yysize = 1;
+  yyset->yycapacity = 16;
+  yyset->yystates
+    = YY_CAST (yyGLRState**,
+               YYMALLOC (YY_CAST (size_t, yyset->yycapacity)
+                         * sizeof yyset->yystates[0]));
+  if (! yyset->yystates)
+    return yyfalse;
+  yyset->yystates[0] = YY_NULLPTR;
+  yyset->yylookaheadNeeds
+    = YY_CAST (yybool*,
+               YYMALLOC (YY_CAST (size_t, yyset->yycapacity)
+                         * sizeof yyset->yylookaheadNeeds[0]));
+  if (! yyset->yylookaheadNeeds)
+    {
+      YYFREE (yyset->yystates);
+      return yyfalse;
+    }
+  memset (yyset->yylookaheadNeeds,
+          0,
+          YY_CAST (size_t, yyset->yycapacity) * sizeof yyset->yylookaheadNeeds[0]);
+  return yytrue;
+}
+
+static void yyfreeStateSet (yyGLRStateSet* yyset)
+{
+  YYFREE (yyset->yystates);
+  YYFREE (yyset->yylookaheadNeeds);
+}
+
+/** Initialize *YYSTACKP to a single empty stack, with total maximum
+ *  capacity for all stacks of YYSIZE.  */
+static yybool
+yyinitGLRStack (yyGLRStack* yystackp, ptrdiff_t yysize)
+{
+  yystackp->yyerrState = 0;
+  yynerrs = 0;
+  yystackp->yyspaceLeft = yysize;
+  yystackp->yyitems
+    = YY_CAST (yyGLRStackItem*,
+               YYMALLOC (YY_CAST (size_t, yysize)
+                         * sizeof yystackp->yynextFree[0]));
+  if (!yystackp->yyitems)
+    return yyfalse;
+  yystackp->yynextFree = yystackp->yyitems;
+  yystackp->yysplitPoint = YY_NULLPTR;
+  yystackp->yylastDeleted = YY_NULLPTR;
+  return yyinitStateSet (&yystackp->yytops);
+}
+
+
+#if YYSTACKEXPANDABLE
+# define YYRELOC(YYFROMITEMS, YYTOITEMS, YYX, YYTYPE)                   \
+  &((YYTOITEMS)                                                         \
+    - ((YYFROMITEMS) - YY_REINTERPRET_CAST (yyGLRStackItem*, (YYX))))->YYTYPE
+
+/** If *YYSTACKP is expandable, extend it.  WARNING: Pointers into the
+    stack from outside should be considered invalid after this call.
+    We always expand when there are 1 or fewer items left AFTER an
+    allocation, so that we can avoid having external pointers exist
+    across an allocation.  */
+static void
+yyexpandGLRStack (yyGLRStack* yystackp)
+{
+  yyGLRStackItem* yynewItems;
+  yyGLRStackItem* yyp0, *yyp1;
+  ptrdiff_t yynewSize;
+  ptrdiff_t yyn;
+  ptrdiff_t yysize = yystackp->yynextFree - yystackp->yyitems;
+  if (YYMAXDEPTH - YYHEADROOM < yysize)
+    yyMemoryExhausted (yystackp);
+  yynewSize = 2*yysize;
+  if (YYMAXDEPTH < yynewSize)
+    yynewSize = YYMAXDEPTH;
+  yynewItems
+    = YY_CAST (yyGLRStackItem*,
+               YYMALLOC (YY_CAST (size_t, yynewSize)
+                         * sizeof yynewItems[0]));
+  if (! yynewItems)
+    yyMemoryExhausted (yystackp);
+  for (yyp0 = yystackp->yyitems, yyp1 = yynewItems, yyn = yysize;
+       0 < yyn;
+       yyn -= 1, yyp0 += 1, yyp1 += 1)
+    {
+      *yyp1 = *yyp0;
+      if (*YY_REINTERPRET_CAST (yybool *, yyp0))
+        {
+          yyGLRState* yys0 = &yyp0->yystate;
+          yyGLRState* yys1 = &yyp1->yystate;
+          if (yys0->yypred != YY_NULLPTR)
+            yys1->yypred =
+              YYRELOC (yyp0, yyp1, yys0->yypred, yystate);
+          if (! yys0->yyresolved && yys0->yysemantics.yyfirstVal != YY_NULLPTR)
+            yys1->yysemantics.yyfirstVal =
+              YYRELOC (yyp0, yyp1, yys0->yysemantics.yyfirstVal, yyoption);
+        }
+      else
+        {
+          yySemanticOption* yyv0 = &yyp0->yyoption;
+          yySemanticOption* yyv1 = &yyp1->yyoption;
+          if (yyv0->yystate != YY_NULLPTR)
+            yyv1->yystate = YYRELOC (yyp0, yyp1, yyv0->yystate, yystate);
+          if (yyv0->yynext != YY_NULLPTR)
+            yyv1->yynext = YYRELOC (yyp0, yyp1, yyv0->yynext, yyoption);
+        }
+    }
+  if (yystackp->yysplitPoint != YY_NULLPTR)
+    yystackp->yysplitPoint = YYRELOC (yystackp->yyitems, yynewItems,
+                                      yystackp->yysplitPoint, yystate);
+
+  for (yyn = 0; yyn < yystackp->yytops.yysize; yyn += 1)
+    if (yystackp->yytops.yystates[yyn] != YY_NULLPTR)
+      yystackp->yytops.yystates[yyn] =
+        YYRELOC (yystackp->yyitems, yynewItems,
+                 yystackp->yytops.yystates[yyn], yystate);
+  YYFREE (yystackp->yyitems);
+  yystackp->yyitems = yynewItems;
+  yystackp->yynextFree = yynewItems + yysize;
+  yystackp->yyspaceLeft = yynewSize - yysize;
+}
+#endif
+
+static void
+yyfreeGLRStack (yyGLRStack* yystackp)
+{
+  YYFREE (yystackp->yyitems);
+  yyfreeStateSet (&yystackp->yytops);
+}
+
+/** Assuming that YYS is a GLRState somewhere on *YYSTACKP, update the
+ *  splitpoint of *YYSTACKP, if needed, so that it is at least as deep as
+ *  YYS.  */
+static inline void
+yyupdateSplit (yyGLRStack* yystackp, yyGLRState* yys)
+{
+  if (yystackp->yysplitPoint != YY_NULLPTR && yystackp->yysplitPoint > yys)
+    yystackp->yysplitPoint = yys;
+}
+
+/** Invalidate stack #YYK in *YYSTACKP.  */
+static inline void
+yymarkStackDeleted (yyGLRStack* yystackp, ptrdiff_t yyk)
+{
+  if (yystackp->yytops.yystates[yyk] != YY_NULLPTR)
+    yystackp->yylastDeleted = yystackp->yytops.yystates[yyk];
+  yystackp->yytops.yystates[yyk] = YY_NULLPTR;
+}
+
+/** Undelete the last stack in *YYSTACKP that was marked as deleted.  Can
+    only be done once after a deletion, and only when all other stacks have
+    been deleted.  */
+static void
+yyundeleteLastStack (yyGLRStack* yystackp)
+{
+  if (yystackp->yylastDeleted == YY_NULLPTR || yystackp->yytops.yysize != 0)
+    return;
+  yystackp->yytops.yystates[0] = yystackp->yylastDeleted;
+  yystackp->yytops.yysize = 1;
+  YY_DPRINTF ((stderr, "Restoring last deleted stack as stack #0.\n"));
+  yystackp->yylastDeleted = YY_NULLPTR;
+}
+
+static inline void
+yyremoveDeletes (yyGLRStack* yystackp)
+{
+  ptrdiff_t yyi, yyj;
+  yyi = yyj = 0;
+  while (yyj < yystackp->yytops.yysize)
+    {
+      if (yystackp->yytops.yystates[yyi] == YY_NULLPTR)
+        {
+          if (yyi == yyj)
+            YY_DPRINTF ((stderr, "Removing dead stacks.\n"));
+          yystackp->yytops.yysize -= 1;
+        }
+      else
+        {
+          yystackp->yytops.yystates[yyj] = yystackp->yytops.yystates[yyi];
+          /* In the current implementation, it's unnecessary to copy
+             yystackp->yytops.yylookaheadNeeds[yyi] since, after
+             yyremoveDeletes returns, the parser immediately either enters
+             deterministic operation or shifts a token.  However, it doesn't
+             hurt, and the code might evolve to need it.  */
+          yystackp->yytops.yylookaheadNeeds[yyj] =
+            yystackp->yytops.yylookaheadNeeds[yyi];
+          if (yyj != yyi)
+            YY_DPRINTF ((stderr, "Rename stack %ld -> %ld.\n",
+                        YY_CAST (long, yyi), YY_CAST (long, yyj)));
+          yyj += 1;
+        }
+      yyi += 1;
+    }
+}
+
+/** Shift to a new state on stack #YYK of *YYSTACKP, corresponding to LR
+ * state YYLRSTATE, at input position YYPOSN, with (resolved) semantic
+ * value *YYVALP and source location *YYLOCP.  */
+static inline void
+yyglrShift (yyGLRStack* yystackp, ptrdiff_t yyk, yyStateNum yylrState,
+            ptrdiff_t yyposn,
+            YYSTYPE* yyvalp)
+{
+  yyGLRState* yynewState = &yynewGLRStackItem (yystackp, yytrue)->yystate;
+
+  yynewState->yylrState = yylrState;
+  yynewState->yyposn = yyposn;
+  yynewState->yyresolved = yytrue;
+  yynewState->yypred = yystackp->yytops.yystates[yyk];
+  yynewState->yysemantics.yysval = *yyvalp;
+  yystackp->yytops.yystates[yyk] = yynewState;
+
+  YY_RESERVE_GLRSTACK (yystackp);
+}
+
+/** Shift stack #YYK of *YYSTACKP, to a new state corresponding to LR
+ *  state YYLRSTATE, at input position YYPOSN, with the (unresolved)
+ *  semantic value of YYRHS under the action for YYRULE.  */
+static inline void
+yyglrShiftDefer (yyGLRStack* yystackp, ptrdiff_t yyk, yyStateNum yylrState,
+                 ptrdiff_t yyposn, yyGLRState* yyrhs, yyRuleNum yyrule)
+{
+  yyGLRState* yynewState = &yynewGLRStackItem (yystackp, yytrue)->yystate;
+  YY_ASSERT (yynewState->yyisState);
+
+  yynewState->yylrState = yylrState;
+  yynewState->yyposn = yyposn;
+  yynewState->yyresolved = yyfalse;
+  yynewState->yypred = yystackp->yytops.yystates[yyk];
+  yynewState->yysemantics.yyfirstVal = YY_NULLPTR;
+  yystackp->yytops.yystates[yyk] = yynewState;
+
+  /* Invokes YY_RESERVE_GLRSTACK.  */
+  yyaddDeferredAction (yystackp, yyk, yynewState, yyrhs, yyrule);
+}
+
+#if !YYDEBUG
+# define YY_REDUCE_PRINT(Args)
+#else
+# define YY_REDUCE_PRINT(Args)          \
+  do {                                  \
+    if (yydebug)                        \
+      yy_reduce_print Args;             \
+  } while (0)
+
+/*----------------------------------------------------------------------.
+| Report that stack #YYK of *YYSTACKP is going to be reduced by YYRULE. |
+`----------------------------------------------------------------------*/
+
+static inline void
+yy_reduce_print (yybool yynormal, yyGLRStackItem* yyvsp, ptrdiff_t yyk,
+                 yyRuleNum yyrule, std::unique_ptr<BaseAST> &ast)
+{
+  int yynrhs = yyrhsLength (yyrule);
+  int yyi;
+  YY_FPRINTF ((stderr, "Reducing stack %ld by rule %d (line %d):\n",
+               YY_CAST (long, yyk), yyrule - 1, yyrline[yyrule]));
+  if (! yynormal)
+    yyfillin (yyvsp, 1, -yynrhs);
+  /* The symbols being reduced.  */
+  for (yyi = 0; yyi < yynrhs; yyi++)
+    {
+      YY_FPRINTF ((stderr, "   $%d = ", yyi + 1));
+      yy_symbol_print (stderr,
+                       yystos[yyvsp[yyi - yynrhs + 1].yystate.yylrState],
+                       &yyvsp[yyi - yynrhs + 1].yystate.yysemantics.yysval                       , ast);
+      if (!yyvsp[yyi - yynrhs + 1].yystate.yyresolved)
+        YY_FPRINTF ((stderr, " (unresolved)"));
+      YY_FPRINTF ((stderr, "\n"));
+    }
+}
+#endif
+
+/** Pop the symbols consumed by reduction #YYRULE from the top of stack
+ *  #YYK of *YYSTACKP, and perform the appropriate semantic action on their
+ *  semantic values.  Assumes that all ambiguities in semantic values
+ *  have been previously resolved.  Set *YYVALP to the resulting value,
+ *  and *YYLOCP to the computed location (if any).  Return value is as
+ *  for userAction.  */
+static inline YYRESULTTAG
+yydoAction (yyGLRStack* yystackp, ptrdiff_t yyk, yyRuleNum yyrule,
+            YYSTYPE* yyvalp, std::unique_ptr<BaseAST> &ast)
+{
+  int yynrhs = yyrhsLength (yyrule);
+
+  if (yystackp->yysplitPoint == YY_NULLPTR)
+    {
+      /* Standard special case: single stack.  */
+      yyGLRStackItem* yyrhs
+        = YY_REINTERPRET_CAST (yyGLRStackItem*, yystackp->yytops.yystates[yyk]);
+      YY_ASSERT (yyk == 0);
+      yystackp->yynextFree -= yynrhs;
+      yystackp->yyspaceLeft += yynrhs;
+      yystackp->yytops.yystates[0] = & yystackp->yynextFree[-1].yystate;
+      YY_REDUCE_PRINT ((yytrue, yyrhs, yyk, yyrule, ast));
+      return yyuserAction (yyrule, yynrhs, yyrhs, yystackp,
+                           yyvalp, ast);
+    }
+  else
+    {
+      yyGLRStackItem yyrhsVals[YYMAXRHS + YYMAXLEFT + 1];
+      yyGLRState* yys = yyrhsVals[YYMAXRHS + YYMAXLEFT].yystate.yypred
+        = yystackp->yytops.yystates[yyk];
+      int yyi;
+      for (yyi = 0; yyi < yynrhs; yyi += 1)
+        {
+          yys = yys->yypred;
+          YY_ASSERT (yys);
+        }
+      yyupdateSplit (yystackp, yys);
+      yystackp->yytops.yystates[yyk] = yys;
+      YY_REDUCE_PRINT ((yyfalse, yyrhsVals + YYMAXRHS + YYMAXLEFT - 1, yyk, yyrule, ast));
+      return yyuserAction (yyrule, yynrhs, yyrhsVals + YYMAXRHS + YYMAXLEFT - 1,
+                           yystackp, yyvalp, ast);
+    }
+}
+
+/** Pop items off stack #YYK of *YYSTACKP according to grammar rule YYRULE,
+ *  and push back on the resulting nonterminal symbol.  Perform the
+ *  semantic action associated with YYRULE and store its value with the
+ *  newly pushed state, if YYFORCEEVAL or if *YYSTACKP is currently
+ *  unambiguous.  Otherwise, store the deferred semantic action with
+ *  the new state.  If the new state would have an identical input
+ *  position, LR state, and predecessor to an existing state on the stack,
+ *  it is identified with that existing state, eliminating stack #YYK from
+ *  *YYSTACKP.  In this case, the semantic value is
+ *  added to the options for the existing state's semantic value.
+ */
+static inline YYRESULTTAG
+yyglrReduce (yyGLRStack* yystackp, ptrdiff_t yyk, yyRuleNum yyrule,
+             yybool yyforceEval, std::unique_ptr<BaseAST> &ast)
+{
+  ptrdiff_t yyposn = yystackp->yytops.yystates[yyk]->yyposn;
+
+  if (yyforceEval || yystackp->yysplitPoint == YY_NULLPTR)
+    {
+      YYSTYPE yysval;
+
+      YYRESULTTAG yyflag = yydoAction (yystackp, yyk, yyrule, &yysval, ast);
+      if (yyflag == yyerr && yystackp->yysplitPoint != YY_NULLPTR)
+        YY_DPRINTF ((stderr,
+                     "Parse on stack %ld rejected by rule %d (line %d).\n",
+                     YY_CAST (long, yyk), yyrule - 1, yyrline[yyrule - 1]));
+      if (yyflag != yyok)
+        return yyflag;
+      YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyrule], &yysval, &yyloc);
+      yyglrShift (yystackp, yyk,
+                  yyLRgotoState (yystackp->yytops.yystates[yyk]->yylrState,
+                                 yylhsNonterm (yyrule)),
+                  yyposn, &yysval);
+    }
+  else
+    {
+      ptrdiff_t yyi;
+      int yyn;
+      yyGLRState* yys, *yys0 = yystackp->yytops.yystates[yyk];
+      yyStateNum yynewLRState;
+
+      for (yys = yystackp->yytops.yystates[yyk], yyn = yyrhsLength (yyrule);
+           0 < yyn; yyn -= 1)
+        {
+          yys = yys->yypred;
+          YY_ASSERT (yys);
+        }
+      yyupdateSplit (yystackp, yys);
+      yynewLRState = yyLRgotoState (yys->yylrState, yylhsNonterm (yyrule));
+      YY_DPRINTF ((stderr,
+                   "Reduced stack %ld by rule %d (line %d); action deferred.  "
+                   "Now in state %d.\n",
+                   YY_CAST (long, yyk), yyrule - 1, yyrline[yyrule - 1],
+                   yynewLRState));
+      for (yyi = 0; yyi < yystackp->yytops.yysize; yyi += 1)
+        if (yyi != yyk && yystackp->yytops.yystates[yyi] != YY_NULLPTR)
+          {
+            yyGLRState *yysplit = yystackp->yysplitPoint;
+            yyGLRState *yyp = yystackp->yytops.yystates[yyi];
+            while (yyp != yys && yyp != yysplit && yyp->yyposn >= yyposn)
+              {
+                if (yyp->yylrState == yynewLRState && yyp->yypred == yys)
+                  {
+                    yyaddDeferredAction (yystackp, yyk, yyp, yys0, yyrule);
+                    yymarkStackDeleted (yystackp, yyk);
+                    YY_DPRINTF ((stderr, "Merging stack %ld into stack %ld.\n",
+                                 YY_CAST (long, yyk), YY_CAST (long, yyi)));
+                    return yyok;
+                  }
+                yyp = yyp->yypred;
+              }
+          }
+      yystackp->yytops.yystates[yyk] = yys;
+      yyglrShiftDefer (yystackp, yyk, yynewLRState, yyposn, yys0, yyrule);
+    }
+  return yyok;
+}
+
+static ptrdiff_t
+yysplitStack (yyGLRStack* yystackp, ptrdiff_t yyk)
+{
+  if (yystackp->yysplitPoint == YY_NULLPTR)
+    {
+      YY_ASSERT (yyk == 0);
+      yystackp->yysplitPoint = yystackp->yytops.yystates[yyk];
+    }
+  if (yystackp->yytops.yycapacity <= yystackp->yytops.yysize)
+    {
+      ptrdiff_t state_size = sizeof yystackp->yytops.yystates[0];
+      ptrdiff_t half_max_capacity = YYSIZEMAX / 2 / state_size;
+      if (half_max_capacity < yystackp->yytops.yycapacity)
+        yyMemoryExhausted (yystackp);
+      yystackp->yytops.yycapacity *= 2;
+
+      {
+        yyGLRState** yynewStates
+          = YY_CAST (yyGLRState**,
+                     YYREALLOC (yystackp->yytops.yystates,
+                                (YY_CAST (size_t, yystackp->yytops.yycapacity)
+                                 * sizeof yynewStates[0])));
+        if (yynewStates == YY_NULLPTR)
+          yyMemoryExhausted (yystackp);
+        yystackp->yytops.yystates = yynewStates;
+      }
+
+      {
+        yybool* yynewLookaheadNeeds
+          = YY_CAST (yybool*,
+                     YYREALLOC (yystackp->yytops.yylookaheadNeeds,
+                                (YY_CAST (size_t, yystackp->yytops.yycapacity)
+                                 * sizeof yynewLookaheadNeeds[0])));
+        if (yynewLookaheadNeeds == YY_NULLPTR)
+          yyMemoryExhausted (yystackp);
+        yystackp->yytops.yylookaheadNeeds = yynewLookaheadNeeds;
+      }
+    }
+  yystackp->yytops.yystates[yystackp->yytops.yysize]
+    = yystackp->yytops.yystates[yyk];
+  yystackp->yytops.yylookaheadNeeds[yystackp->yytops.yysize]
+    = yystackp->yytops.yylookaheadNeeds[yyk];
+  yystackp->yytops.yysize += 1;
+  return yystackp->yytops.yysize - 1;
+}
+
+/** True iff YYY0 and YYY1 represent identical options at the top level.
+ *  That is, they represent the same rule applied to RHS symbols
+ *  that produce the same terminal symbols.  */
+static yybool
+yyidenticalOptions (yySemanticOption* yyy0, yySemanticOption* yyy1)
+{
+  if (yyy0->yyrule == yyy1->yyrule)
+    {
+      yyGLRState *yys0, *yys1;
+      int yyn;
+      for (yys0 = yyy0->yystate, yys1 = yyy1->yystate,
+           yyn = yyrhsLength (yyy0->yyrule);
+           yyn > 0;
+           yys0 = yys0->yypred, yys1 = yys1->yypred, yyn -= 1)
+        if (yys0->yyposn != yys1->yyposn)
+          return yyfalse;
+      return yytrue;
+    }
+  else
+    return yyfalse;
+}
+
+/** Assuming identicalOptions (YYY0,YYY1), destructively merge the
+ *  alternative semantic values for the RHS-symbols of YYY1 and YYY0.  */
+static void
+yymergeOptionSets (yySemanticOption* yyy0, yySemanticOption* yyy1)
+{
+  yyGLRState *yys0, *yys1;
+  int yyn;
+  for (yys0 = yyy0->yystate, yys1 = yyy1->yystate,
+       yyn = yyrhsLength (yyy0->yyrule);
+       0 < yyn;
+       yys0 = yys0->yypred, yys1 = yys1->yypred, yyn -= 1)
+    {
+      if (yys0 == yys1)
+        break;
+      else if (yys0->yyresolved)
+        {
+          yys1->yyresolved = yytrue;
+          yys1->yysemantics.yysval = yys0->yysemantics.yysval;
+        }
+      else if (yys1->yyresolved)
+        {
+          yys0->yyresolved = yytrue;
+          yys0->yysemantics.yysval = yys1->yysemantics.yysval;
+        }
+      else
+        {
+          yySemanticOption** yyz0p = &yys0->yysemantics.yyfirstVal;
+          yySemanticOption* yyz1 = yys1->yysemantics.yyfirstVal;
+          while (yytrue)
+            {
+              if (yyz1 == *yyz0p || yyz1 == YY_NULLPTR)
+                break;
+              else if (*yyz0p == YY_NULLPTR)
+                {
+                  *yyz0p = yyz1;
+                  break;
+                }
+              else if (*yyz0p < yyz1)
+                {
+                  yySemanticOption* yyz = *yyz0p;
+                  *yyz0p = yyz1;
+                  yyz1 = yyz1->yynext;
+                  (*yyz0p)->yynext = yyz;
+                }
+              yyz0p = &(*yyz0p)->yynext;
+            }
+          yys1->yysemantics.yyfirstVal = yys0->yysemantics.yyfirstVal;
+        }
+    }
+}
+
+/** Y0 and Y1 represent two possible actions to take in a given
+ *  parsing state; return 0 if no combination is possible,
+ *  1 if user-mergeable, 2 if Y0 is preferred, 3 if Y1 is preferred.  */
+static int
+yypreference (yySemanticOption* y0, yySemanticOption* y1)
+{
+  yyRuleNum r0 = y0->yyrule, r1 = y1->yyrule;
+  int p0 = yydprec[r0], p1 = yydprec[r1];
+
+  if (p0 == p1)
+    {
+      if (yymerger[r0] == 0 || yymerger[r0] != yymerger[r1])
+        return 0;
+      else
+        return 1;
+    }
+  if (p0 == 0 || p1 == 0)
+    return 0;
+  if (p0 < p1)
+    return 3;
+  if (p1 < p0)
+    return 2;
+  return 0;
+}
+
+static YYRESULTTAG yyresolveValue (yyGLRState* yys,
+                                   yyGLRStack* yystackp, std::unique_ptr<BaseAST> &ast);
+
+
+/** Resolve the previous YYN states starting at and including state YYS
+ *  on *YYSTACKP. If result != yyok, some states may have been left
+ *  unresolved possibly with empty semantic option chains.  Regardless
+ *  of whether result = yyok, each state has been left with consistent
+ *  data so that yydestroyGLRState can be invoked if necessary.  */
+static YYRESULTTAG
+yyresolveStates (yyGLRState* yys, int yyn,
+                 yyGLRStack* yystackp, std::unique_ptr<BaseAST> &ast)
+{
+  if (0 < yyn)
+    {
+      YY_ASSERT (yys->yypred);
+      YYCHK (yyresolveStates (yys->yypred, yyn-1, yystackp, ast));
+      if (! yys->yyresolved)
+        YYCHK (yyresolveValue (yys, yystackp, ast));
+    }
+  return yyok;
+}
+
+/** Resolve the states for the RHS of YYOPT on *YYSTACKP, perform its
+ *  user action, and return the semantic value and location in *YYVALP
+ *  and *YYLOCP.  Regardless of whether result = yyok, all RHS states
+ *  have been destroyed (assuming the user action destroys all RHS
+ *  semantic values if invoked).  */
+static YYRESULTTAG
+yyresolveAction (yySemanticOption* yyopt, yyGLRStack* yystackp,
+                 YYSTYPE* yyvalp, std::unique_ptr<BaseAST> &ast)
+{
+  yyGLRStackItem yyrhsVals[YYMAXRHS + YYMAXLEFT + 1];
+  int yynrhs = yyrhsLength (yyopt->yyrule);
+  YYRESULTTAG yyflag =
+    yyresolveStates (yyopt->yystate, yynrhs, yystackp, ast);
+  if (yyflag != yyok)
+    {
+      yyGLRState *yys;
+      for (yys = yyopt->yystate; yynrhs > 0; yys = yys->yypred, yynrhs -= 1)
+        yydestroyGLRState ("Cleanup: popping", yys, ast);
+      return yyflag;
+    }
+
+  yyrhsVals[YYMAXRHS + YYMAXLEFT].yystate.yypred = yyopt->yystate;
+  {
+    int yychar_current = yychar;
+    YYSTYPE yylval_current = yylval;
+    yychar = yyopt->yyrawchar;
+    yylval = yyopt->yyval;
+    yyflag = yyuserAction (yyopt->yyrule, yynrhs,
+                           yyrhsVals + YYMAXRHS + YYMAXLEFT - 1,
+                           yystackp, yyvalp, ast);
+    yychar = yychar_current;
+    yylval = yylval_current;
+  }
+  return yyflag;
+}
+
+#if YYDEBUG
+static void
+yyreportTree (yySemanticOption* yyx, int yyindent)
+{
+  int yynrhs = yyrhsLength (yyx->yyrule);
+  int yyi;
+  yyGLRState* yys;
+  yyGLRState* yystates[1 + YYMAXRHS];
+  yyGLRState yyleftmost_state;
+
+  for (yyi = yynrhs, yys = yyx->yystate; 0 < yyi; yyi -= 1, yys = yys->yypred)
+    yystates[yyi] = yys;
+  if (yys == YY_NULLPTR)
+    {
+      yyleftmost_state.yyposn = 0;
+      yystates[0] = &yyleftmost_state;
+    }
+  else
+    yystates[0] = yys;
+
+  if (yyx->yystate->yyposn < yys->yyposn + 1)
+    YY_FPRINTF ((stderr, "%*s%s -> <Rule %d, empty>\n",
+                 yyindent, "", yytokenName (yylhsNonterm (yyx->yyrule)),
+                 yyx->yyrule - 1));
+  else
+    YY_FPRINTF ((stderr, "%*s%s -> <Rule %d, tokens %ld .. %ld>\n",
+                 yyindent, "", yytokenName (yylhsNonterm (yyx->yyrule)),
+                 yyx->yyrule - 1, YY_CAST (long, yys->yyposn + 1),
+                 YY_CAST (long, yyx->yystate->yyposn)));
+  for (yyi = 1; yyi <= yynrhs; yyi += 1)
+    {
+      if (yystates[yyi]->yyresolved)
+        {
+          if (yystates[yyi-1]->yyposn+1 > yystates[yyi]->yyposn)
+            YY_FPRINTF ((stderr, "%*s%s <empty>\n", yyindent+2, "",
+                         yytokenName (yystos[yystates[yyi]->yylrState])));
+          else
+            YY_FPRINTF ((stderr, "%*s%s <tokens %ld .. %ld>\n", yyindent+2, "",
+                         yytokenName (yystos[yystates[yyi]->yylrState]),
+                         YY_CAST (long, yystates[yyi-1]->yyposn + 1),
+                         YY_CAST (long, yystates[yyi]->yyposn)));
+        }
+      else
+        yyreportTree (yystates[yyi]->yysemantics.yyfirstVal, yyindent+2);
+    }
+}
+#endif
+
+static YYRESULTTAG
+yyreportAmbiguity (yySemanticOption* yyx0,
+                   yySemanticOption* yyx1, std::unique_ptr<BaseAST> &ast)
+{
+  YYUSE (yyx0);
+  YYUSE (yyx1);
+
+#if YYDEBUG
+  YY_FPRINTF ((stderr, "Ambiguity detected.\n"));
+  YY_FPRINTF ((stderr, "Option 1,\n"));
+  yyreportTree (yyx0, 2);
+  YY_FPRINTF ((stderr, "\nOption 2,\n"));
+  yyreportTree (yyx1, 2);
+  YY_FPRINTF ((stderr, "\n"));
+#endif
+
+  yyerror (ast, YY_("syntax is ambiguous"));
+  return yyabort;
+}
+
+/** Resolve the ambiguity represented in state YYS in *YYSTACKP,
+ *  perform the indicated actions, and set the semantic value of YYS.
+ *  If result != yyok, the chain of semantic options in YYS has been
+ *  cleared instead or it has been left unmodified except that
+ *  redundant options may have been removed.  Regardless of whether
+ *  result = yyok, YYS has been left with consistent data so that
+ *  yydestroyGLRState can be invoked if necessary.  */
+static YYRESULTTAG
+yyresolveValue (yyGLRState* yys, yyGLRStack* yystackp, std::unique_ptr<BaseAST> &ast)
+{
+  yySemanticOption* yyoptionList = yys->yysemantics.yyfirstVal;
+  yySemanticOption* yybest = yyoptionList;
+  yySemanticOption** yypp;
+  yybool yymerge = yyfalse;
+  YYSTYPE yysval;
+  YYRESULTTAG yyflag;
+
+  for (yypp = &yyoptionList->yynext; *yypp != YY_NULLPTR; )
+    {
+      yySemanticOption* yyp = *yypp;
+
+      if (yyidenticalOptions (yybest, yyp))
+        {
+          yymergeOptionSets (yybest, yyp);
+          *yypp = yyp->yynext;
+        }
+      else
+        {
+          switch (yypreference (yybest, yyp))
+            {
+            case 0:
+              return yyreportAmbiguity (yybest, yyp, ast);
+              break;
+            case 1:
+              yymerge = yytrue;
+              break;
+            case 2:
+              break;
+            case 3:
+              yybest = yyp;
+              yymerge = yyfalse;
+              break;
+            default:
+              /* This cannot happen so it is not worth a YY_ASSERT (yyfalse),
+                 but some compilers complain if the default case is
+                 omitted.  */
+              break;
+            }
+          yypp = &yyp->yynext;
+        }
+    }
+
+  if (yymerge)
+    {
+      yySemanticOption* yyp;
+      int yyprec = yydprec[yybest->yyrule];
+      yyflag = yyresolveAction (yybest, yystackp, &yysval, ast);
+      if (yyflag == yyok)
+        for (yyp = yybest->yynext; yyp != YY_NULLPTR; yyp = yyp->yynext)
+          {
+            if (yyprec == yydprec[yyp->yyrule])
+              {
+                YYSTYPE yysval_other;
+                yyflag = yyresolveAction (yyp, yystackp, &yysval_other, ast);
+                if (yyflag != yyok)
+                  {
+                    yydestruct ("Cleanup: discarding incompletely merged value for",
+                                yystos[yys->yylrState],
+                                &yysval, ast);
+                    break;
+                  }
+                yyuserMerge (yymerger[yyp->yyrule], &yysval, &yysval_other);
+              }
+          }
+    }
+  else
+    yyflag = yyresolveAction (yybest, yystackp, &yysval, ast);
+
+  if (yyflag == yyok)
+    {
+      yys->yyresolved = yytrue;
+      yys->yysemantics.yysval = yysval;
+    }
+  else
+    yys->yysemantics.yyfirstVal = YY_NULLPTR;
+  return yyflag;
+}
+
+static YYRESULTTAG
+yyresolveStack (yyGLRStack* yystackp, std::unique_ptr<BaseAST> &ast)
+{
+  if (yystackp->yysplitPoint != YY_NULLPTR)
+    {
+      yyGLRState* yys;
+      int yyn;
+
+      for (yyn = 0, yys = yystackp->yytops.yystates[0];
+           yys != yystackp->yysplitPoint;
+           yys = yys->yypred, yyn += 1)
+        continue;
+      YYCHK (yyresolveStates (yystackp->yytops.yystates[0], yyn, yystackp
+                             , ast));
+    }
+  return yyok;
+}
+
+static void
+yycompressStack (yyGLRStack* yystackp)
+{
+  yyGLRState* yyp, *yyq, *yyr;
+
+  if (yystackp->yytops.yysize != 1 || yystackp->yysplitPoint == YY_NULLPTR)
+    return;
+
+  for (yyp = yystackp->yytops.yystates[0], yyq = yyp->yypred, yyr = YY_NULLPTR;
+       yyp != yystackp->yysplitPoint;
+       yyr = yyp, yyp = yyq, yyq = yyp->yypred)
+    yyp->yypred = yyr;
+
+  yystackp->yyspaceLeft += yystackp->yynextFree - yystackp->yyitems;
+  yystackp->yynextFree = YY_REINTERPRET_CAST (yyGLRStackItem*, yystackp->yysplitPoint) + 1;
+  yystackp->yyspaceLeft -= yystackp->yynextFree - yystackp->yyitems;
+  yystackp->yysplitPoint = YY_NULLPTR;
+  yystackp->yylastDeleted = YY_NULLPTR;
+
+  while (yyr != YY_NULLPTR)
+    {
+      yystackp->yynextFree->yystate = *yyr;
+      yyr = yyr->yypred;
+      yystackp->yynextFree->yystate.yypred = &yystackp->yynextFree[-1].yystate;
+      yystackp->yytops.yystates[0] = &yystackp->yynextFree->yystate;
+      yystackp->yynextFree += 1;
+      yystackp->yyspaceLeft -= 1;
+    }
+}
+
+static YYRESULTTAG
+yyprocessOneStack (yyGLRStack* yystackp, ptrdiff_t yyk,
+                   ptrdiff_t yyposn, std::unique_ptr<BaseAST> &ast)
+{
+  while (yystackp->yytops.yystates[yyk] != YY_NULLPTR)
+    {
+      yyStateNum yystate = yystackp->yytops.yystates[yyk]->yylrState;
+      YY_DPRINTF ((stderr, "Stack %ld Entering state %d\n",
+                   YY_CAST (long, yyk), yystate));
+
+      YY_ASSERT (yystate != YYFINAL);
+
+      if (yyisDefaultedState (yystate))
+        {
+          YYRESULTTAG yyflag;
+          yyRuleNum yyrule = yydefaultAction (yystate);
+          if (yyrule == 0)
+            {
+              YY_DPRINTF ((stderr, "Stack %ld dies.\n", YY_CAST (long, yyk)));
+              yymarkStackDeleted (yystackp, yyk);
+              return yyok;
+            }
+          yyflag = yyglrReduce (yystackp, yyk, yyrule, yyimmediate[yyrule], ast);
+          if (yyflag == yyerr)
+            {
+              YY_DPRINTF ((stderr,
+                           "Stack %ld dies "
+                           "(predicate failure or explicit user error).\n",
+                           YY_CAST (long, yyk)));
+              yymarkStackDeleted (yystackp, yyk);
+              return yyok;
+            }
+          if (yyflag != yyok)
+            return yyflag;
+        }
+      else
+        {
+          yySymbol yytoken = yygetToken (&yychar, ast);
+          const short* yyconflicts;
+          const int yyaction = yygetLRActions (yystate, yytoken, &yyconflicts);
+          yystackp->yytops.yylookaheadNeeds[yyk] = yytrue;
+
+          while (*yyconflicts != 0)
+            {
+              YYRESULTTAG yyflag;
+              ptrdiff_t yynewStack = yysplitStack (yystackp, yyk);
+              YY_DPRINTF ((stderr, "Splitting off stack %ld from %ld.\n",
+                           YY_CAST (long, yynewStack), YY_CAST (long, yyk)));
+              yyflag = yyglrReduce (yystackp, yynewStack,
+                                    *yyconflicts,
+                                    yyimmediate[*yyconflicts], ast);
+              if (yyflag == yyok)
+                YYCHK (yyprocessOneStack (yystackp, yynewStack,
+                                          yyposn, ast));
+              else if (yyflag == yyerr)
+                {
+                  YY_DPRINTF ((stderr, "Stack %ld dies.\n", YY_CAST (long, yynewStack)));
+                  yymarkStackDeleted (yystackp, yynewStack);
+                }
+              else
+                return yyflag;
+              yyconflicts += 1;
+            }
+
+          if (yyisShiftAction (yyaction))
+            break;
+          else if (yyisErrorAction (yyaction))
+            {
+              YY_DPRINTF ((stderr, "Stack %ld dies.\n", YY_CAST (long, yyk)));
+              yymarkStackDeleted (yystackp, yyk);
+              break;
+            }
+          else
+            {
+              YYRESULTTAG yyflag = yyglrReduce (yystackp, yyk, -yyaction,
+                                                yyimmediate[-yyaction], ast);
+              if (yyflag == yyerr)
+                {
+                  YY_DPRINTF ((stderr,
+                               "Stack %ld dies "
+                               "(predicate failure or explicit user error).\n",
+                               YY_CAST (long, yyk)));
+                  yymarkStackDeleted (yystackp, yyk);
+                  break;
+                }
+              else if (yyflag != yyok)
+                return yyflag;
+            }
+        }
+    }
+  return yyok;
+}
+
+static void
+yyreportSyntaxError (yyGLRStack* yystackp, std::unique_ptr<BaseAST> &ast)
+{
+  if (yystackp->yyerrState != 0)
+    return;
+#if ! YYERROR_VERBOSE
+  yyerror (ast, YY_("syntax error"));
+#else
+  {
+  yySymbol yytoken = yychar == YYEMPTY ? YYEMPTY : YYTRANSLATE (yychar);
+  yybool yysize_overflow = yyfalse;
+  char* yymsg = YY_NULLPTR;
   enum { YYERROR_VERBOSE_ARGS_MAXIMUM = 5 };
   /* Internationalized format string. */
   const char *yyformat = YY_NULLPTR;
@@ -1033,7 +3232,7 @@ yysyntax_error (YYPTRDIFF_T *yymsg_alloc, char **yymsg,
   /* Actual size of YYARG. */
   int yycount = 0;
   /* Cumulated lengths of YYARG.  */
-  YYPTRDIFF_T yysize = 0;
+  ptrdiff_t yysize = 0;
 
   /* There are many possibilities here to consider:
      - If this state is a consistent state with a default action, then
@@ -1060,21 +3259,20 @@ yysyntax_error (YYPTRDIFF_T *yymsg_alloc, char **yymsg,
   */
   if (yytoken != YYEMPTY)
     {
-      int yyn = yypact[+*yyssp];
-      YYPTRDIFF_T yysize0 = yytnamerr (YY_NULLPTR, yytname[yytoken]);
+      int yyn = yypact[yystackp->yytops.yystates[0]->yylrState];
+      ptrdiff_t yysize0 = yytnamerr (YY_NULLPTR, yytokenName (yytoken));
       yysize = yysize0;
-      yyarg[yycount++] = yytname[yytoken];
+      yyarg[yycount++] = yytokenName (yytoken);
       if (!yypact_value_is_default (yyn))
         {
           /* Start YYX at -YYN if negative to avoid negative indexes in
-             YYCHECK.  In other words, skip the first -YYN actions for
-             this state because they are default actions.  */
+             YYCHECK.  In other words, skip the first -YYN actions for this
+             state because they are default actions.  */
           int yyxbegin = yyn < 0 ? -yyn : 0;
           /* Stay within bounds of both yycheck and yytname.  */
           int yychecklim = YYLAST - yyn + 1;
           int yyxend = yychecklim < YYNTOKENS ? yychecklim : YYNTOKENS;
           int yyx;
-
           for (yyx = yyxbegin; yyx < yyxend; ++yyx)
             if (yycheck[yyx + yyn] == yyx && yyx != YYTERROR
                 && !yytable_value_is_error (yytable[yyx + yyn]))
@@ -1085,14 +3283,13 @@ yysyntax_error (YYPTRDIFF_T *yymsg_alloc, char **yymsg,
                     yysize = yysize0;
                     break;
                   }
-                yyarg[yycount++] = yytname[yyx];
+                yyarg[yycount++] = yytokenName (yyx);
                 {
-                  YYPTRDIFF_T yysize1
-                    = yysize + yytnamerr (YY_NULLPTR, yytname[yyx]);
-                  if (yysize <= yysize1 && yysize1 <= YYSTACK_ALLOC_MAXIMUM)
-                    yysize = yysize1;
+                  ptrdiff_t yysz = yytnamerr (YY_NULLPTR, yytokenName (yyx));
+                  if (YYSIZEMAX - yysize < yysz)
+                    yysize_overflow = yytrue;
                   else
-                    return 2;
+                    yysize += yysz;
                 }
               }
         }
@@ -1100,9 +3297,9 @@ yysyntax_error (YYPTRDIFF_T *yymsg_alloc, char **yymsg,
 
   switch (yycount)
     {
-# define YYCASE_(N, S)                      \
-      case N:                               \
-        yyformat = S;                       \
+#define YYCASE_(N, S)                   \
+      case N:                           \
+        yyformat = S;                   \
       break
     default: /* Avoid compiler warnings. */
       YYCASE_(0, YY_("syntax error"));
@@ -1111,79 +3308,149 @@ yysyntax_error (YYPTRDIFF_T *yymsg_alloc, char **yymsg,
       YYCASE_(3, YY_("syntax error, unexpected %s, expecting %s or %s"));
       YYCASE_(4, YY_("syntax error, unexpected %s, expecting %s or %s or %s"));
       YYCASE_(5, YY_("syntax error, unexpected %s, expecting %s or %s or %s or %s"));
-# undef YYCASE_
+#undef YYCASE_
     }
 
   {
     /* Don't count the "%s"s in the final size, but reserve room for
        the terminator.  */
-    YYPTRDIFF_T yysize1 = yysize + (yystrlen (yyformat) - 2 * yycount) + 1;
-    if (yysize <= yysize1 && yysize1 <= YYSTACK_ALLOC_MAXIMUM)
-      yysize = yysize1;
+    ptrdiff_t yysz = YY_CAST (ptrdiff_t, strlen (yyformat)) - 2 * yycount + 1;
+    if (YYSIZEMAX - yysize < yysz)
+      yysize_overflow = yytrue;
     else
-      return 2;
+      yysize += yysz;
   }
 
-  if (*yymsg_alloc < yysize)
+  if (!yysize_overflow)
+    yymsg = YY_CAST (char *, YYMALLOC (YY_CAST (size_t, yysize)));
+
+  if (yymsg)
     {
-      *yymsg_alloc = 2 * yysize;
-      if (! (yysize <= *yymsg_alloc
-             && *yymsg_alloc <= YYSTACK_ALLOC_MAXIMUM))
-        *yymsg_alloc = YYSTACK_ALLOC_MAXIMUM;
-      return 1;
+      char *yyp = yymsg;
+      int yyi = 0;
+      while ((*yyp = *yyformat))
+        {
+          if (*yyp == '%' && yyformat[1] == 's' && yyi < yycount)
+            {
+              yyp += yytnamerr (yyp, yyarg[yyi++]);
+              yyformat += 2;
+            }
+          else
+            {
+              ++yyp;
+              ++yyformat;
+            }
+        }
+      yyerror (ast, yymsg);
+      YYFREE (yymsg);
     }
-
-  /* Avoid sprintf, as that infringes on the user's name space.
-     Don't have undefined behavior even if the translation
-     produced a string with the wrong number of "%s"s.  */
-  {
-    char *yyp = *yymsg;
-    int yyi = 0;
-    while ((*yyp = *yyformat) != '\0')
-      if (*yyp == '%' && yyformat[1] == 's' && yyi < yycount)
-        {
-          yyp += yytnamerr (yyp, yyarg[yyi++]);
-          yyformat += 2;
-        }
-      else
-        {
-          ++yyp;
-          ++yyformat;
-        }
+  else
+    {
+      yyerror (ast, YY_("syntax error"));
+      yyMemoryExhausted (yystackp);
+    }
   }
-  return 0;
-}
 #endif /* YYERROR_VERBOSE */
-
-/*-----------------------------------------------.
-| Release the memory associated to this symbol.  |
-`-----------------------------------------------*/
-
-static void
-yydestruct (const char *yymsg, int yytype, YYSTYPE *yyvaluep, std::unique_ptr<BaseAST> &ast)
-{
-  YYUSE (yyvaluep);
-  YYUSE (ast);
-  if (!yymsg)
-    yymsg = "Deleting";
-  YY_SYMBOL_PRINT (yymsg, yytype, yyvaluep, yylocationp);
-
-  YY_IGNORE_MAYBE_UNINITIALIZED_BEGIN
-  YYUSE (yytype);
-  YY_IGNORE_MAYBE_UNINITIALIZED_END
+  yynerrs += 1;
 }
 
+/* Recover from a syntax error on *YYSTACKP, assuming that *YYSTACKP->YYTOKENP,
+   yylval, and yylloc are the syntactic category, semantic value, and location
+   of the lookahead.  */
+static void
+yyrecoverSyntaxError (yyGLRStack* yystackp, std::unique_ptr<BaseAST> &ast)
+{
+  if (yystackp->yyerrState == 3)
+    /* We just shifted the error token and (perhaps) took some
+       reductions.  Skip tokens until we can proceed.  */
+    while (yytrue)
+      {
+        yySymbol yytoken;
+        int yyj;
+        if (yychar == YYEOF)
+          yyFail (yystackp, ast, YY_NULLPTR);
+        if (yychar != YYEMPTY)
+          {
+            yytoken = YYTRANSLATE (yychar);
+            yydestruct ("Error: discarding",
+                        yytoken, &yylval, ast);
+            yychar = YYEMPTY;
+          }
+        yytoken = yygetToken (&yychar, ast);
+        yyj = yypact[yystackp->yytops.yystates[0]->yylrState];
+        if (yypact_value_is_default (yyj))
+          return;
+        yyj += yytoken;
+        if (yyj < 0 || YYLAST < yyj || yycheck[yyj] != yytoken)
+          {
+            if (yydefact[yystackp->yytops.yystates[0]->yylrState] != 0)
+              return;
+          }
+        else if (! yytable_value_is_error (yytable[yyj]))
+          return;
+      }
 
+  /* Reduce to one stack.  */
+  {
+    ptrdiff_t yyk;
+    for (yyk = 0; yyk < yystackp->yytops.yysize; yyk += 1)
+      if (yystackp->yytops.yystates[yyk] != YY_NULLPTR)
+        break;
+    if (yyk >= yystackp->yytops.yysize)
+      yyFail (yystackp, ast, YY_NULLPTR);
+    for (yyk += 1; yyk < yystackp->yytops.yysize; yyk += 1)
+      yymarkStackDeleted (yystackp, yyk);
+    yyremoveDeletes (yystackp);
+    yycompressStack (yystackp);
+  }
 
+  /* Now pop stack until we find a state that shifts the error token.  */
+  yystackp->yyerrState = 3;
+  while (yystackp->yytops.yystates[0] != YY_NULLPTR)
+    {
+      yyGLRState *yys = yystackp->yytops.yystates[0];
+      int yyj = yypact[yys->yylrState];
+      if (! yypact_value_is_default (yyj))
+        {
+          yyj += YYTERROR;
+          if (0 <= yyj && yyj <= YYLAST && yycheck[yyj] == YYTERROR
+              && yyisShiftAction (yytable[yyj]))
+            {
+              /* Shift the error token.  */
+              int yyaction = yytable[yyj];
+              YY_SYMBOL_PRINT ("Shifting", yystos[yyaction],
+                               &yylval, &yyerrloc);
+              yyglrShift (yystackp, 0, yyaction,
+                          yys->yyposn, &yylval);
+              yys = yystackp->yytops.yystates[0];
+              break;
+            }
+        }
+      if (yys->yypred != YY_NULLPTR)
+        yydestroyGLRState ("Error: popping", yys, ast);
+      yystackp->yytops.yystates[0] = yys->yypred;
+      yystackp->yynextFree -= 1;
+      yystackp->yyspaceLeft += 1;
+    }
+  if (yystackp->yytops.yystates[0] == YY_NULLPTR)
+    yyFail (yystackp, ast, YY_NULLPTR);
+}
 
-/* The lookahead symbol.  */
-int yychar;
-
-/* The semantic value of the lookahead symbol.  */
-YYSTYPE yylval;
-/* Number of syntax errors so far.  */
-int yynerrs;
-
+#define YYCHK1(YYE)                                                          \
+  do {                                                                       \
+    switch (YYE) {                                                           \
+    case yyok:                                                               \
+      break;                                                                 \
+    case yyabort:                                                            \
+      goto yyabortlab;                                                       \
+    case yyaccept:                                                           \
+      goto yyacceptlab;                                                      \
+    case yyerr:                                                              \
+      goto yyuser_error;                                                     \
+    default:                                                                 \
+      goto yybuglab;                                                         \
+    }                                                                        \
+  } while (0)
 
 /*----------.
 | yyparse.  |
@@ -1192,1292 +3459,293 @@ int yynerrs;
 int
 yyparse (std::unique_ptr<BaseAST> &ast)
 {
-    yy_state_fast_t yystate;
-    /* Number of tokens to shift before error messages enabled.  */
-    int yyerrstatus;
-
-    /* The stacks and their tools:
-       'yyss': related to states.
-       'yyvs': related to semantic values.
-
-       Refer to the stacks through separate pointers, to allow yyoverflow
-       to reallocate them elsewhere.  */
-
-    /* The state stack.  */
-    yy_state_t yyssa[YYINITDEPTH];
-    yy_state_t *yyss;
-    yy_state_t *yyssp;
-
-    /* The semantic value stack.  */
-    YYSTYPE yyvsa[YYINITDEPTH];
-    YYSTYPE *yyvs;
-    YYSTYPE *yyvsp;
-
-    YYPTRDIFF_T yystacksize;
-
-  int yyn;
   int yyresult;
-  /* Lookahead token as an internal (translated) token number.  */
-  int yytoken = 0;
-  /* The variables used to return semantic value and location from the
-     action routines.  */
-  YYSTYPE yyval;
+  yyGLRStack yystack;
+  yyGLRStack* const yystackp = &yystack;
+  ptrdiff_t yyposn;
 
-#if YYERROR_VERBOSE
-  /* Buffer for error messages, and its allocated size.  */
-  char yymsgbuf[128];
-  char *yymsg = yymsgbuf;
-  YYPTRDIFF_T yymsg_alloc = sizeof yymsgbuf;
-#endif
+  YY_DPRINTF ((stderr, "Starting parse\n"));
 
-#define YYPOPSTACK(N)   (yyvsp -= (N), yyssp -= (N))
-
-  /* The number of symbols on the RHS of the reduced rule.
-     Keep to zero when no symbol should be popped.  */
-  int yylen = 0;
-
-  yyssp = yyss = yyssa;
-  yyvsp = yyvs = yyvsa;
-  yystacksize = YYINITDEPTH;
-
-  YYDPRINTF ((stderr, "Starting parse\n"));
-
-  yystate = 0;
-  yyerrstatus = 0;
-  yynerrs = 0;
-  yychar = YYEMPTY; /* Cause a token to be read.  */
-  goto yysetstate;
-
-
-/*------------------------------------------------------------.
-| yynewstate -- push a new state, which is found in yystate.  |
-`------------------------------------------------------------*/
-yynewstate:
-  /* In all cases, when you get here, the value and location stacks
-     have just been pushed.  So pushing a state here evens the stacks.  */
-  yyssp++;
-
-
-/*--------------------------------------------------------------------.
-| yysetstate -- set current state (the top of the stack) to yystate.  |
-`--------------------------------------------------------------------*/
-yysetstate:
-  YYDPRINTF ((stderr, "Entering state %d\n", yystate));
-  YY_ASSERT (0 <= yystate && yystate < YYNSTATES);
-  YY_IGNORE_USELESS_CAST_BEGIN
-  *yyssp = YY_CAST (yy_state_t, yystate);
-  YY_IGNORE_USELESS_CAST_END
-
-  if (yyss + yystacksize - 1 <= yyssp)
-#if !defined yyoverflow && !defined YYSTACK_RELOCATE
-    goto yyexhaustedlab;
-#else
-    {
-      /* Get the current used size of the three stacks, in elements.  */
-      YYPTRDIFF_T yysize = yyssp - yyss + 1;
-
-# if defined yyoverflow
-      {
-        /* Give user a chance to reallocate the stack.  Use copies of
-           these so that the &'s don't force the real ones into
-           memory.  */
-        yy_state_t *yyss1 = yyss;
-        YYSTYPE *yyvs1 = yyvs;
-
-        /* Each stack pointer address is followed by the size of the
-           data in use in that stack, in bytes.  This used to be a
-           conditional around just the two extra args, but that might
-           be undefined if yyoverflow is a macro.  */
-        yyoverflow (YY_("memory exhausted"),
-                    &yyss1, yysize * YYSIZEOF (*yyssp),
-                    &yyvs1, yysize * YYSIZEOF (*yyvsp),
-                    &yystacksize);
-        yyss = yyss1;
-        yyvs = yyvs1;
-      }
-# else /* defined YYSTACK_RELOCATE */
-      /* Extend the stack our own way.  */
-      if (YYMAXDEPTH <= yystacksize)
-        goto yyexhaustedlab;
-      yystacksize *= 2;
-      if (YYMAXDEPTH < yystacksize)
-        yystacksize = YYMAXDEPTH;
-
-      {
-        yy_state_t *yyss1 = yyss;
-        union yyalloc *yyptr =
-          YY_CAST (union yyalloc *,
-                   YYSTACK_ALLOC (YY_CAST (YYSIZE_T, YYSTACK_BYTES (yystacksize))));
-        if (! yyptr)
-          goto yyexhaustedlab;
-        YYSTACK_RELOCATE (yyss_alloc, yyss);
-        YYSTACK_RELOCATE (yyvs_alloc, yyvs);
-# undef YYSTACK_RELOCATE
-        if (yyss1 != yyssa)
-          YYSTACK_FREE (yyss1);
-      }
-# endif
-
-      yyssp = yyss + yysize - 1;
-      yyvsp = yyvs + yysize - 1;
-
-      YY_IGNORE_USELESS_CAST_BEGIN
-      YYDPRINTF ((stderr, "Stack size increased to %ld\n",
-                  YY_CAST (long, yystacksize)));
-      YY_IGNORE_USELESS_CAST_END
-
-      if (yyss + yystacksize - 1 <= yyssp)
-        YYABORT;
-    }
-#endif /* !defined yyoverflow && !defined YYSTACK_RELOCATE */
-
-  if (yystate == YYFINAL)
-    YYACCEPT;
-
-  goto yybackup;
-
-
-/*-----------.
-| yybackup.  |
-`-----------*/
-yybackup:
-  /* Do appropriate processing given the current state.  Read a
-     lookahead token if we need one and don't already have one.  */
-
-  /* First try to decide what to do without reference to lookahead token.  */
-  yyn = yypact[yystate];
-  if (yypact_value_is_default (yyn))
-    goto yydefault;
-
-  /* Not known => get a lookahead token if don't already have one.  */
-
-  /* YYCHAR is either YYEMPTY or YYEOF or a valid lookahead symbol.  */
-  if (yychar == YYEMPTY)
-    {
-      YYDPRINTF ((stderr, "Reading a token: "));
-      yychar = yylex ();
-    }
-
-  if (yychar <= YYEOF)
-    {
-      yychar = yytoken = YYEOF;
-      YYDPRINTF ((stderr, "Now at end of input.\n"));
-    }
-  else
-    {
-      yytoken = YYTRANSLATE (yychar);
-      YY_SYMBOL_PRINT ("Next token is", yytoken, &yylval, &yylloc);
-    }
-
-  /* If the proper action on seeing token YYTOKEN is to reduce or to
-     detect an error, take that action.  */
-  yyn += yytoken;
-  if (yyn < 0 || YYLAST < yyn || yycheck[yyn] != yytoken)
-    goto yydefault;
-  yyn = yytable[yyn];
-  if (yyn <= 0)
-    {
-      if (yytable_value_is_error (yyn))
-        goto yyerrlab;
-      yyn = -yyn;
-      goto yyreduce;
-    }
-
-  /* Count tokens shifted since error; after three, turn off error
-     status.  */
-  if (yyerrstatus)
-    yyerrstatus--;
-
-  /* Shift the lookahead token.  */
-  YY_SYMBOL_PRINT ("Shifting", yytoken, &yylval, &yylloc);
-  yystate = yyn;
-  YY_IGNORE_MAYBE_UNINITIALIZED_BEGIN
-  *++yyvsp = yylval;
-  YY_IGNORE_MAYBE_UNINITIALIZED_END
-
-  /* Discard the shifted token.  */
   yychar = YYEMPTY;
-  goto yynewstate;
+  yylval = yyval_default;
 
-
-/*-----------------------------------------------------------.
-| yydefault -- do the default action for the current state.  |
-`-----------------------------------------------------------*/
-yydefault:
-  yyn = yydefact[yystate];
-  if (yyn == 0)
-    goto yyerrlab;
-  goto yyreduce;
-
-
-/*-----------------------------.
-| yyreduce -- do a reduction.  |
-`-----------------------------*/
-yyreduce:
-  /* yyn is the number of a rule to reduce with.  */
-  yylen = yyr2[yyn];
-
-  /* If YYLEN is nonzero, implement the default value of the action:
-     '$$ = $1'.
-
-     Otherwise, the following line sets YYVAL to garbage.
-     This behavior is undocumented and Bison
-     users should not rely upon it.  Assigning to YYVAL
-     unconditionally makes the parser a bit smaller, and it avoids a
-     GCC warning that YYVAL may be used uninitialized.  */
-  yyval = yyvsp[1-yylen];
-
-
-  YY_REDUCE_PRINT (yyn);
-  switch (yyn)
+  if (! yyinitGLRStack (yystackp, YYINITDEPTH))
+    goto yyexhaustedlab;
+  switch (YYSETJMP (yystack.yyexception_buffer))
     {
-  case 2:
-#line 54 "/project/sysy-make-template/src/sysy.y"
-            {
-    auto comp_unit = make_unique<CompUnitAST>();
-    comp_unit->func_def = unique_ptr<BaseAST>((yyvsp[0].ast_val));
-    ast = move(comp_unit);
-  }
-#line 1442 "/project/sysy-make-template/build/sysy.tab.cpp"
-    break;
+    case 0: break;
+    case 1: goto yyabortlab;
+    case 2: goto yyexhaustedlab;
+    default: goto yybuglab;
+    }
+  yyglrShift (&yystack, 0, 0, 0, &yylval);
+  yyposn = 0;
 
-  case 3:
-#line 62 "/project/sysy-make-template/src/sysy.y"
-                                 {
-    auto ast = new FuncDefAST();
-    ast->func_type = unique_ptr<BaseAST>((yyvsp[-4].ast_val));
-    ast->ident = *unique_ptr<string>((yyvsp[-3].str_val));
-    ast->block = unique_ptr<BaseAST>((yyvsp[0].ast_val));
-    (yyval.ast_val) = ast;
-  }
-#line 1454 "/project/sysy-make-template/build/sysy.tab.cpp"
-    break;
-
-  case 4:
-#line 72 "/project/sysy-make-template/src/sysy.y"
+  while (yytrue)
+    {
+      /* For efficiency, we have two loops, the first of which is
+         specialized to deterministic operation (single stack, no
+         potential ambiguity).  */
+      /* Standard mode */
+      while (yytrue)
         {
-    auto ast = new FuncTypeAST();
-    ast->func_type = "int";
-    (yyval.ast_val) = ast;
-  }
-#line 1464 "/project/sysy-make-template/build/sysy.tab.cpp"
-    break;
-
-  case 5:
-#line 80 "/project/sysy-make-template/src/sysy.y"
+          yyStateNum yystate = yystack.yytops.yystates[0]->yylrState;
+          YY_DPRINTF ((stderr, "Entering state %d\n", yystate));
+          if (yystate == YYFINAL)
+            goto yyacceptlab;
+          if (yyisDefaultedState (yystate))
             {
-    auto ast = new BlockAST();
-    (yyval.ast_val) = ast;
-  }
-#line 1473 "/project/sysy-make-template/build/sysy.tab.cpp"
-    break;
-
-  case 6:
-#line 84 "/project/sysy-make-template/src/sysy.y"
-                           {
-    auto ast = new BlockAST();
-    ast->rest_of_block_item=unique_ptr<BaseAST>((yyvsp[-1].ast_val));
-    ast->get_block_item_vec();
-    (yyval.ast_val) = ast;
-  }
-#line 1484 "/project/sysy-make-template/build/sysy.tab.cpp"
-    break;
-
-  case 7:
-#line 93 "/project/sysy-make-template/src/sysy.y"
-              {
-    auto ast = new RestOfBlockItemAST();
-    ast->rest_of_block_item = NULL;
-    ast->block_item=unique_ptr<BaseAST>((yyvsp[0].ast_val));
-    (yyval.ast_val) = ast;
-  }
-#line 1495 "/project/sysy-make-template/build/sysy.tab.cpp"
-    break;
-
-  case 8:
-#line 99 "/project/sysy-make-template/src/sysy.y"
-                              {
-    auto ast = new RestOfBlockItemAST();
-    ast->block_item=unique_ptr<BaseAST>((yyvsp[-1].ast_val));
-    ast->rest_of_block_item = unique_ptr<BaseAST>((yyvsp[0].ast_val));
-    (yyval.ast_val) = ast;
-  }
-#line 1506 "/project/sysy-make-template/build/sysy.tab.cpp"
-    break;
-
-  case 9:
-#line 108 "/project/sysy-make-template/src/sysy.y"
-         {
-    auto ast = new BlockItemAST();
-    ast->op = 1;
-    ast->decl = unique_ptr<BaseAST>((yyvsp[0].ast_val));
-    (yyval.ast_val) = ast;
-  }
-#line 1517 "/project/sysy-make-template/build/sysy.tab.cpp"
-    break;
-
-  case 10:
-#line 114 "/project/sysy-make-template/src/sysy.y"
-         {
-    auto ast = new BlockItemAST();
-    ast->op = 2;
-    ast->stmt = unique_ptr<BaseAST>((yyvsp[0].ast_val));
-    (yyval.ast_val) = ast;
-  }
-#line 1528 "/project/sysy-make-template/build/sysy.tab.cpp"
-    break;
-
-  case 11:
-#line 123 "/project/sysy-make-template/src/sysy.y"
-             {
-    auto ast = new StmtAST();
-    ast->op = 1;
-    ast->open_stmt = unique_ptr<BaseAST>((yyvsp[0].ast_val));
-    (yyval.ast_val) = ast;
-  }
-#line 1539 "/project/sysy-make-template/build/sysy.tab.cpp"
-    break;
-
-  case 12:
-#line 129 "/project/sysy-make-template/src/sysy.y"
-               {
-    auto ast = new StmtAST();
-    ast->op = 2;
-    ast->closed_stmt = unique_ptr<BaseAST>((yyvsp[0].ast_val));
-    (yyval.ast_val) = ast;
-  }
-#line 1550 "/project/sysy-make-template/build/sysy.tab.cpp"
-    break;
-
-  case 13:
-#line 138 "/project/sysy-make-template/src/sysy.y"
-                        {
-    auto ast = new OpenStmtAST();
-    ast->op = 1;
-    ast->exp = unique_ptr<BaseAST>((yyvsp[-2].ast_val));
-    ast->stmt = unique_ptr<BaseAST>((yyvsp[0].ast_val));
-    (yyval.ast_val) = ast;
-  }
-#line 1562 "/project/sysy-make-template/build/sysy.tab.cpp"
-    break;
-
-  case 14:
-#line 145 "/project/sysy-make-template/src/sysy.y"
-                                            {
-    auto ast = new OpenStmtAST();
-    ast->op = 2;
-    ast->exp = unique_ptr<BaseAST>((yyvsp[-4].ast_val));
-    ast->if_stmt = unique_ptr<BaseAST>((yyvsp[-2].ast_val));
-    ast->else_stmt = unique_ptr<BaseAST>((yyvsp[0].ast_val));
-    (yyval.ast_val) = ast;
-  }
-#line 1575 "/project/sysy-make-template/build/sysy.tab.cpp"
-    break;
-
-  case 15:
-#line 153 "/project/sysy-make-template/src/sysy.y"
-                               {
-    auto ast = new OpenStmtAST();
-    ast->op = 3;
-    ast->exp = unique_ptr<BaseAST>((yyvsp[-2].ast_val));
-    ast->open_stmt = unique_ptr<BaseAST>((yyvsp[0].ast_val));
-    (yyval.ast_val) = ast;
-  }
-#line 1587 "/project/sysy-make-template/build/sysy.tab.cpp"
-    break;
-
-  case 16:
-#line 163 "/project/sysy-make-template/src/sysy.y"
-               {
-    auto ast = new ClosedStmtAST();
-    ast->op = 1;
-    ast->simple_stmt = unique_ptr<BaseAST>((yyvsp[0].ast_val));
-    (yyval.ast_val) = ast;
-  }
-#line 1598 "/project/sysy-make-template/build/sysy.tab.cpp"
-    break;
-
-  case 17:
-#line 169 "/project/sysy-make-template/src/sysy.y"
-                                              {
-    auto ast = new ClosedStmtAST();
-    ast->op = 2;
-    ast->exp = unique_ptr<BaseAST>((yyvsp[-4].ast_val));
-    ast->if_stmt = unique_ptr<BaseAST>((yyvsp[-2].ast_val));
-    ast->else_stmt = unique_ptr<BaseAST>((yyvsp[0].ast_val));
-    (yyval.ast_val) = ast;
-  }
-#line 1611 "/project/sysy-make-template/build/sysy.tab.cpp"
-    break;
-
-  case 18:
-#line 177 "/project/sysy-make-template/src/sysy.y"
-                                 {
-    auto ast = new ClosedStmtAST();
-    ast->op = 3;
-    ast->exp = unique_ptr<BaseAST>((yyvsp[-2].ast_val));
-    ast->closed_stmt = unique_ptr<BaseAST>((yyvsp[0].ast_val));
-    (yyval.ast_val) = ast;
-  }
-#line 1623 "/project/sysy-make-template/build/sysy.tab.cpp"
-    break;
-
-  case 19:
-#line 187 "/project/sysy-make-template/src/sysy.y"
-                     {
-    auto ast = new SimpleStmtAST();
-    ast->op = 1;
-    ast->lval = unique_ptr<BaseAST>((yyvsp[-3].ast_val));
-    ast->exp = unique_ptr<BaseAST>((yyvsp[-1].ast_val));    
-    (yyval.ast_val) = ast;
-  }
-#line 1635 "/project/sysy-make-template/build/sysy.tab.cpp"
-    break;
-
-  case 20:
-#line 194 "/project/sysy-make-template/src/sysy.y"
-        {
-    auto ast=new SimpleStmtAST();
-    ast->op = 2;
-    (yyval.ast_val) = ast;
-  }
-#line 1645 "/project/sysy-make-template/build/sysy.tab.cpp"
-    break;
-
-  case 21:
-#line 199 "/project/sysy-make-template/src/sysy.y"
-            {
-    auto ast = new SimpleStmtAST();
-    ast->op = 3;
-    ast->exp = unique_ptr<BaseAST>((yyvsp[-1].ast_val));    
-    (yyval.ast_val) = ast;
-  }
-#line 1656 "/project/sysy-make-template/build/sysy.tab.cpp"
-    break;
-
-  case 22:
-#line 205 "/project/sysy-make-template/src/sysy.y"
-          {
-    auto ast = new SimpleStmtAST();
-    ast->op = 4;
-    ast->block = unique_ptr<BaseAST>((yyvsp[0].ast_val));    
-    (yyval.ast_val) = ast;
-  }
-#line 1667 "/project/sysy-make-template/build/sysy.tab.cpp"
-    break;
-
-  case 23:
-#line 211 "/project/sysy-make-template/src/sysy.y"
-               {
-    auto ast = new SimpleStmtAST();
-    ast->op = 5;
-    (yyval.ast_val) = ast;
-  }
-#line 1677 "/project/sysy-make-template/build/sysy.tab.cpp"
-    break;
-
-  case 24:
-#line 216 "/project/sysy-make-template/src/sysy.y"
-                   {
-    auto ast = new SimpleStmtAST();
-    ast->op = 6;
-    ast->exp = unique_ptr<BaseAST>((yyvsp[-1].ast_val));
-    (yyval.ast_val) = ast;
-  }
-#line 1688 "/project/sysy-make-template/build/sysy.tab.cpp"
-    break;
-
-  case 25:
-#line 222 "/project/sysy-make-template/src/sysy.y"
-              {
-    auto ast = new SimpleStmtAST();
-    ast->op = 7;
-    (yyval.ast_val) = ast;
-  }
-#line 1698 "/project/sysy-make-template/build/sysy.tab.cpp"
-    break;
-
-  case 26:
-#line 227 "/project/sysy-make-template/src/sysy.y"
+              yyRuleNum yyrule = yydefaultAction (yystate);
+              if (yyrule == 0)
                 {
-    auto ast = new SimpleStmtAST();
-    ast->op = 8;
-    (yyval.ast_val) = ast;
-  }
-#line 1708 "/project/sysy-make-template/build/sysy.tab.cpp"
-    break;
-
-  case 27:
-#line 235 "/project/sysy-make-template/src/sysy.y"
-           {
-    auto ast = new ExpAST();
-    ast->lor_exp = unique_ptr<BaseAST>((yyvsp[0].ast_val));
-    (yyval.ast_val) = ast;
-  }
-#line 1718 "/project/sysy-make-template/build/sysy.tab.cpp"
-    break;
-
-  case 28:
-#line 243 "/project/sysy-make-template/src/sysy.y"
-           {
-    auto ast = new AddExpAST();
-    ast->op = 1;
-    ast->mul_exp = unique_ptr<BaseAST>((yyvsp[0].ast_val));
-    (yyval.ast_val) = ast;
-  }
-#line 1729 "/project/sysy-make-template/build/sysy.tab.cpp"
-    break;
-
-  case 29:
-#line 249 "/project/sysy-make-template/src/sysy.y"
-                      {
-    auto ast = new AddExpAST();
-    ast->op = 2;
-    ast->add_exp = unique_ptr<BaseAST>((yyvsp[-2].ast_val));
-    ast->add_op = "+";
-    ast->mul_exp = unique_ptr<BaseAST>((yyvsp[0].ast_val));
-    (yyval.ast_val) = ast;
-  }
-#line 1742 "/project/sysy-make-template/build/sysy.tab.cpp"
-    break;
-
-  case 30:
-#line 257 "/project/sysy-make-template/src/sysy.y"
-                      {
-    auto ast = new AddExpAST();
-    ast->op = 2;
-    ast->add_exp = unique_ptr<BaseAST>((yyvsp[-2].ast_val));
-    ast->add_op = "-";
-    ast->mul_exp = unique_ptr<BaseAST>((yyvsp[0].ast_val));
-    (yyval.ast_val) = ast;
-  }
-#line 1755 "/project/sysy-make-template/build/sysy.tab.cpp"
-    break;
-
-  case 31:
-#line 268 "/project/sysy-make-template/src/sysy.y"
-             {
-    auto ast = new MulExpAST();
-    ast->op = 1;
-    ast-> unary_exp = unique_ptr<BaseAST>((yyvsp[0].ast_val));
-    (yyval.ast_val) = ast;
-  }
-#line 1766 "/project/sysy-make-template/build/sysy.tab.cpp"
-    break;
-
-  case 32:
-#line 274 "/project/sysy-make-template/src/sysy.y"
-                        {
-    auto ast = new MulExpAST();
-    ast->op = 2;
-    ast->mul_exp = unique_ptr<BaseAST>((yyvsp[-2].ast_val));
-    ast->mul_op = "*";
-    ast->unary_exp = unique_ptr<BaseAST>((yyvsp[0].ast_val));
-    (yyval.ast_val) = ast;
-  }
-#line 1779 "/project/sysy-make-template/build/sysy.tab.cpp"
-    break;
-
-  case 33:
-#line 282 "/project/sysy-make-template/src/sysy.y"
-                        {
-    auto ast = new MulExpAST();
-    ast->op = 2;
-    ast->mul_exp = unique_ptr<BaseAST>((yyvsp[-2].ast_val));
-    ast->mul_op = "/";
-    ast->unary_exp = unique_ptr<BaseAST>((yyvsp[0].ast_val));
-    (yyval.ast_val) = ast;
-  }
-#line 1792 "/project/sysy-make-template/build/sysy.tab.cpp"
-    break;
-
-  case 34:
-#line 290 "/project/sysy-make-template/src/sysy.y"
-                        {
-    auto ast = new MulExpAST();
-    ast->op = 2;
-    ast->mul_exp = unique_ptr<BaseAST>((yyvsp[-2].ast_val));
-    ast->mul_op = "%";
-    ast->unary_exp = unique_ptr<BaseAST>((yyvsp[0].ast_val));
-    (yyval.ast_val) = ast;
-  }
-#line 1805 "/project/sysy-make-template/build/sysy.tab.cpp"
-    break;
-
-  case 35:
-#line 301 "/project/sysy-make-template/src/sysy.y"
+                  yyreportSyntaxError (&yystack, ast);
+                  goto yyuser_error;
+                }
+              YYCHK1 (yyglrReduce (&yystack, 0, yyrule, yytrue, ast));
+            }
+          else
             {
-    auto ast = new LOrExpAST();
-    ast->op = 1;
-    ast->land_exp = unique_ptr<BaseAST>((yyvsp[0].ast_val));
-    (yyval.ast_val) = ast;
-  }
-#line 1816 "/project/sysy-make-template/build/sysy.tab.cpp"
-    break;
-
-  case 36:
-#line 307 "/project/sysy-make-template/src/sysy.y"
-                       {
-    auto ast = new LOrExpAST();
-    ast->op = 2;
-    ast->lor_exp = unique_ptr<BaseAST>((yyvsp[-2].ast_val));
-    ast->lor_op = "||";
-    ast->land_exp = unique_ptr<BaseAST>((yyvsp[0].ast_val));
-    (yyval.ast_val) = ast;
-  }
-#line 1829 "/project/sysy-make-template/build/sysy.tab.cpp"
-    break;
-
-  case 37:
-#line 318 "/project/sysy-make-template/src/sysy.y"
-          {
-    auto ast = new LAndExpAST();
-    ast->op = 1;
-    ast->eq_exp = unique_ptr<BaseAST>((yyvsp[0].ast_val));
-    (yyval.ast_val) = ast;
-  }
-#line 1840 "/project/sysy-make-template/build/sysy.tab.cpp"
-    break;
-
-  case 38:
-#line 324 "/project/sysy-make-template/src/sysy.y"
-                       {
-    auto ast = new LAndExpAST();
-    ast->op = 2;
-    ast->land_exp = unique_ptr<BaseAST>((yyvsp[-2].ast_val));
-    ast->land_op = "&&";
-    ast->eq_exp = unique_ptr<BaseAST>((yyvsp[0].ast_val));
-    (yyval.ast_val) = ast;
-  }
-#line 1853 "/project/sysy-make-template/build/sysy.tab.cpp"
-    break;
-
-  case 39:
-#line 335 "/project/sysy-make-template/src/sysy.y"
-           {
-    auto ast = new EqExpAST();
-    ast->op = 1;
-    ast->rel_exp = unique_ptr<BaseAST>((yyvsp[0].ast_val));
-    (yyval.ast_val) = ast;
-  }
-#line 1864 "/project/sysy-make-template/build/sysy.tab.cpp"
-    break;
-
-  case 40:
-#line 341 "/project/sysy-make-template/src/sysy.y"
-                    {
-    auto ast = new EqExpAST();
-    ast->op = 2;
-    ast->eq_exp = unique_ptr<BaseAST>((yyvsp[-2].ast_val));
-    ast->eq_op = "==";
-    ast->rel_exp = unique_ptr<BaseAST>((yyvsp[0].ast_val));
-    (yyval.ast_val) = ast;
-  }
-#line 1877 "/project/sysy-make-template/build/sysy.tab.cpp"
-    break;
-
-  case 41:
-#line 349 "/project/sysy-make-template/src/sysy.y"
-                     {
-    auto ast = new EqExpAST();
-    ast->op = 2;
-    ast->eq_exp = unique_ptr<BaseAST>((yyvsp[-2].ast_val));
-    ast->eq_op = "!=";
-    ast->rel_exp = unique_ptr<BaseAST>((yyvsp[0].ast_val));
-    (yyval.ast_val) = ast;
-  }
-#line 1890 "/project/sysy-make-template/build/sysy.tab.cpp"
-    break;
-
-  case 42:
-#line 360 "/project/sysy-make-template/src/sysy.y"
-           {
-    auto ast = new RelExpAST();
-    ast->op = 1;
-    ast->add_exp = unique_ptr<BaseAST>((yyvsp[0].ast_val));
-    (yyval.ast_val) = ast;
-  }
-#line 1901 "/project/sysy-make-template/build/sysy.tab.cpp"
-    break;
-
-  case 43:
-#line 366 "/project/sysy-make-template/src/sysy.y"
-                      {
-    auto ast = new RelExpAST();
-    ast->op = 2;
-    ast->rel_exp = unique_ptr<BaseAST>((yyvsp[-2].ast_val));
-    ast->rel_op = "<";
-    ast->add_exp = unique_ptr<BaseAST>((yyvsp[0].ast_val));
-    (yyval.ast_val) = ast;
-  }
-#line 1914 "/project/sysy-make-template/build/sysy.tab.cpp"
-    break;
-
-  case 44:
-#line 374 "/project/sysy-make-template/src/sysy.y"
-                      {
-    auto ast = new RelExpAST();
-    ast->op = 2;
-    ast->rel_exp = unique_ptr<BaseAST>((yyvsp[-2].ast_val));
-    ast->rel_op = ">";
-    ast->add_exp = unique_ptr<BaseAST>((yyvsp[0].ast_val));
-    (yyval.ast_val) = ast;
-  }
-#line 1927 "/project/sysy-make-template/build/sysy.tab.cpp"
-    break;
-
-  case 45:
-#line 382 "/project/sysy-make-template/src/sysy.y"
-                      {
-    auto ast = new RelExpAST();
-    ast->op = 2;
-    ast->rel_exp = unique_ptr<BaseAST>((yyvsp[-2].ast_val));
-    ast->rel_op = "<=";
-    ast->add_exp = unique_ptr<BaseAST>((yyvsp[0].ast_val));
-    (yyval.ast_val) = ast;
-  }
-#line 1940 "/project/sysy-make-template/build/sysy.tab.cpp"
-    break;
-
-  case 46:
-#line 390 "/project/sysy-make-template/src/sysy.y"
-                      {
-    auto ast = new RelExpAST();
-    ast->op = 2;
-    ast->rel_exp = unique_ptr<BaseAST>((yyvsp[-2].ast_val));
-    ast->rel_op = ">=";
-    ast->add_exp = unique_ptr<BaseAST>((yyvsp[0].ast_val));
-    (yyval.ast_val) = ast;
-  }
-#line 1953 "/project/sysy-make-template/build/sysy.tab.cpp"
-    break;
-
-  case 47:
-#line 401 "/project/sysy-make-template/src/sysy.y"
-                {
-    auto ast = new PrimaryExpAST();
-    ast->op = 1;
-    ast->exp = unique_ptr<BaseAST>((yyvsp[-1].ast_val));
-    (yyval.ast_val) = ast;
-  }
-#line 1964 "/project/sysy-make-template/build/sysy.tab.cpp"
-    break;
-
-  case 48:
-#line 407 "/project/sysy-make-template/src/sysy.y"
-         {
-    auto ast = new PrimaryExpAST();
-    ast->op = 2;
-    ast->lval = unique_ptr<BaseAST>((yyvsp[0].ast_val));
-    (yyval.ast_val) = ast;
-  }
-#line 1975 "/project/sysy-make-template/build/sysy.tab.cpp"
-    break;
-
-  case 49:
-#line 413 "/project/sysy-make-template/src/sysy.y"
-           {
-    auto ast = new PrimaryExpAST();
-    ast->op = 3;
-    ast->number = int((yyvsp[0].int_val));
-    (yyval.ast_val) = ast;
-  }
-#line 1986 "/project/sysy-make-template/build/sysy.tab.cpp"
-    break;
-
-  case 50:
-#line 422 "/project/sysy-make-template/src/sysy.y"
-               {
-    auto ast = new UnaryExpAST();
-    ast->op = 1;
-    ast->primary_exp = unique_ptr<BaseAST>((yyvsp[0].ast_val));
-    (yyval.ast_val) = ast;
-  }
-#line 1997 "/project/sysy-make-template/build/sysy.tab.cpp"
-    break;
-
-  case 51:
-#line 428 "/project/sysy-make-template/src/sysy.y"
-                     {
-    auto ast = new UnaryExpAST();
-    ast->op = 2;
-    ast->unary_op = unique_ptr<BaseAST>((yyvsp[-1].ast_val));
-    ast->unary_exp = unique_ptr<BaseAST>((yyvsp[0].ast_val));
-    (yyval.ast_val) = ast;
-  }
-#line 2009 "/project/sysy-make-template/build/sysy.tab.cpp"
-    break;
-
-  case 52:
-#line 438 "/project/sysy-make-template/src/sysy.y"
-              {
-    auto ast = new DeclAST();
-    ast->op = 1;
-    ast->const_decl = unique_ptr<BaseAST>((yyvsp[0].ast_val));
-    (yyval.ast_val) = ast;
-  }
-#line 2020 "/project/sysy-make-template/build/sysy.tab.cpp"
-    break;
-
-  case 53:
-#line 444 "/project/sysy-make-template/src/sysy.y"
-            {
-    auto ast = new DeclAST();
-    ast->op = 2;
-    ast->var_decl = unique_ptr<BaseAST>((yyvsp[0].ast_val));
-    (yyval.ast_val) = ast;
-  }
-#line 2031 "/project/sysy-make-template/build/sysy.tab.cpp"
-    break;
-
-  case 54:
-#line 453 "/project/sysy-make-template/src/sysy.y"
-                            {
-    auto ast = new ConstDeclAST();
-    ast->btype = unique_ptr<BaseAST>((yyvsp[-2].ast_val));
-    ast->const_def.push_back(unique_ptr<BaseAST>((yyvsp[-1].ast_val)));
-    (yyval.ast_val) = ast;
-  }
-#line 2042 "/project/sysy-make-template/build/sysy.tab.cpp"
-    break;
-
-  case 55:
-#line 459 "/project/sysy-make-template/src/sysy.y"
-                                           {
-    auto ast = new ConstDeclAST();
-    ast->btype = unique_ptr<BaseAST>((yyvsp[-3].ast_val));
-    ast->first_const_def = unique_ptr<BaseAST>((yyvsp[-2].ast_val));
-    ast->rest_of_const_def = unique_ptr<BaseAST>((yyvsp[-1].ast_val));
-    ast->get_const_def_vec();
-    (yyval.ast_val) = ast;
-  }
-#line 2055 "/project/sysy-make-template/build/sysy.tab.cpp"
-    break;
-
-  case 56:
-#line 470 "/project/sysy-make-template/src/sysy.y"
-                    {
-    auto ast = new VarDeclAST();
-    ast->btype = unique_ptr<BaseAST>((yyvsp[-2].ast_val));
-    ast->var_def.push_back(unique_ptr<BaseAST>((yyvsp[-1].ast_val)));
-    (yyval.ast_val) = ast;
-  }
-#line 2066 "/project/sysy-make-template/build/sysy.tab.cpp"
-    break;
-
-  case 57:
-#line 476 "/project/sysy-make-template/src/sysy.y"
-                                 {
-    auto ast = new VarDeclAST();
-    ast->btype = unique_ptr<BaseAST>((yyvsp[-3].ast_val));
-    ast->first_var_def = unique_ptr<BaseAST>((yyvsp[-2].ast_val));
-    ast->rest_of_var_def = unique_ptr<BaseAST>((yyvsp[-1].ast_val));
-    ast->get_var_def_vec();
-    (yyval.ast_val) = ast;
-  }
-#line 2079 "/project/sysy-make-template/build/sysy.tab.cpp"
-    break;
-
-  case 58:
-#line 487 "/project/sysy-make-template/src/sysy.y"
-                 {
-    auto ast = new RestOfConstDefAST();
-    ast->rest_of_const_def = NULL;
-    ast->const_def = unique_ptr<BaseAST>((yyvsp[0].ast_val));
-    (yyval.ast_val) = ast;
-  }
-#line 2090 "/project/sysy-make-template/build/sysy.tab.cpp"
-    break;
-
-  case 59:
-#line 493 "/project/sysy-make-template/src/sysy.y"
-                                {
-    auto ast = new RestOfConstDefAST();
-    ast->const_def = unique_ptr<BaseAST>((yyvsp[-1].ast_val));
-    ast->rest_of_const_def = unique_ptr<BaseAST>((yyvsp[0].ast_val));
-    (yyval.ast_val) = ast;
-  }
-#line 2101 "/project/sysy-make-template/build/sysy.tab.cpp"
-    break;
-
-  case 60:
-#line 502 "/project/sysy-make-template/src/sysy.y"
-               {
-    auto ast = new RestOfVarDefAST();
-    ast->rest_of_var_def = NULL;
-    ast->var_def = unique_ptr<BaseAST>((yyvsp[0].ast_val));
-    (yyval.ast_val) = ast;
-  }
-#line 2112 "/project/sysy-make-template/build/sysy.tab.cpp"
-    break;
-
-  case 61:
-#line 508 "/project/sysy-make-template/src/sysy.y"
-                            {
-    auto ast = new RestOfVarDefAST();
-    ast->var_def = unique_ptr<BaseAST>((yyvsp[-1].ast_val));
-    ast->rest_of_var_def = unique_ptr<BaseAST>((yyvsp[0].ast_val));
-    (yyval.ast_val) = ast;
-  }
-#line 2123 "/project/sysy-make-template/build/sysy.tab.cpp"
-    break;
-
-  case 62:
-#line 517 "/project/sysy-make-template/src/sysy.y"
-        {
-    auto ast = new BTypeAST();
-    ast->btype = "int";
-    (yyval.ast_val) = ast;
-  }
-#line 2133 "/project/sysy-make-template/build/sysy.tab.cpp"
-    break;
-
-  case 63:
-#line 525 "/project/sysy-make-template/src/sysy.y"
-                           {
-    auto ast = new ConstDefAST();
-    ast->ident = *unique_ptr<string>((yyvsp[-2].str_val));
-    ast->const_init_val = unique_ptr<BaseAST>((yyvsp[0].ast_val));
-    (yyval.ast_val) = ast;
-  }
-#line 2144 "/project/sysy-make-template/build/sysy.tab.cpp"
-    break;
-
-  case 64:
-#line 534 "/project/sysy-make-template/src/sysy.y"
-          {
-    auto ast = new VarDefAST();
-    ast->op = 1;
-    ast->ident = *unique_ptr<string>((yyvsp[0].str_val));
-    (yyval.ast_val) = ast;
-  }
-#line 2155 "/project/sysy-make-template/build/sysy.tab.cpp"
-    break;
-
-  case 65:
-#line 540 "/project/sysy-make-template/src/sysy.y"
-                      {
-    auto ast = new VarDefAST();
-    ast->op = 2;
-    ast->ident = *unique_ptr<string>((yyvsp[-2].str_val));
-    ast->init_val = unique_ptr<BaseAST>((yyvsp[0].ast_val));
-    (yyval.ast_val) = ast;
-  }
-#line 2167 "/project/sysy-make-template/build/sysy.tab.cpp"
-    break;
-
-  case 66:
-#line 550 "/project/sysy-make-template/src/sysy.y"
-             {
-    auto ast = new ConstInitValAST();
-    ast->const_exp = unique_ptr<BaseAST>((yyvsp[0].ast_val));
-    (yyval.ast_val) = ast;
-  }
-#line 2177 "/project/sysy-make-template/build/sysy.tab.cpp"
-    break;
-
-  case 67:
-#line 558 "/project/sysy-make-template/src/sysy.y"
-        {
-    auto ast = new InitValAST();
-    ast->exp = unique_ptr<BaseAST>((yyvsp[0].ast_val));
-    (yyval.ast_val) = ast;
-  }
-#line 2187 "/project/sysy-make-template/build/sysy.tab.cpp"
-    break;
-
-  case 68:
-#line 566 "/project/sysy-make-template/src/sysy.y"
-        {
-    auto ast = new ConstExpAST();
-    ast->exp = unique_ptr<BaseAST>((yyvsp[0].ast_val));
-    (yyval.ast_val) = ast;
-  }
-#line 2197 "/project/sysy-make-template/build/sysy.tab.cpp"
-    break;
-
-  case 69:
-#line 574 "/project/sysy-make-template/src/sysy.y"
-          {
-    auto ast = new LValAST();
-    ast->ident = *unique_ptr<string>((yyvsp[0].str_val));
-    (yyval.ast_val) = ast;
-  }
-#line 2207 "/project/sysy-make-template/build/sysy.tab.cpp"
-    break;
-
-  case 70:
-#line 582 "/project/sysy-make-template/src/sysy.y"
-        {
-    auto ast = new UnaryOpAST();
-    ast->op = "+";
-    (yyval.ast_val)=ast;
-  }
-#line 2217 "/project/sysy-make-template/build/sysy.tab.cpp"
-    break;
-
-  case 71:
-#line 587 "/project/sysy-make-template/src/sysy.y"
-        {
-    auto ast = new UnaryOpAST();
-    ast->op = "-";
-    (yyval.ast_val)=ast;
-  }
-#line 2227 "/project/sysy-make-template/build/sysy.tab.cpp"
-    break;
-
-  case 72:
-#line 592 "/project/sysy-make-template/src/sysy.y"
-         {
-    auto ast = new UnaryOpAST();
-    ast->op = "!";
-    (yyval.ast_val)=ast;
-  }
-#line 2237 "/project/sysy-make-template/build/sysy.tab.cpp"
-    break;
-
-  case 73:
-#line 600 "/project/sysy-make-template/src/sysy.y"
-              {
-    (yyval.int_val) = int((yyvsp[0].int_val));
-  }
-#line 2245 "/project/sysy-make-template/build/sysy.tab.cpp"
-    break;
-
-
-#line 2249 "/project/sysy-make-template/build/sysy.tab.cpp"
-
-      default: break;
-    }
-  /* User semantic actions sometimes alter yychar, and that requires
-     that yytoken be updated with the new translation.  We take the
-     approach of translating immediately before every use of yytoken.
-     One alternative is translating here after every semantic action,
-     but that translation would be missed if the semantic action invokes
-     YYABORT, YYACCEPT, or YYERROR immediately after altering yychar or
-     if it invokes YYBACKUP.  In the case of YYABORT or YYACCEPT, an
-     incorrect destructor might then be invoked immediately.  In the
-     case of YYERROR or YYBACKUP, subsequent parser actions might lead
-     to an incorrect destructor call or verbose syntax error message
-     before the lookahead is translated.  */
-  YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
-
-  YYPOPSTACK (yylen);
-  yylen = 0;
-  YY_STACK_PRINT (yyss, yyssp);
-
-  *++yyvsp = yyval;
-
-  /* Now 'shift' the result of the reduction.  Determine what state
-     that goes to, based on the state we popped back to and the rule
-     number reduced by.  */
-  {
-    const int yylhs = yyr1[yyn] - YYNTOKENS;
-    const int yyi = yypgoto[yylhs] + *yyssp;
-    yystate = (0 <= yyi && yyi <= YYLAST && yycheck[yyi] == *yyssp
-               ? yytable[yyi]
-               : yydefgoto[yylhs]);
-  }
-
-  goto yynewstate;
-
-
-/*--------------------------------------.
-| yyerrlab -- here on detecting error.  |
-`--------------------------------------*/
-yyerrlab:
-  /* Make sure we have latest lookahead translation.  See comments at
-     user semantic actions for why this is necessary.  */
-  yytoken = yychar == YYEMPTY ? YYEMPTY : YYTRANSLATE (yychar);
-
-  /* If not already recovering from an error, report this error.  */
-  if (!yyerrstatus)
-    {
-      ++yynerrs;
-#if ! YYERROR_VERBOSE
-      yyerror (ast, YY_("syntax error"));
-#else
-# define YYSYNTAX_ERROR yysyntax_error (&yymsg_alloc, &yymsg, \
-                                        yyssp, yytoken)
-      {
-        char const *yymsgp = YY_("syntax error");
-        int yysyntax_error_status;
-        yysyntax_error_status = YYSYNTAX_ERROR;
-        if (yysyntax_error_status == 0)
-          yymsgp = yymsg;
-        else if (yysyntax_error_status == 1)
-          {
-            if (yymsg != yymsgbuf)
-              YYSTACK_FREE (yymsg);
-            yymsg = YY_CAST (char *, YYSTACK_ALLOC (YY_CAST (YYSIZE_T, yymsg_alloc)));
-            if (!yymsg)
-              {
-                yymsg = yymsgbuf;
-                yymsg_alloc = sizeof yymsgbuf;
-                yysyntax_error_status = 2;
-              }
-            else
-              {
-                yysyntax_error_status = YYSYNTAX_ERROR;
-                yymsgp = yymsg;
-              }
-          }
-        yyerror (ast, yymsgp);
-        if (yysyntax_error_status == 2)
-          goto yyexhaustedlab;
-      }
-# undef YYSYNTAX_ERROR
-#endif
-    }
-
-
-
-  if (yyerrstatus == 3)
-    {
-      /* If just tried and failed to reuse lookahead token after an
-         error, discard it.  */
-
-      if (yychar <= YYEOF)
-        {
-          /* Return failure if at end of input.  */
-          if (yychar == YYEOF)
-            YYABORT;
-        }
-      else
-        {
-          yydestruct ("Error: discarding",
-                      yytoken, &yylval, ast);
-          yychar = YYEMPTY;
-        }
-    }
-
-  /* Else will try to reuse lookahead token after shifting the error
-     token.  */
-  goto yyerrlab1;
-
-
-/*---------------------------------------------------.
-| yyerrorlab -- error raised explicitly by YYERROR.  |
-`---------------------------------------------------*/
-yyerrorlab:
-  /* Pacify compilers when the user code never invokes YYERROR and the
-     label yyerrorlab therefore never appears in user code.  */
-  if (0)
-    YYERROR;
-
-  /* Do not reclaim the symbols of the rule whose action triggered
-     this YYERROR.  */
-  YYPOPSTACK (yylen);
-  yylen = 0;
-  YY_STACK_PRINT (yyss, yyssp);
-  yystate = *yyssp;
-  goto yyerrlab1;
-
-
-/*-------------------------------------------------------------.
-| yyerrlab1 -- common code for both syntax error and YYERROR.  |
-`-------------------------------------------------------------*/
-yyerrlab1:
-  yyerrstatus = 3;      /* Each real token shifted decrements this.  */
-
-  for (;;)
-    {
-      yyn = yypact[yystate];
-      if (!yypact_value_is_default (yyn))
-        {
-          yyn += YYTERROR;
-          if (0 <= yyn && yyn <= YYLAST && yycheck[yyn] == YYTERROR)
-            {
-              yyn = yytable[yyn];
-              if (0 < yyn)
+              yySymbol yytoken = yygetToken (&yychar, ast);
+              const short* yyconflicts;
+              int yyaction = yygetLRActions (yystate, yytoken, &yyconflicts);
+              if (*yyconflicts != 0)
                 break;
+              if (yyisShiftAction (yyaction))
+                {
+                  YY_SYMBOL_PRINT ("Shifting", yytoken, &yylval, &yylloc);
+                  yychar = YYEMPTY;
+                  yyposn += 1;
+                  yyglrShift (&yystack, 0, yyaction, yyposn, &yylval);
+                  if (0 < yystack.yyerrState)
+                    yystack.yyerrState -= 1;
+                }
+              else if (yyisErrorAction (yyaction))
+                {                  yyreportSyntaxError (&yystack, ast);
+                  goto yyuser_error;
+                }
+              else
+                YYCHK1 (yyglrReduce (&yystack, 0, -yyaction, yytrue, ast));
             }
         }
 
-      /* Pop the current state because it cannot handle the error token.  */
-      if (yyssp == yyss)
-        YYABORT;
+      while (yytrue)
+        {
+          yySymbol yytoken_to_shift;
+          ptrdiff_t yys;
 
+          for (yys = 0; yys < yystack.yytops.yysize; yys += 1)
+            yystackp->yytops.yylookaheadNeeds[yys] = yychar != YYEMPTY;
 
-      yydestruct ("Error: popping",
-                  yystos[yystate], yyvsp, ast);
-      YYPOPSTACK (1);
-      yystate = *yyssp;
-      YY_STACK_PRINT (yyss, yyssp);
+          /* yyprocessOneStack returns one of three things:
+
+              - An error flag.  If the caller is yyprocessOneStack, it
+                immediately returns as well.  When the caller is finally
+                yyparse, it jumps to an error label via YYCHK1.
+
+              - yyok, but yyprocessOneStack has invoked yymarkStackDeleted
+                (&yystack, yys), which sets the top state of yys to NULL.  Thus,
+                yyparse's following invocation of yyremoveDeletes will remove
+                the stack.
+
+              - yyok, when ready to shift a token.
+
+             Except in the first case, yyparse will invoke yyremoveDeletes and
+             then shift the next token onto all remaining stacks.  This
+             synchronization of the shift (that is, after all preceding
+             reductions on all stacks) helps prevent double destructor calls
+             on yylval in the event of memory exhaustion.  */
+
+          for (yys = 0; yys < yystack.yytops.yysize; yys += 1)
+            YYCHK1 (yyprocessOneStack (&yystack, yys, yyposn, ast));
+          yyremoveDeletes (&yystack);
+          if (yystack.yytops.yysize == 0)
+            {
+              yyundeleteLastStack (&yystack);
+              if (yystack.yytops.yysize == 0)
+                yyFail (&yystack, ast, YY_("syntax error"));
+              YYCHK1 (yyresolveStack (&yystack, ast));
+              YY_DPRINTF ((stderr, "Returning to deterministic operation.\n"));
+              yyreportSyntaxError (&yystack, ast);
+              goto yyuser_error;
+            }
+
+          /* If any yyglrShift call fails, it will fail after shifting.  Thus,
+             a copy of yylval will already be on stack 0 in the event of a
+             failure in the following loop.  Thus, yychar is set to YYEMPTY
+             before the loop to make sure the user destructor for yylval isn't
+             called twice.  */
+          yytoken_to_shift = YYTRANSLATE (yychar);
+          yychar = YYEMPTY;
+          yyposn += 1;
+          for (yys = 0; yys < yystack.yytops.yysize; yys += 1)
+            {
+              yyStateNum yystate = yystack.yytops.yystates[yys]->yylrState;
+              const short* yyconflicts;
+              int yyaction = yygetLRActions (yystate, yytoken_to_shift,
+                              &yyconflicts);
+              /* Note that yyconflicts were handled by yyprocessOneStack.  */
+              YY_DPRINTF ((stderr, "On stack %ld, ", YY_CAST (long, yys)));
+              YY_SYMBOL_PRINT ("shifting", yytoken_to_shift, &yylval, &yylloc);
+              yyglrShift (&yystack, yys, yyaction, yyposn,
+                          &yylval);
+              YY_DPRINTF ((stderr, "Stack %ld now in state #%d\n",
+                           YY_CAST (long, yys),
+                           yystack.yytops.yystates[yys]->yylrState));
+            }
+
+          if (yystack.yytops.yysize == 1)
+            {
+              YYCHK1 (yyresolveStack (&yystack, ast));
+              YY_DPRINTF ((stderr, "Returning to deterministic operation.\n"));
+              yycompressStack (&yystack);
+              break;
+            }
+        }
+      continue;
+    yyuser_error:
+      yyrecoverSyntaxError (&yystack, ast);
+      yyposn = yystack.yytops.yystates[0]->yyposn;
     }
 
-  YY_IGNORE_MAYBE_UNINITIALIZED_BEGIN
-  *++yyvsp = yylval;
-  YY_IGNORE_MAYBE_UNINITIALIZED_END
-
-
-  /* Shift the error token.  */
-  YY_SYMBOL_PRINT ("Shifting", yystos[yyn], yyvsp, yylsp);
-
-  yystate = yyn;
-  goto yynewstate;
-
-
-/*-------------------------------------.
-| yyacceptlab -- YYACCEPT comes here.  |
-`-------------------------------------*/
-yyacceptlab:
+ yyacceptlab:
   yyresult = 0;
   goto yyreturn;
 
+ yybuglab:
+  YY_ASSERT (yyfalse);
+  goto yyabortlab;
 
-/*-----------------------------------.
-| yyabortlab -- YYABORT comes here.  |
-`-----------------------------------*/
-yyabortlab:
+ yyabortlab:
   yyresult = 1;
   goto yyreturn;
 
-
-#if !defined yyoverflow || YYERROR_VERBOSE
-/*-------------------------------------------------.
-| yyexhaustedlab -- memory exhaustion comes here.  |
-`-------------------------------------------------*/
-yyexhaustedlab:
+ yyexhaustedlab:
   yyerror (ast, YY_("memory exhausted"));
   yyresult = 2;
-  /* Fall through.  */
-#endif
+  goto yyreturn;
 
-
-/*-----------------------------------------------------.
-| yyreturn -- parsing is finished, return the result.  |
-`-----------------------------------------------------*/
-yyreturn:
+ yyreturn:
   if (yychar != YYEMPTY)
+    yydestruct ("Cleanup: discarding lookahead",
+                YYTRANSLATE (yychar), &yylval, ast);
+
+  /* If the stack is well-formed, pop the stack until it is empty,
+     destroying its entries as we go.  But free the stack regardless
+     of whether it is well-formed.  */
+  if (yystack.yyitems)
     {
-      /* Make sure we have latest lookahead translation.  See comments at
-         user semantic actions for why this is necessary.  */
-      yytoken = YYTRANSLATE (yychar);
-      yydestruct ("Cleanup: discarding lookahead",
-                  yytoken, &yylval, ast);
+      yyGLRState** yystates = yystack.yytops.yystates;
+      if (yystates)
+        {
+          ptrdiff_t yysize = yystack.yytops.yysize;
+          ptrdiff_t yyk;
+          for (yyk = 0; yyk < yysize; yyk += 1)
+            if (yystates[yyk])
+              {
+                while (yystates[yyk])
+                  {
+                    yyGLRState *yys = yystates[yyk];
+                    if (yys->yypred != YY_NULLPTR)
+                      yydestroyGLRState ("Cleanup: popping", yys, ast);
+                    yystates[yyk] = yys->yypred;
+                    yystack.yynextFree -= 1;
+                    yystack.yyspaceLeft += 1;
+                  }
+                break;
+              }
+        }
+      yyfreeGLRStack (&yystack);
     }
-  /* Do not reclaim the symbols of the rule whose action triggered
-     this YYABORT or YYACCEPT.  */
-  YYPOPSTACK (yylen);
-  YY_STACK_PRINT (yyss, yyssp);
-  while (yyssp != yyss)
-    {
-      yydestruct ("Cleanup: popping",
-                  yystos[+*yyssp], yyvsp, ast);
-      YYPOPSTACK (1);
-    }
-#ifndef yyoverflow
-  if (yyss != yyssa)
-    YYSTACK_FREE (yyss);
-#endif
-#if YYERROR_VERBOSE
-  if (yymsg != yymsgbuf)
-    YYSTACK_FREE (yymsg);
-#endif
+
   return yyresult;
 }
-#line 605 "/project/sysy-make-template/src/sysy.y"
+
+/* DEBUGGING ONLY */
+#if YYDEBUG
+static void
+yy_yypstack (yyGLRState* yys)
+{
+  if (yys->yypred)
+    {
+      yy_yypstack (yys->yypred);
+      YY_FPRINTF ((stderr, " -> "));
+    }
+  YY_FPRINTF ((stderr, "%d@%ld", yys->yylrState, YY_CAST (long, yys->yyposn)));
+}
+
+static void
+yypstates (yyGLRState* yyst)
+{
+  if (yyst == YY_NULLPTR)
+    YY_FPRINTF ((stderr, "<null>"));
+  else
+    yy_yypstack (yyst);
+  YY_FPRINTF ((stderr, "\n"));
+}
+
+static void
+yypstack (yyGLRStack* yystackp, ptrdiff_t yyk)
+{
+  yypstates (yystackp->yytops.yystates[yyk]);
+}
+
+static void
+yypdumpstack (yyGLRStack* yystackp)
+{
+#define YYINDEX(YYX)                                                    \
+  YY_CAST (long,                                                        \
+           ((YYX)                                                       \
+            ? YY_REINTERPRET_CAST (yyGLRStackItem*, (YYX)) - yystackp->yyitems \
+            : -1))
+
+  yyGLRStackItem* yyp;
+  for (yyp = yystackp->yyitems; yyp < yystackp->yynextFree; yyp += 1)
+    {
+      YY_FPRINTF ((stderr, "%3ld. ",
+                   YY_CAST (long, yyp - yystackp->yyitems)));
+      if (*YY_REINTERPRET_CAST (yybool *, yyp))
+        {
+          YY_ASSERT (yyp->yystate.yyisState);
+          YY_ASSERT (yyp->yyoption.yyisState);
+          YY_FPRINTF ((stderr, "Res: %d, LR State: %d, posn: %ld, pred: %ld",
+                       yyp->yystate.yyresolved, yyp->yystate.yylrState,
+                       YY_CAST (long, yyp->yystate.yyposn),
+                       YYINDEX (yyp->yystate.yypred)));
+          if (! yyp->yystate.yyresolved)
+            YY_FPRINTF ((stderr, ", firstVal: %ld",
+                         YYINDEX (yyp->yystate.yysemantics.yyfirstVal)));
+        }
+      else
+        {
+          YY_ASSERT (!yyp->yystate.yyisState);
+          YY_ASSERT (!yyp->yyoption.yyisState);
+          YY_FPRINTF ((stderr, "Option. rule: %d, state: %ld, next: %ld",
+                       yyp->yyoption.yyrule - 1,
+                       YYINDEX (yyp->yyoption.yystate),
+                       YYINDEX (yyp->yyoption.yynext)));
+        }
+      YY_FPRINTF ((stderr, "\n"));
+    }
+
+  YY_FPRINTF ((stderr, "Tops:"));
+  {
+    ptrdiff_t yyi;
+    for (yyi = 0; yyi < yystackp->yytops.yysize; yyi += 1)
+      YY_FPRINTF ((stderr, "%ld: %ld; ", YY_CAST (long, yyi),
+                   YYINDEX (yystackp->yytops.yystates[yyi])));
+    YY_FPRINTF ((stderr, "\n"));
+  }
+#undef YYINDEX
+}
+#endif
+
+#undef yylval
+#undef yychar
+#undef yynerrs
+
+
+
+#line 736 "/compiler-principles-project/src/sysy.y"
 
 
 // 定义错误处理函数, 其中第二个参数是错误信息

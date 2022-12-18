@@ -37,23 +37,36 @@ extern int while_tmp_id;
 extern int loop_num;
 extern int unreachable_tmp_id;
 extern int var_def_id;
+extern bool is_global_decl;
 
 class symbol{
  public:
-  std::string name; // koopa代码中的变量名(a->a_x)
-  int val;
+  std::string name; // koopa代码中的变量名(a->a_x)或函数名
+  std::string val; // 此符号对应的值(一个数或者一个中间变量名)("x"或"%x")
   bool is_const; // 是否为常量
   bool is_assigned; // 是否已赋值
-  symbol(bool i_c,std::string str=""){
-    name=str;
-    is_const=i_c;
-    is_assigned=0;
-  }
-  symbol(int v,bool i_c,std::string str=""){
-    name=str;
-    val=v;
-    is_const=i_c;
-    is_assigned=1;
+  bool is_func; // 此符号是否对应一个函数
+  bool is_void; // 此函数是否为void型
+  
+  symbol(bool i_f,bool i_c_or_i_v,std::string n="",std::string v=""){
+    if (!i_f){
+      is_func=0;
+      is_const=i_c_or_i_v;
+      name=n;
+      val=v;
+      if (val==""){
+        val="0";
+        is_assigned=0;
+      }
+      else {
+        is_assigned=1;
+      }
+    }
+    else {
+      is_func=1;
+      is_void=i_c_or_i_v;
+      name=n;
+    }
   }
   symbol(){}
 };

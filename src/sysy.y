@@ -38,32 +38,76 @@ using namespace std;
 
 
 // lexer 返回的所有 token 种类的声明
-%token INT RETURN CONST IF ELSE  WHILE BREAK CONTINUE
+%token INT VOID RETURN CONST IF ELSE  WHILE BREAK CONTINUE
 %token <str_val> IDENT LEq GEq Eq NEq LAnd LOr
 %token <int_val> INT_CONST
 
 // 非终结符的类型定义
-%type <ast_val> FuncDef FuncType Block BlockItem RestOfBlockItem Stmt OpenStmt ClosedStmt SimpleStmt
+%type <ast_val> GlobalItem RestOfGlobalItem Block BlockItem RestOfBlockItem Stmt OpenStmt ClosedStmt SimpleStmt
+%type <ast_val> FuncDef FuncType FuncFParams FuncFParam RestOfFuncFParam FuncRParams RestOfFuncRParam
 %type <ast_val> Exp UnaryExp PrimaryExp UnaryOp AddExp MulExp LOrExp LAndExp EqExp RelExp ConstExp 
 %type <ast_val> Decl ConstDecl VarDecl BType ConstDef VarDef RestOfConstDef RestOfVarDef ConstInitVal InitVal LVal 
 %type <int_val> Number
 
+%glr-parser
 %%
 
 CompUnit
-  : FuncDef {
+  : RestOfGlobalItem {
     auto comp_unit = make_unique<CompUnitAST>();
-    comp_unit->func_def = unique_ptr<BaseAST>($1);
+    comp_unit->rest_of_global_item = unique_ptr<BaseAST>($1);
+    comp_unit->get_global_item_vec();
     ast = move(comp_unit);
+  }
+  ;
+
+RestOfGlobalItem
+  : GlobalItem {
+    auto ast = new RestOfGlobalItemAST();
+    ast->rest_of_global_item = NULL;
+    ast->global_item=unique_ptr<BaseAST>($1);
+    $$ = ast;
+  }
+  | GlobalItem RestOfGlobalItem {
+    auto ast = new RestOfGlobalItemAST();
+    ast->global_item=unique_ptr<BaseAST>($1);
+    ast->rest_of_global_item = unique_ptr<BaseAST>($2);
+    $$ = ast;
+  }
+  ;
+
+GlobalItem
+  : Decl {
+    auto ast = new GlobalItemAST();
+    ast->op = 1;
+    ast->decl = unique_ptr<BaseAST>($1);
+    $$ = ast;
+  }
+  | FuncDef {
+    auto ast = new GlobalItemAST();
+    ast->op = 2;
+    ast->func_def = unique_ptr<BaseAST>($1);
+    $$ = ast;
   }
   ;
 
 FuncDef
   : FuncType IDENT '(' ')' Block {
     auto ast = new FuncDefAST();
+    ast->op = 1;
     ast->func_type = unique_ptr<BaseAST>($1);
     ast->ident = *unique_ptr<string>($2);
+    ast->func_f_params = NULL;
     ast->block = unique_ptr<BaseAST>($5);
+    $$ = ast;
+  }
+  | FuncType IDENT '(' FuncFParams ')' Block {
+    auto ast = new FuncDefAST();
+    ast->op = 2;
+    ast->func_type = unique_ptr<BaseAST>($1);
+    ast->ident = *unique_ptr<string>($2);
+    ast->func_f_params = unique_ptr<BaseAST>($4);
+    ast->block = unique_ptr<BaseAST>($6);
     $$ = ast;
   }
   ;
@@ -72,6 +116,80 @@ FuncType
   : INT {
     auto ast = new FuncTypeAST();
     ast->func_type = "int";
+    $$ = ast;
+  }
+  | VOID {
+    auto ast = new FuncTypeAST();
+    ast->func_type = "void";
+    $$ = ast;
+  }
+  ;
+
+FuncFParams
+  : FuncFParam {
+    auto ast = new FuncFParamsAST();
+    ast->param.push_back(unique_ptr<BaseAST>($1));
+    $$ = ast;
+  }
+  | FuncFParam RestOfFuncFParam {
+    auto ast = new FuncFParamsAST();
+    ast->first_param = unique_ptr<BaseAST>($1);
+    ast->rest_of_param = unique_ptr<BaseAST>($2);
+    ast->get_param_vec();
+    $$ = ast;
+  }
+  ;
+
+RestOfFuncFParam
+  : ',' FuncFParam {
+    auto ast = new RestOfFuncFParamAST();
+    ast->rest_of_param = NULL;
+    ast->param = unique_ptr<BaseAST>($2);
+    $$ = ast;
+  }
+  | ',' FuncFParam RestOfFuncFParam {
+    auto ast = new RestOfFuncFParamAST();
+    ast->param = unique_ptr<BaseAST>($2);
+    ast->rest_of_param = unique_ptr<BaseAST>($3);
+    $$ = ast;
+  }
+  ;
+
+FuncFParam
+  : BType IDENT {
+    auto ast = new FuncFParamAST();
+    ast->btype = unique_ptr<BaseAST>($1);
+    ast->ident = *unique_ptr<string>($2);
+    $$ = ast;
+  }
+  ;
+
+FuncRParams
+  : Exp {
+    auto ast = new FuncRParamsAST();
+    ast->exp.push_back(unique_ptr<BaseAST>($1));
+    $$ = ast;
+  }
+  | Exp RestOfFuncRParam {
+    auto ast = new FuncRParamsAST();
+    ast->first_exp = unique_ptr<BaseAST>($1);
+    ast->rest_of_exp = unique_ptr<BaseAST>($2);
+    ast->get_exp_vec();
+    $$ = ast;
+  }
+  ;
+
+RestOfFuncRParam
+  : ',' Exp {
+    auto ast = new RestOfFuncRParamAST();
+    ast->rest_of_exp = NULL;
+    ast->exp = unique_ptr<BaseAST>($2);
+    $$ = ast;
+  }
+  | ',' Exp RestOfFuncRParam {
+    auto ast = new RestOfFuncRParamAST();
+    ast->exp = unique_ptr<BaseAST>($2);
+    ast->rest_of_exp = unique_ptr<BaseAST>($3);
     $$ = ast;
   }
   ;
@@ -83,7 +201,7 @@ Block
   }
   | '{' RestOfBlockItem '}'{
     auto ast = new BlockAST();
-    ast->rest_of_block_item=unique_ptr<BaseAST>($2);
+    ast->rest_of_block_item = unique_ptr<BaseAST>($2);
     ast->get_block_item_vec();
     $$ = ast;
   }
@@ -430,6 +548,19 @@ UnaryExp
     ast->op = 2;
     ast->unary_op = unique_ptr<BaseAST>($1);
     ast->unary_exp = unique_ptr<BaseAST>($2);
+    $$ = ast;
+  }
+  | IDENT '(' ')' {
+    auto ast = new UnaryExpAST();
+    ast->op = 3;
+    ast->ident = *unique_ptr<string>($1);
+    $$ = ast;
+  }
+  | IDENT '(' FuncRParams ')' {
+    auto ast = new UnaryExpAST();
+    ast->op = 4;
+    ast->ident = *unique_ptr<string>($1);
+    ast->func_r_params = unique_ptr<BaseAST>($3);
     $$ = ast;
   }
   ;

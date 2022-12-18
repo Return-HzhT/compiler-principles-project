@@ -1,9 +1,8 @@
 /* A Bison parser, made by GNU Bison 3.5.1.  */
 
-/* Bison interface for Yacc-like parsers in C
+/* Skeleton interface for Bison GLR parsers in C
 
-   Copyright (C) 1984, 1989-1990, 2000-2015, 2018-2020 Free Software Foundation,
-   Inc.
+   Copyright (C) 2002-2015, 2018-2020 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -31,11 +30,8 @@
    This special exception was added by the Free Software Foundation in
    version 2.2 of Bison.  */
 
-/* Undocumented macros, especially those whose name start with YY_,
-   are private implementation details.  Do not rely on them.  */
-
-#ifndef YY_YY_PROJECT_SYSY_MAKE_TEMPLATE_BUILD_SYSY_TAB_HPP_INCLUDED
-# define YY_YY_PROJECT_SYSY_MAKE_TEMPLATE_BUILD_SYSY_TAB_HPP_INCLUDED
+#ifndef YY_YY_COMPILER_PRINCIPLES_PROJECT_BUILD_SYSY_TAB_HPP_INCLUDED
+# define YY_YY_COMPILER_PRINCIPLES_PROJECT_BUILD_SYSY_TAB_HPP_INCLUDED
 /* Debug traces.  */
 #ifndef YYDEBUG
 # define YYDEBUG 0
@@ -44,13 +40,13 @@
 extern int yydebug;
 #endif
 /* "%code requires" blocks.  */
-#line 1 "/project/sysy-make-template/src/sysy.y"
+#line 1 "/compiler-principles-project/src/sysy.y"
 
   #include <memory>
   #include <string>
   #include <ast.h>
 
-#line 54 "/project/sysy-make-template/build/sysy.tab.hpp"
+#line 50 "/compiler-principles-project/build/sysy.tab.hpp"
 
 /* Token type.  */
 #ifndef YYTOKENTYPE
@@ -58,21 +54,22 @@ extern int yydebug;
   enum yytokentype
   {
     INT = 258,
-    RETURN = 259,
-    CONST = 260,
-    IF = 261,
-    ELSE = 262,
-    WHILE = 263,
-    BREAK = 264,
-    CONTINUE = 265,
-    IDENT = 266,
-    LEq = 267,
-    GEq = 268,
-    Eq = 269,
-    NEq = 270,
-    LAnd = 271,
-    LOr = 272,
-    INT_CONST = 273
+    VOID = 259,
+    RETURN = 260,
+    CONST = 261,
+    IF = 262,
+    ELSE = 263,
+    WHILE = 264,
+    BREAK = 265,
+    CONTINUE = 266,
+    IDENT = 267,
+    LEq = 268,
+    GEq = 269,
+    Eq = 270,
+    NEq = 271,
+    LAnd = 272,
+    LOr = 273,
+    INT_CONST = 274
   };
 #endif
 
@@ -80,13 +77,13 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 33 "/project/sysy-make-template/src/sysy.y"
+#line 33 "/compiler-principles-project/src/sysy.y"
 
   std::string *str_val;
   int int_val;
   BaseAST *ast_val;
 
-#line 90 "/project/sysy-make-template/build/sysy.tab.hpp"
+#line 87 "/compiler-principles-project/build/sysy.tab.hpp"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -99,4 +96,4 @@ extern YYSTYPE yylval;
 
 int yyparse (std::unique_ptr<BaseAST> &ast);
 
-#endif /* !YY_YY_PROJECT_SYSY_MAKE_TEMPLATE_BUILD_SYSY_TAB_HPP_INCLUDED  */
+#endif /* !YY_YY_COMPILER_PRINCIPLES_PROJECT_BUILD_SYSY_TAB_HPP_INCLUDED  */
