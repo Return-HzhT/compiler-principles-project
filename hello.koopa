@@ -6,19 +6,10 @@ decl @putch(i32)
 decl @putarray(i32, *i32)
 decl @starttime()
 decl @stoptime()
-global  @x_0 = alloc i32, zeroinit
-global  @init_1 = alloc i32, 1
+global  @var_0 = alloc i32, zeroinit
 fun @main(): i32 {
 %entry:
-  %1 = load @x_0
-  call @putint(%1)
-  call @putch(32)
-  call @putint(10)
-  call @putch(32)
-  call @putint(11)
-  call @putch(32)
-  %2 = load @init_1
-  call @putint(%2)
-  call @putch(10)
-  ret 0
+  %0 = load @var_0
+  %1 = add %0, 1
+  ret %1
 }

@@ -39,7 +39,7 @@ int main(int argc, const char *argv[]) {
   ast->Dump();
   riscv_code="";
 
-  // koopa_process();
+  koopa_process();
 
   ofstream out(output);
   if (mode[1]=='k'){

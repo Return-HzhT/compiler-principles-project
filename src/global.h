@@ -20,6 +20,8 @@ void Visit_store(const koopa_raw_store_t &store);
 int Visit_load(const koopa_raw_load_t &load);
 void Visit_branch(const koopa_raw_branch_t &branch);
 void Visit_jump(const koopa_raw_jump_t &jump);
+void Visit_call(const koopa_raw_call_t &call);
+void Visit_global_alloc(const koopa_raw_value_t &value);
 
 
 int set_prologue(const koopa_raw_function_t &func);
