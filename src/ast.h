@@ -10,10 +10,11 @@ using namespace std;
 // 所有 AST 的基类
 class BaseAST {
  public:
+  int op;
   std::string ir_id;
   virtual ~BaseAST() = default;
   virtual std::string Dump(){return "";}
-  virtual std::string get_op(){return "";}
+  virtual std::string get_opt(){return "";}
   virtual void get_rest_of_const_def_vec(std::vector< std::unique_ptr<BaseAST> > &vec){return;};
   virtual void get_rest_of_var_def_vec(std::vector< std::unique_ptr<BaseAST> > &vec){return;};
   virtual void get_rest_of_block_item_vec(std::vector< std::unique_ptr<BaseAST> > &vec){return;};
@@ -27,6 +28,11 @@ class BaseAST {
   virtual bool get_have_ret(){return 0;} // 是否为返回语句(如果为分支语句，则全部情况均返回)
   virtual bool is_void(){return 0;}
   virtual void pre_alloc_store(){return;} // 函数提前将输入参数加入符号表
+  virtual void get_rest_of_axis_info_vec(std::vector< std::unique_ptr<BaseAST> > &vec){return;} // 获取数组各维信息
+  virtual void get_rest_of_const_init_val_vec(std::vector< std::unique_ptr<BaseAST> > &vec){return;}
+  virtual void get_rest_of_init_val_vec(std::vector< std::unique_ptr<BaseAST> > &vec){return;}
+  virtual void get_rest_of_init_vec(std::vector<int> &vec,std::vector<int> axis_length,int now_axis){return;}
+  virtual std::string load(std::string &loaded_id){return "";} // 若目标为指针，则load并更新loaded_id，否则等同于get_ir_id()
 };
 
 class CompUnitAST : public BaseAST {
@@ -82,7 +88,6 @@ class RestOfGlobalItemAST : public BaseAST {
 
 class GlobalItemAST : public BaseAST {
  public:
-  int op;
   std::unique_ptr<BaseAST> decl;
   std::unique_ptr<BaseAST> func_def;
 
@@ -101,7 +106,6 @@ class GlobalItemAST : public BaseAST {
 
 class FuncDefAST : public BaseAST {
  public:
-  int op;
   std::unique_ptr<BaseAST> func_type;
   std::string ident;
   std::unique_ptr<BaseAST> func_f_params;
@@ -209,19 +213,54 @@ class FuncFParamAST : public BaseAST {
  public:
   std::unique_ptr<BaseAST> btype;
   std::string ident;
+  std::unique_ptr<BaseAST> axis;
+  std::vector< unique_ptr<BaseAST> > axis_info;
+  std::string axis_str;
 
   std::string Dump(){
     koopa_ir+="@"+ident+": ";
-    btype->Dump();
+    if (op==1){
+      btype->Dump();
+    }
+    else if (op==2){
+      koopa_ir+="*i32";
+    }
+    else if (op==3){
+      int n=axis_info.size();
+
+      for (int i=n-1;i>=0;i--){
+        if (i==n-1){
+          axis_str="[i32, "+std::to_string(axis_info[i]->get_val())+"]";
+        }
+        else {
+          axis_str="["+axis_str+", "+std::to_string(axis_info[i]->get_val())+"]";
+        }
+      }
+      koopa_ir+="*"+axis_str;
+    }
     return "";
   }
 
   void pre_alloc_store(){
     std::string name=ident+"_"+std::to_string(var_def_id);
     symbol_table[now_symbol_table_id][ident]=symbol(0,0,name,"0"); // 认为输入参数已被赋值
-    koopa_ir+="  @"+name+" = alloc i32\n";
-    koopa_ir+="  store @"+ident+", @"+name+"\n";
+    if (op==1){
+      koopa_ir+="  @"+name+" = alloc i32\n";
+      koopa_ir+="  store @"+ident+", @"+name+"\n";
+    }
+    else if (op==2){
+      koopa_ir+="  @"+name+" = alloc *i32\n";
+      koopa_ir+="  store @"+ident+", @"+name+"\n";
+    }
+    else if (op==3){
+      koopa_ir+="  @"+name+" = alloc "+axis_str+"\n";
+      koopa_ir+="  store @"+ident+", @"+name+"\n";
+    }
     var_def_id++;
+  }
+
+  void get_axis_info_vec(){
+    axis->get_rest_of_axis_info_vec(axis_info);
   }
 };
 
@@ -238,8 +277,9 @@ class FuncRParamsAST : public BaseAST {
     std::string tmp_str="";
     for (int i=0;i<n;i++){
       tmp_str+=exp[i]->Dump();
-      string ir_id=exp[i]->get_ir_id();
-      params+=ir_id;
+      std::string loaded_id="";
+      tmp_str+=exp[i]->load(loaded_id);
+      params+=loaded_id;
       if (i<n-1){
         params+=", ";
       }
@@ -271,7 +311,6 @@ class RestOfFuncRParamAST : public BaseAST {
 
 class BlockAST : public BaseAST {
  public:
-  int op;
   std::unique_ptr<BaseAST> rest_of_block_item;
   std::vector< std::unique_ptr<BaseAST> > block_item;
   bool have_ret; // 标记block最终是否返回
@@ -323,7 +362,6 @@ class RestOfBlockItemAST : public BaseAST {
 
 class BlockItemAST : public BaseAST {
  public:
-  int op;
   std::unique_ptr<BaseAST> decl;
   std::unique_ptr<BaseAST> stmt;
 
@@ -347,7 +385,6 @@ class BlockItemAST : public BaseAST {
 
 class StmtAST : public BaseAST {
  public:
-  int op;
   std::unique_ptr<BaseAST> open_stmt;
   std::unique_ptr<BaseAST> closed_stmt;
 
@@ -374,7 +411,6 @@ class StmtAST : public BaseAST {
 
 class OpenStmtAST : public BaseAST {
  public:
-  int op;
   std::unique_ptr<BaseAST> exp;
   std::unique_ptr<BaseAST> stmt;
   std::unique_ptr<BaseAST> if_stmt;
@@ -463,7 +499,6 @@ class OpenStmtAST : public BaseAST {
 
 class ClosedStmtAST : public BaseAST {
  public:
-  int op;
   std::unique_ptr<BaseAST> exp;
   std::unique_ptr<BaseAST> simple_stmt;
   std::unique_ptr<BaseAST> if_stmt;
@@ -547,7 +582,6 @@ class ClosedStmtAST : public BaseAST {
 
 class SimpleStmtAST : public BaseAST {
  public:
-  int op;
   std::unique_ptr<BaseAST> lval;
   std::unique_ptr<BaseAST> exp;
   std::unique_ptr<BaseAST> block;
@@ -564,10 +598,17 @@ class SimpleStmtAST : public BaseAST {
           }
           else {
             koopa_ir+=exp->Dump();
-            std::string tmp_id=exp->get_ir_id();
-            symbol_table[i][ident].val=exp->get_ir_id();
-            koopa_ir+="  store "+tmp_id+", @"+symbol_table[i][ident].name+"\n";
-            symbol_table[i][ident].is_assigned=1;
+            koopa_ir+=lval->Dump();
+            std::string tmp_id="";
+            koopa_ir+=exp->load(tmp_id);
+            if (lval->op==1){
+              symbol_table[i][ident].val=exp->get_ir_id();
+              koopa_ir+="  store "+tmp_id+", @"+symbol_table[i][ident].name+"\n";
+              symbol_table[i][ident].is_assigned=1;
+            }
+            else if (lval->op==2){
+              koopa_ir+="  store "+tmp_id+", "+lval->get_ir_id()+"\n";
+            }
           }
           flag=1;
           break;
@@ -596,7 +637,8 @@ class SimpleStmtAST : public BaseAST {
     }
     else if (op==6){
       koopa_ir+=exp->Dump();
-      std::string ret_val=exp->get_ir_id();
+      std::string ret_val="";
+      koopa_ir+=exp->load(ret_val);
       koopa_ir+="  ret "+ret_val+"\n";
     }
     else if (op==7){ // break
@@ -647,6 +689,10 @@ class ExpAST : public BaseAST {
     return tmp_str;
   }
 
+  std::string load(std::string &loaded_id){
+    return lor_exp->load(loaded_id);
+  }
+
   int get_val(){
     return lor_exp->get_val();
   }
@@ -654,7 +700,6 @@ class ExpAST : public BaseAST {
 
 class PrimaryExpAST : public BaseAST {
   public:
-   int op;
    std::unique_ptr<BaseAST> exp;
    std::unique_ptr<BaseAST> lval;
    int number;
@@ -687,11 +732,24 @@ class PrimaryExpAST : public BaseAST {
     }
     return 0;
   }
+
+  std::string load(std::string &loaded_id){
+    std::string tmp_str="";
+    if (op==1){
+      tmp_str=exp->load(loaded_id);
+    }
+    else if (op==2){
+      tmp_str=lval->load(loaded_id);
+    }
+    else if (op==3){
+      loaded_id=ir_id;
+    }
+    return tmp_str;
+  }
 };
 
 class UnaryExpAST : public BaseAST {
  public:
-  int op;
   std::unique_ptr<BaseAST> primary_exp;
   std::unique_ptr<BaseAST> unary_op;
   std::unique_ptr<BaseAST> unary_exp;
@@ -706,16 +764,18 @@ class UnaryExpAST : public BaseAST {
     }
     else if (op==2){
       tmp_str+=unary_exp->Dump();
-      string opt=unary_op->get_op();
+      string opt=unary_op->get_opt();
 
       if (opt=="-"){
-        std::string tmp_id=unary_exp->get_ir_id();
+        std::string tmp_id="";
+        tmp_str+=unary_exp->load(tmp_id);
         ir_id="%"+std::to_string(koopa_tmp_id);
         koopa_tmp_id++;
         tmp_str+="  "+ir_id+" = sub 0, "+tmp_id+"\n";
       }
       else if (opt=="!"){
-        std::string tmp_id=unary_exp->get_ir_id();
+        std::string tmp_id="";
+        tmp_str+=unary_exp->load(tmp_id);
         ir_id="%"+std::to_string(koopa_tmp_id);
         koopa_tmp_id++;
         tmp_str+="  "+ir_id+" = eq ";
@@ -778,7 +838,7 @@ class UnaryExpAST : public BaseAST {
       return primary_exp->get_val();
     }
     else if (op==2){
-      string opt=unary_op->get_op();
+      string opt=unary_op->get_opt();
       if (opt=="-"){
         return -(unary_exp->get_val());
       }
@@ -791,20 +851,30 @@ class UnaryExpAST : public BaseAST {
     }
     return 0;
   }
+
+  std::string load(std::string &loaded_id){
+    std::string tmp_str="";
+    if (op==1){
+      tmp_str=primary_exp->load(loaded_id);
+    }
+    else {
+      loaded_id=ir_id;
+    }
+    return tmp_str;
+  }
 };
 
 class UnaryOpAST : public BaseAST {
  public:
-  std::string op;
+  std::string opt;
 
-  string get_op(){
-    return op;
+  string get_opt(){
+    return opt;
   }
 };
 
 class AddExpAST : public BaseAST {
  public:
-  int op;
   std::string add_op;
   std::unique_ptr<BaseAST> add_exp;
   std::unique_ptr<BaseAST> mul_exp;
@@ -818,8 +888,9 @@ class AddExpAST : public BaseAST {
     else if (op==2){
       tmp_str+=mul_exp->Dump();
       tmp_str+=add_exp->Dump();
-      std::string mul_id=mul_exp->get_ir_id();
-      std::string add_id=add_exp->get_ir_id();
+      std::string mul_id="",add_id="";
+      tmp_str+=mul_exp->load(mul_id);
+      tmp_str+=add_exp->load(add_id);
       
       ir_id="%"+std::to_string(koopa_tmp_id);
       koopa_tmp_id++;
@@ -848,11 +919,21 @@ class AddExpAST : public BaseAST {
     }
     return 0;
   }
+
+  std::string load(std::string &loaded_id){
+    std::string tmp_str="";
+    if (op==1){
+      tmp_str=mul_exp->load(loaded_id);
+    }
+    else if (op==2){
+      loaded_id=ir_id;
+    }
+    return tmp_str;
+  }
 };
 
 class MulExpAST : public BaseAST {
  public:
-  int op;
   std::unique_ptr<BaseAST> mul_exp;
   std::string mul_op;
   std::unique_ptr<BaseAST> unary_exp;
@@ -866,8 +947,9 @@ class MulExpAST : public BaseAST {
     else if (op==2){
       tmp_str+=unary_exp->Dump();
       tmp_str+=mul_exp->Dump();
-      std::string unary_id=unary_exp->get_ir_id();
-      std::string mul_id=mul_exp->get_ir_id();
+      std::string unary_id="",mul_id="";
+      tmp_str+=unary_exp->load(unary_id);
+      tmp_str+=mul_exp->load(mul_id);
       
       ir_id="%"+std::to_string(koopa_tmp_id);
       koopa_tmp_id++;
@@ -902,11 +984,21 @@ class MulExpAST : public BaseAST {
     }
     return 0;
   }
+
+  std::string load(std::string &loaded_id){
+    std::string tmp_str="";
+    if (op==1){
+      tmp_str=unary_exp->load(loaded_id);
+    }
+    else if (op==2){
+      loaded_id=ir_id;
+    }
+    return tmp_str;
+  }
 };
 
 class LOrExpAST : public BaseAST {
  public:
-  int op;
   std::unique_ptr<BaseAST> lor_exp;
   std::string lor_op;
   std::unique_ptr<BaseAST> land_exp;
@@ -928,12 +1020,14 @@ class LOrExpAST : public BaseAST {
       tmp_str+="  store "+std::to_string(1)+", @"+res_var+"\n";
 
       tmp_str+=lor_exp->Dump();
-      std::string lor_id=lor_exp->get_ir_id();
+      std::string lor_id="";
+      tmp_str+=lor_exp->load(lor_id);
       tmp_str+="  br "+lor_id+", "+end_label+", "+then_label+"\n";
       tmp_str+=then_label+":\n";
 
       tmp_str+=land_exp->Dump();
-      std::string land_id=land_exp->get_ir_id();
+      std::string land_id="";
+      tmp_str+=land_exp->load(land_id);
       std::string tmp_id="%"+std::to_string(koopa_tmp_id);
       koopa_tmp_id++;
       tmp_str+="  "+tmp_id+" = ne "+land_id+", 0"+"\n";
@@ -958,11 +1052,21 @@ class LOrExpAST : public BaseAST {
     }
     return 0;
   }
+
+  std::string load(std::string &loaded_id){
+    std::string tmp_str="";
+    if (op==1){
+      tmp_str=land_exp->load(loaded_id);
+    }
+    else if (op==2){
+      loaded_id=ir_id;
+    }
+    return tmp_str;
+  }
 };
 
 class LAndExpAST : public BaseAST {
  public:
-  int op;
   std::unique_ptr<BaseAST> land_exp;
   std::string land_op;
   std::unique_ptr<BaseAST> eq_exp;
@@ -984,12 +1088,14 @@ class LAndExpAST : public BaseAST {
       tmp_str+="  store "+std::to_string(0)+", @"+res_var+"\n";
 
       tmp_str+=land_exp->Dump();
-      std::string land_id=land_exp->get_ir_id();
+      std::string land_id="";
+      tmp_str+=land_exp->load(land_id);
       tmp_str+="  br "+land_id+", "+then_label+", "+end_label+"\n";
       tmp_str+=then_label+":\n";
 
       tmp_str+=eq_exp->Dump();
-      std::string eq_id=eq_exp->get_ir_id();
+      std::string eq_id="";
+      tmp_str+=eq_exp->load(eq_id);
       std::string tmp_id="%"+std::to_string(koopa_tmp_id);
       koopa_tmp_id++;
       tmp_str+="  "+tmp_id+" = ne "+eq_id+", 0"+"\n";
@@ -1014,11 +1120,21 @@ class LAndExpAST : public BaseAST {
     }
     return 0;
   }
+
+  std::string load(std::string &loaded_id){
+    std::string tmp_str="";
+    if (op==1){
+      tmp_str=eq_exp->load(loaded_id);
+    }
+    else if (op==2){
+      loaded_id=ir_id;
+    }
+    return tmp_str;
+  }
 };
 
 class EqExpAST : public BaseAST {
  public:
-  int op;
   std::unique_ptr<BaseAST> eq_exp;
   std::string eq_op;
   std::unique_ptr<BaseAST> rel_exp;
@@ -1032,8 +1148,9 @@ class EqExpAST : public BaseAST {
     else if (op==2){
       tmp_str+=eq_exp->Dump();
       tmp_str+=rel_exp->Dump();
-      std::string eq_id=eq_exp->get_ir_id();
-      std::string rel_id=rel_exp->get_ir_id();
+      std::string eq_id="",rel_id="";
+      tmp_str+=eq_exp->load(eq_id);
+      tmp_str+=rel_exp->load(rel_id);
 
       ir_id="%"+std::to_string(koopa_tmp_id);
       koopa_tmp_id++;
@@ -1062,11 +1179,21 @@ class EqExpAST : public BaseAST {
     }
     return 0;
   }
+
+  std::string load(std::string &loaded_id){
+    std::string tmp_str="";
+    if (op==1){
+      tmp_str=rel_exp->load(loaded_id);
+    }
+    else if (op==2){
+      loaded_id=ir_id;
+    }
+    return tmp_str;
+  }
 };
 
 class RelExpAST : public BaseAST {
  public:
-  int op;
   std::unique_ptr<BaseAST> rel_exp;
   std::string rel_op;
   std::unique_ptr<BaseAST> add_exp;
@@ -1080,8 +1207,9 @@ class RelExpAST : public BaseAST {
     else if (op==2){
       tmp_str+=rel_exp->Dump();
       tmp_str+=add_exp->Dump();
-      std::string rel_id=rel_exp->get_ir_id();
-      std::string add_id=add_exp->get_ir_id();
+      std::string rel_id="",add_id="";
+      tmp_str+=rel_exp->load(rel_id);
+      tmp_str+=add_exp->load(add_id);
       
       ir_id="%"+std::to_string(koopa_tmp_id);
       koopa_tmp_id++;
@@ -1122,11 +1250,21 @@ class RelExpAST : public BaseAST {
     }
     return 0;
   }
+
+  std::string load(std::string &loaded_id){
+    std::string tmp_str="";
+    if (op==1){
+      tmp_str=add_exp->load(loaded_id);
+    }
+    else if (op==2){
+      loaded_id=ir_id;
+    }
+    return tmp_str;
+  }
 };
 
 class DeclAST : public BaseAST {
  public:
-  int op;
   std::unique_ptr<BaseAST> const_decl;
   std::unique_ptr<BaseAST> var_decl;
 
@@ -1223,32 +1361,157 @@ class BTypeAST : public BaseAST {
 class ConstDefAST : public BaseAST {
  public:
   std::string ident;
+  std::unique_ptr<BaseAST> axis;
   std::unique_ptr<BaseAST> const_init_val;
+  std::vector< unique_ptr<BaseAST> > axis_info;
+  std::vector<int> init_vec;
 
   std::string Dump(){
     if (symbol_table[now_symbol_table_id].count(ident)){
       std::cout<<"error: redefined.\n";
       exit(0);
     }
-    if (is_global_decl){
-      const_init_val->Dump();
+    if (op==1){
+      if (is_global_decl){
+        const_init_val->Dump();
+      }
+      else {
+        koopa_ir+=const_init_val->Dump();
+      }
+    
+      std::string val=const_init_val->get_ir_id();
+      int digit_val=const_init_val->get_val();
+      symbol_table[now_symbol_table_id][ident]=symbol(0,1,val,std::to_string(digit_val));
     }
-    else {
-      koopa_ir+=const_init_val->Dump();
+    else if (op==2){
+      for (int i=0;i<axis_info.size();i++){
+        axis_info[i]->Dump();
+      }
+      const_init_val->Dump();
+
+      std::string name=ident+"_"+std::to_string(var_def_id);
+      symbol_table[now_symbol_table_id][ident]=symbol(0,0,name);
+      symbol_table[now_symbol_table_id][ident].is_arr=1;
+
+      int n=axis_info.size();
+      std::string axis_str="";
+
+      for (int i=n-1;i>=0;i--){
+        if (i==n-1){
+          axis_str="[i32, "+std::to_string(axis_info[i]->get_val())+"]";
+        }
+        else {
+          axis_str="["+axis_str+", "+std::to_string(axis_info[i]->get_val())+"]";
+        }
+      }
+
+      get_init_vec();
+      // std::cout<<init_vec.size()<<"\n";
+      // for (int i=0;i<init_vec.size();i++){
+      //   std::cout<<init_vec[i]<<" ";
+      // }
+      // std::cout<<"\n";
+
+      if (is_global_decl){
+        koopa_ir+="global @"+name+" = alloc "+axis_str;
+        koopa_ir+=", {";
+        global_arr_init(0,0);
+        koopa_ir+="}\n";
+      }
+      else {
+        koopa_ir+="  @"+name+" = alloc "+axis_str+"\n";
+        arr_init("@"+name,0,0);
+      }
+
+      var_def_id++;
+    }
+
+    return "";
+  }
+
+    void global_arr_init(int now_axis,int cnt){
+    if (now_axis==axis_info.size()-1){
+      for (int i=0;i<axis_info[now_axis]->get_val();i++){
+        if (i==0){
+          koopa_ir+=std::to_string(init_vec[cnt+i]);
+        }
+        else {
+          koopa_ir+=", "+std::to_string(init_vec[cnt+i]);
+        }
+      }
+      return;
     }
     
-    std::string val=const_init_val->get_ir_id();
-    int digit_val=const_init_val->get_val();
-    symbol_table[now_symbol_table_id][ident]=symbol(0,1,val,std::to_string(digit_val));
-    return "";
+    int axis_sum=1; // 当前维度总长度
+    for (int i=now_axis+1;i<axis_info.size();i++){
+      axis_sum*=axis_info[i]->get_val();
+    }
+    for (int i=0;i<axis_info[now_axis]->get_val();i++){
+      if (i==0){
+        koopa_ir+="{";
+      }
+      else {
+        koopa_ir+=", {";
+      }
+      global_arr_init(now_axis+1,cnt+i*axis_sum);
+      koopa_ir+="}";
+    }
+  }
+
+  void arr_init(std::string pre_ptr,int now_axis,int cnt){
+    int axis_sum=1; // 当前维度总长度
+    for (int i=now_axis+1;i<axis_info.size();i++){
+      axis_sum*=axis_info[i]->get_val();
+    }
+
+    for (int i=0;i<axis_info[now_axis]->get_val();i++){
+      std::string tmp_ptr_id="%"+std::to_string(koopa_tmp_id);
+      koopa_tmp_id++;
+      koopa_ir+="  "+tmp_ptr_id+" = getelemptr "+pre_ptr+", "+std::to_string(i)+"\n";
+
+      if (now_axis==axis_info.size()-1){
+        koopa_ir+="  store "+std::to_string(init_vec[cnt+i])+", "+tmp_ptr_id+"\n";
+      }
+      else {
+        arr_init(tmp_ptr_id,now_axis+1,cnt+i*axis_sum);
+      }
+
+    }
+  }
+
+  void get_init_vec(){
+    std::vector<int> axis_length=std::vector<int>();
+    for (int i=0;i<axis_info.size();i++){
+      axis_length.push_back(axis_info[i]->get_val());
+    }
+    const_init_val->get_rest_of_init_vec(init_vec,axis_length,0);
+  }
+
+  void get_axis_info_vec(){
+    axis->get_rest_of_axis_info_vec(axis_info);
+  }
+};
+
+class AxisAST : public BaseAST {
+ public:
+  std::unique_ptr<BaseAST> const_exp;
+  std::unique_ptr<BaseAST> axis;
+
+  void get_rest_of_axis_info_vec(std::vector< std::unique_ptr<BaseAST> > &vec){
+    vec.push_back(std::move(const_exp));
+    if (axis!=NULL){
+      axis->get_rest_of_axis_info_vec(vec);
+    }
   }
 };
 
 class VarDefAST : public BaseAST {
  public:
-  int op;
   std::string ident;
   std::unique_ptr<BaseAST> init_val;
+  std::unique_ptr<BaseAST> axis;
+  std::vector< unique_ptr<BaseAST> > axis_info;
+  std::vector<int> init_vec;
 
   std::string Dump(){
     if (symbol_table[now_symbol_table_id].count(ident)){
@@ -1284,20 +1547,168 @@ class VarDefAST : public BaseAST {
         koopa_ir+=", "+val+"\n";
       }
       else {
-        koopa_ir+="  store "+val+", @"+name+"\n";
+        koopa_ir+="\n  store "+val+", @"+name+"\n";
       }
       var_def_id++;
     }
+    else if (op==3){
+      for (int i=0;i<axis_info.size();i++){
+        axis_info[i]->Dump();
+      }
+
+      std::string name=ident+"_"+std::to_string(var_def_id);
+      symbol_table[now_symbol_table_id][ident]=symbol(0,0,name);
+      symbol_table[now_symbol_table_id][ident].is_arr=1;
+
+      std::string axis_str="";
+      int n=axis_info.size();
+      for (int i=n-1;i>=0;i--){
+        if (i==n-1){
+          axis_str="[i32, "+std::to_string(axis_info[i]->get_val())+"]";
+        }
+        else {
+          axis_str="["+axis_str+", "+std::to_string(axis_info[i]->get_val())+"]";
+        }
+      }
+
+      if (is_global_decl){
+        koopa_ir+="global @"+name+" = alloc "+axis_str+", zeroinit\n";
+      }
+      else {
+        koopa_ir+="  @"+name+" = alloc "+axis_str+"\n";
+      }
+      var_def_id++;
+    }
+    else if (op==4){
+      for (int i=0;i<axis_info.size();i++){
+        axis_info[i]->Dump();
+      }
+      if (is_global_decl){
+        init_val->Dump();
+      }
+      else {
+        koopa_ir+=init_val->Dump();
+      }
+
+      std::string name=ident+"_"+std::to_string(var_def_id);
+      symbol_table[now_symbol_table_id][ident]=symbol(0,0,name);
+      symbol_table[now_symbol_table_id][ident].is_arr=1;
+      
+      int n=axis_info.size();
+      std::string axis_str="";
+
+      for (int i=n-1;i>=0;i--){
+        if (i==n-1){
+          axis_str="[i32, "+std::to_string(axis_info[i]->get_val())+"]";
+        }
+        else {
+          axis_str="["+axis_str+", "+std::to_string(axis_info[i]->get_val())+"]";
+        }
+      }
+
+      get_init_vec();
+      // std::cout<<init_vec.size()<<"\n";
+      // for (int i=0;i<init_vec.size();i++){
+      //   std::cout<<init_vec[i]<<" ";
+      // }
+      // std::cout<<"\n";
+
+      if (is_global_decl){
+        koopa_ir+="global @"+name+" = alloc "+axis_str;
+        koopa_ir+=", {";
+        global_arr_init(0,0);
+        koopa_ir+="}\n";
+      }
+      else {
+        koopa_ir+="  @"+name+" = alloc "+axis_str+"\n";
+        arr_init("@"+name,0,0);
+      }
+
+      var_def_id++;
+    }
     return "";
+  }
+
+  void global_arr_init(int now_axis,int cnt){
+    if (now_axis==axis_info.size()-1){
+      for (int i=0;i<axis_info[now_axis]->get_val();i++){
+        if (i==0){
+          koopa_ir+=std::to_string(init_vec[cnt+i]);
+        }
+        else {
+          koopa_ir+=", "+std::to_string(init_vec[cnt+i]);
+        }
+      }
+      return;
+    }
+    
+    int axis_sum=1; // 当前维度总长度
+    for (int i=now_axis+1;i<axis_info.size();i++){
+      axis_sum*=axis_info[i]->get_val();
+    }
+    for (int i=0;i<axis_info[now_axis]->get_val();i++){
+      if (i==0){
+        koopa_ir+="{";
+      }
+      else {
+        koopa_ir+=", {";
+      }
+      global_arr_init(now_axis+1,cnt+i*axis_sum);
+      koopa_ir+="}";
+    }
+  }
+
+  void arr_init(std::string pre_ptr,int now_axis,int cnt){
+    int axis_sum=1; // 当前维度总长度
+    for (int i=now_axis+1;i<axis_info.size();i++){
+      axis_sum*=axis_info[i]->get_val();
+    }
+
+    for (int i=0;i<axis_info[now_axis]->get_val();i++){
+      std::string tmp_ptr_id="%"+std::to_string(koopa_tmp_id);
+      koopa_tmp_id++;
+      koopa_ir+="  "+tmp_ptr_id+" = getelemptr "+pre_ptr+", "+std::to_string(i)+"\n";
+      if (now_axis==axis_info.size()-1){
+        koopa_ir+="  store "+std::to_string(init_vec[cnt+i])+", "+tmp_ptr_id+"\n";
+      }
+      else {
+        arr_init(tmp_ptr_id,now_axis+1,cnt+i*axis_sum);
+      }
+    }
+  }
+
+  void get_init_vec(){
+    std::vector<int> axis_length=std::vector<int>();
+    for (int i=0;i<axis_info.size();i++){
+      axis_length.push_back(axis_info[i]->get_val());
+    }
+    init_val->get_rest_of_init_vec(init_vec,axis_length,0);
+  }
+
+  void get_axis_info_vec(){
+    axis->get_rest_of_axis_info_vec(axis_info);
   }
 };
 
 class ConstInitValAST : public BaseAST {
  public:
   std::unique_ptr<BaseAST> const_exp;
-  
+  std::unique_ptr<BaseAST> const_init_val;
+  std::unique_ptr<BaseAST> rest_of_const_init_val;
+  std::vector< std::unique_ptr<BaseAST> > const_init_val_vec;
+
   std::string Dump(){
-    return const_exp->Dump();
+    std::string tmp_str="";
+    if (op==1){
+      tmp_str=const_exp->Dump();
+    }
+    else if (op==2){}
+    else if (op==3){
+      for (int i=0;i<const_init_val_vec.size();i++){
+        tmp_str+=const_init_val_vec[i]->Dump();
+      }
+    }
+    return tmp_str;
   }
 
   std::string get_ir_id(){
@@ -1307,14 +1718,89 @@ class ConstInitValAST : public BaseAST {
   int get_val(){
     return const_exp->get_val();
   }
+
+  void get_const_init_val_vec(){
+    const_init_val_vec.push_back(std::move(const_init_val));
+    rest_of_const_init_val->get_rest_of_const_init_val_vec(const_init_val_vec);
+  }
+
+  virtual void get_rest_of_init_vec(std::vector<int> &vec,std::vector<int> axis_length,int now_axis){
+    if (op==1){
+      vec.push_back(const_exp->get_val());
+    }
+    else if (op==2){
+      int tot=1;
+      for (int i=now_axis;i<axis_length.size();i++){
+        tot*=axis_length[i];
+      }
+      for (int i=0;i<tot;i++){
+        vec.push_back(0);
+      }
+    }
+    else if (op==3){
+      for (int i=0;i<const_init_val_vec.size();i++){
+        int now_tot=vec.size(),tmp_axis=now_axis+1;
+        for (int j=axis_length.size()-1;j>now_axis;j--){
+          if (now_tot%axis_length[j]==0){
+            now_tot/=axis_length[j];
+          }
+          else {
+            tmp_axis=j;
+            break;
+          }
+        }
+        const_init_val_vec[i]->get_rest_of_init_vec(vec,axis_length,tmp_axis);
+      }
+      
+      int tot=1;
+      for (int i=now_axis;i<axis_length.size();i++){
+        tot*=axis_length[i];
+      }
+      int rest=vec.size()%tot;
+      if (rest){
+        for (int i=rest;i<tot;i++){
+          vec.push_back(0);
+        }
+      }
+    }
+  }
+};
+
+
+class RestOfConstInitValAST : public BaseAST {
+ public:
+  std::unique_ptr<BaseAST> const_init_val;
+  std::unique_ptr<BaseAST> rest_of_const_init_val;
+
+  void get_rest_of_const_init_val_vec(std::vector< std::unique_ptr<BaseAST> > &vec){
+    if (op==1){
+      vec.push_back(std::move(const_init_val));
+      if (rest_of_const_init_val){
+        rest_of_const_init_val->get_rest_of_const_init_val_vec(vec);
+      }
+    }
+  }
 };
 
 class InitValAST : public BaseAST {
  public:
   std::unique_ptr<BaseAST> exp;
+  std::unique_ptr<BaseAST> init_val;
+  std::unique_ptr<BaseAST> rest_of_init_val;
+  std::vector< std::unique_ptr<BaseAST> > init_val_vec;
   
   std::string Dump(){
-    return exp->Dump();
+    std::string tmp_str="";
+    if (op==1){
+      tmp_str=exp->Dump();
+    }
+    else if (op==2){}
+    else if (op==3){
+      for (int i=0;i<init_val_vec.size();i++){
+        tmp_str+=init_val_vec[i]->Dump();
+      }
+    }
+    return tmp_str;
   }
 
   std::string get_ir_id(){
@@ -1323,6 +1809,67 @@ class InitValAST : public BaseAST {
 
   int get_val(){
     return exp->get_val();
+  }
+
+  void get_init_val_vec(){
+    init_val_vec.push_back(std::move(init_val));
+    rest_of_init_val->get_rest_of_init_val_vec(init_val_vec);
+  }
+
+  virtual void get_rest_of_init_vec(std::vector<int> &vec,std::vector<int> axis_length,int now_axis){
+    if (op==1){
+      vec.push_back(exp->get_val());
+    }
+    else if (op==2){
+      int tot=1;
+      for (int i=now_axis;i<axis_length.size();i++){
+        tot*=axis_length[i];
+      }
+      for (int i=0;i<tot;i++){
+        vec.push_back(0);
+      }
+    }
+    else if (op==3){
+      for (int i=0;i<init_val_vec.size();i++){
+        int now_tot=vec.size(),tmp_axis=now_axis+1;
+        for (int j=axis_length.size()-1;j>now_axis;j--){
+          if (now_tot%axis_length[j]==0){
+            now_tot/=axis_length[j];
+          }
+          else {
+            tmp_axis=j;
+            break;
+          }
+        }
+        init_val_vec[i]->get_rest_of_init_vec(vec,axis_length,tmp_axis);
+      }
+      
+      int tot=1;
+      for (int i=now_axis;i<axis_length.size();i++){
+        tot*=axis_length[i];
+      }
+      int rest=vec.size()%tot;
+      if (rest){
+        for (int i=rest;i<tot;i++){
+          vec.push_back(0);
+        }
+      }
+    }
+  }
+};
+
+class RestOfInitValAST : public BaseAST {
+ public:
+  std::unique_ptr<BaseAST> init_val;
+  std::unique_ptr<BaseAST> rest_of_init_val;
+
+  void get_rest_of_init_val_vec(std::vector< std::unique_ptr<BaseAST> > &vec){
+    if (op==1){
+      vec.push_back(std::move(init_val));
+      if (rest_of_init_val){
+        rest_of_init_val->get_rest_of_init_val_vec(vec);
+      }
+    }
   }
 };
 
@@ -1346,29 +1893,71 @@ class ConstExpAST : public BaseAST {
 class LValAST : public BaseAST {
  public:
   std::string ident;
+  std::unique_ptr<BaseAST> axis;
+  std::vector< unique_ptr<BaseAST> > axis_info;
 
   std::string Dump(){
     std::string tmp_str="";
-    for (int i=now_symbol_table_id;i>=0;i--){
-      if (symbol_table[i].count(ident)){
-        if (symbol_table[i][ident].is_const){
-          ir_id=symbol_table[i][ident].val;
-          return "";
-        }
-        else {
-          if (symbol_table[i][ident].is_assigned==0){
-            std::cout<<ident<<endl;
-            std::cout<<"error: unassigned variable.\n";
-            exit(0);
+    if (op==1){
+      for (int i=now_symbol_table_id;i>=0;i--){
+        if (symbol_table[i].count(ident)){
+          if (symbol_table[i][ident].is_const){
+            ir_id=symbol_table[i][ident].val;
+            return "";
           }
           else {
-            ir_id="%"+std::to_string(koopa_tmp_id);
+            ir_id="@"+symbol_table[i][ident].name;
+            return "";
+          }
+        }
+      }
+    }
+    else if (op==2){
+      for (int i=now_symbol_table_id;i>=0;i--){
+        if (symbol_table[i].count(ident)){
+          for (int i=0;i<axis_info.size();i++){
+            tmp_str+=axis_info[i]->Dump();
+          }
+
+          std::string now_ptr_id="@"+symbol_table[i][ident].name;
+          for (int i=0;i<axis_info.size();i++){
+            std::string next_ptr_id="%"+std::to_string(koopa_tmp_id);
             koopa_tmp_id++;
-            tmp_str+="  "+ir_id+" = load @"+symbol_table[i][ident].name+"\n";
+            tmp_str+="  "+next_ptr_id+" = getelemptr "+now_ptr_id+", "+axis_info[i]->get_ir_id()+"\n";
+            now_ptr_id=next_ptr_id;
+          }
+          ir_id=now_ptr_id;
+          break;
+        }
+      }
+    }
+    return tmp_str;
+  }
+
+  std::string load(std::string &loaded_id){
+    std::string tmp_str="";
+    if (op==1){
+      for (int i=now_symbol_table_id;i>=0;i--){
+        if (symbol_table[i].count(ident)){
+          if (symbol_table[i][ident].is_const){
+            loaded_id=ir_id;
+            return "";
+          }
+          else {
+            loaded_id="%"+std::to_string(koopa_tmp_id);
+            koopa_tmp_id++;
+
+            tmp_str+="  "+loaded_id+" = load "+ir_id+"\n";
             return tmp_str;
           }
         }
       }
+    }
+    else if (op==2){
+      loaded_id="%"+std::to_string(koopa_tmp_id);
+      koopa_tmp_id++;
+
+      tmp_str+="  "+loaded_id+" = load "+ir_id+"\n";
     }
     return tmp_str;
   }
@@ -1394,5 +1983,9 @@ class LValAST : public BaseAST {
     // 运行到这里说明未找到此变量的定义
     std::cout<<"error: undeclared variable.\n";
     exit(0);
+  }
+
+  void get_axis_info_vec(){
+    axis->get_rest_of_axis_info_vec(axis_info);
   }
 };

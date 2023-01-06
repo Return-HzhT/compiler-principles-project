@@ -1,14 +1,98 @@
+  .data
+  .globl a_0
+a_0:
+  .word 10
   .text
-  .global main
-main:
+  .global inc
+inc:
+wtf
   addi sp, sp, -16
-16???
-  lw t0, 0(sp)
-  sw t0, 0(sp)
-  lw t1, 0(sp)
+  la t0, a_0
+  lw t0, 0(t0)
+  sw t0, 12(sp)
+  lw t1, 12(sp)
   li t2, 1
   add t0, t1, t2
+  sw t0, 8(sp)
+  lw t0, 8(sp)
+  la t1, a_0
+  sw t0, 0(t1)
+  la t0, a_0
+  lw t0, 0(t0)
   sw t0, 4(sp)
   lw a0, 4(sp)
   addi sp, sp, 16
   ret
+end
+  .text
+  .global print_a
+print_a:
+wtf
+  addi sp, sp, -16
+hi
+  sw ra, 12(sp)
+  la t0, a_0
+  lw t0, 0(t0)
+  sw t0, 8(sp)
+  lw a0, 8(sp)
+  call putint
+  li a0, 10
+  call putch
+  ret
+end
+  .text
+  .global main
+main:
+wtf
+  addi sp, sp, -48
+hi
+  sw ra, 44(sp)
+  li t0, 0
+  sw t0, 40(sp)
+  j while_entry_0
+while_entry_0:
+  lw t0, 40(sp)
+  sw t0, 36(sp)
+  lw t1, 36(sp)
+  li t2, 10
+  slt t0, t1, t2
+  sw t0, 32(sp)
+  lw t0, 32(sp)
+  bnez t0, while_body_0
+  j while_end_0
+while_body_0:
+  call inc
+  sw a0, 28(sp)
+  li t0, 1
+  sw t0, 24(sp)
+  lw t0, 24(sp)
+  sw t0, 20(sp)
+  lw t1, 20(sp)
+  li t2, 2
+  add t0, t1, t2
+  sw t0, 16(sp)
+  lw t0, 16(sp)
+  sw t0, 24(sp)
+  lw t0, 24(sp)
+  sw t0, 12(sp)
+  lw a0, 12(sp)
+  call putint
+  li a0, 10
+  call putch
+  call print_a
+  lw t0, 40(sp)
+  sw t0, 8(sp)
+  lw t1, 8(sp)
+  li t2, 1
+  add t0, t1, t2
+  sw t0, 4(sp)
+  lw t0, 4(sp)
+  sw t0, 40(sp)
+  j while_entry_0
+while_end_0:
+  li a0, 0
+yes
+  lw ra, 44(sp)
+  addi sp, sp, 48
+  ret
+end

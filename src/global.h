@@ -49,6 +49,7 @@ class symbol{
   bool is_assigned; // 是否已赋值
   bool is_func; // 此符号是否对应一个函数
   bool is_void; // 此函数是否为void型
+  bool is_arr; // 此符号是否对应一个数组
   
   symbol(bool i_f,bool i_c_or_i_v,std::string n="",std::string v=""){
     if (!i_f){

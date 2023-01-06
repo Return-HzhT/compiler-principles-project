@@ -46,7 +46,7 @@ using namespace std;
 %type <ast_val> GlobalItem RestOfGlobalItem Block BlockItem RestOfBlockItem Stmt OpenStmt ClosedStmt SimpleStmt
 %type <ast_val> FuncDef FuncType FuncFParams FuncFParam RestOfFuncFParam FuncRParams RestOfFuncRParam
 %type <ast_val> Exp UnaryExp PrimaryExp UnaryOp AddExp MulExp LOrExp LAndExp EqExp RelExp ConstExp 
-%type <ast_val> Decl ConstDecl VarDecl BType ConstDef VarDef RestOfConstDef RestOfVarDef ConstInitVal InitVal LVal 
+%type <ast_val> Decl ConstDecl VarDecl BType ConstDef VarDef RestOfConstDef RestOfVarDef ConstInitVal RestOfConstInitVal InitVal RestOfInitVal LVal Axis
 %type <int_val> Number
 
 %glr-parser
@@ -158,8 +158,25 @@ RestOfFuncFParam
 FuncFParam
   : BType IDENT {
     auto ast = new FuncFParamAST();
+    ast->op = 1;
     ast->btype = unique_ptr<BaseAST>($1);
     ast->ident = *unique_ptr<string>($2);
+    $$ = ast;
+  }
+  | BType IDENT '[' ']' {
+    auto ast = new FuncFParamAST();
+    ast->op = 2;
+    ast->btype = unique_ptr<BaseAST>($1);
+    ast->ident = *unique_ptr<string>($2);
+    $$ = ast;
+  }
+  | BType IDENT '[' ']' Axis {
+    auto ast = new FuncFParamAST();
+    ast->op = 3;
+    ast->btype = unique_ptr<BaseAST>($1);
+    ast->ident = *unique_ptr<string>($2);
+    ast->axis = unique_ptr<BaseAST>($5);
+    ast->get_axis_info_vec();
     $$ = ast;
   }
   ;
@@ -655,11 +672,38 @@ BType
 ConstDef
   : IDENT '=' ConstInitVal {
     auto ast = new ConstDefAST();
+    ast->op = 1;
     ast->ident = *unique_ptr<string>($1);
     ast->const_init_val = unique_ptr<BaseAST>($3);
     $$ = ast;
   }
+  | IDENT Axis '=' ConstInitVal {
+    auto ast = new ConstDefAST();
+    ast->op = 2;
+    ast->ident = *unique_ptr<string>($1);
+    ast->axis = unique_ptr<BaseAST>($2);
+    ast->get_axis_info_vec();
+    ast->const_init_val = unique_ptr<BaseAST>($4);
+    $$ = ast;
+  }
   ;
+
+Axis
+  : '[' ConstExp ']' {
+    auto ast = new AxisAST();
+    ast->op = 1;
+    ast->const_exp = unique_ptr<BaseAST>($2);
+    ast->axis = NULL;
+    $$ = ast;
+  }
+  | '[' ConstExp ']' Axis {
+    auto ast = new AxisAST();
+    ast->op = 2;
+    ast->const_exp = unique_ptr<BaseAST>($2);
+    ast->axis = unique_ptr<BaseAST>($4);
+    $$ = ast;
+  }
+  ; 
 
 VarDef
   : IDENT {
@@ -675,12 +719,58 @@ VarDef
     ast->init_val = unique_ptr<BaseAST>($3);
     $$ = ast;
   }
+  | IDENT Axis {
+    auto ast = new VarDefAST();
+    ast->op = 3;
+    ast->ident = *unique_ptr<string>($1);
+    ast->axis = unique_ptr<BaseAST>($2);
+    ast->get_axis_info_vec();
+    $$ = ast;
+  }
+  | IDENT Axis '=' InitVal {
+    auto ast = new VarDefAST();
+    ast->op = 4;
+    ast->ident = *unique_ptr<string>($1);
+    ast->axis = unique_ptr<BaseAST>($2);
+    ast->get_axis_info_vec();
+    ast->init_val = unique_ptr<BaseAST>($4);
+    $$ = ast;
+  }
   ;
 
 ConstInitVal
   : ConstExp {
     auto ast = new ConstInitValAST();
+    ast->op = 1;
     ast->const_exp = unique_ptr<BaseAST>($1);
+    $$ = ast;
+  }
+  | '{' '}' {
+    auto ast = new ConstInitValAST();
+    ast->op = 2;
+    $$ = ast;
+  }
+  | '{' ConstInitVal RestOfConstInitVal '}' {
+    auto ast = new ConstInitValAST();
+    ast->op = 3;
+    ast->const_init_val = unique_ptr<BaseAST>($2);
+    ast->rest_of_const_init_val = unique_ptr<BaseAST>($3);
+    ast->get_const_init_val_vec();
+    $$ = ast;
+  }
+  ;
+
+RestOfConstInitVal
+  : ',' ConstInitVal RestOfConstInitVal {
+    auto ast = new RestOfConstInitValAST();
+    ast->op = 1;
+    ast->const_init_val = unique_ptr<BaseAST>($2);
+    ast->rest_of_const_init_val = unique_ptr<BaseAST>($3);
+    $$ = ast;
+  }
+  | {
+    auto ast = new RestOfConstInitValAST();
+    ast->op = 2;
     $$ = ast;
   }
   ;
@@ -688,7 +778,36 @@ ConstInitVal
 InitVal
   : Exp {
     auto ast = new InitValAST();
+    ast->op = 1;
     ast->exp = unique_ptr<BaseAST>($1);
+    $$ = ast;
+  }
+  | '{' '}' {
+    auto ast = new InitValAST();
+    ast->op = 2;
+    $$ = ast;
+  }
+  | '{' InitVal RestOfInitVal '}' {
+    auto ast = new InitValAST();
+    ast->op = 3;
+    ast->init_val = unique_ptr<BaseAST>($2);
+    ast->rest_of_init_val = unique_ptr<BaseAST>($3);
+    ast->get_init_val_vec();
+    $$ = ast;
+  }  
+  ;
+
+RestOfInitVal
+  : ',' InitVal RestOfInitVal {
+    auto ast = new RestOfInitValAST();
+    ast->op = 1;
+    ast->init_val = unique_ptr<BaseAST>($2);
+    ast->rest_of_init_val = unique_ptr<BaseAST>($3);
+    $$ = ast;
+  }
+  | {
+    auto ast = new RestOfInitValAST();
+    ast->op = 2;
     $$ = ast;
   }
   ;
@@ -704,7 +823,16 @@ ConstExp
 LVal
   : IDENT {
     auto ast = new LValAST();
+    ast->op = 1;
     ast->ident = *unique_ptr<string>($1);
+    $$ = ast;
+  }
+  | IDENT Axis {
+    auto ast = new LValAST();
+    ast->op = 2;
+    ast->ident = *unique_ptr<string>($1);
+    ast->axis = unique_ptr<BaseAST>($2);
+    ast->get_axis_info_vec();
     $$ = ast;
   }
   ;
@@ -712,17 +840,17 @@ LVal
 UnaryOp
   : '+' {
     auto ast = new UnaryOpAST();
-    ast->op = "+";
+    ast->opt = "+";
     $$=ast;
   }
   | '-' {
     auto ast = new UnaryOpAST();
-    ast->op = "-";
+    ast->opt = "-";
     $$=ast;
   }
   |  '!' {
     auto ast = new UnaryOpAST();
-    ast->op = "!";
+    ast->opt = "!";
     $$=ast;
   }
   ;
