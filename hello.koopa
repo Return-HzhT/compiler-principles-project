@@ -6,46 +6,90 @@ decl @putch(i32)
 decl @putarray(i32, *i32)
 decl @starttime()
 decl @stoptime()
-global  @a_0 = alloc i32, 10
-fun @inc(): i32 {
-%entry:
-  %0 = load @a_0
-  %1 = add %0, 1
-  store %1, @a_0
-  %2 = load @a_0
-  ret %2
-}
-fun @print_a() {
-%entry:
-  %3 = load @a_0
-  call @putint(%3)
-  call @putch(10)
-  ret
-}
+global @ga_0 = alloc [i32, 10], zeroinit
+global @gb_1 = alloc [[i32, 3], 2], {{5, 6, 7}, {8, 0, 0}}
 fun @main(): i32 {
 %entry:
-  @i_1 = alloc i32
-  store 0, @i_1
+  @a_2 = alloc [i32, 10]
+  @b_3 = alloc [[i32, 3], 2]
+  %0 = getelemptr @b_3, 0
+  %1 = getelemptr %0, 0
+  store 1, %1
+  %2 = getelemptr %0, 1
+  store 2, %2
+  %3 = getelemptr %0, 2
+  store 3, %3
+  %4 = getelemptr @b_3, 1
+  %5 = getelemptr %4, 0
+  store 4, %5
+  %6 = getelemptr %4, 1
+  store 0, %6
+  %7 = getelemptr %4, 2
+  store 0, %7
+  @sum_4 = alloc i32
+  store 0, @sum_4
+  @i_5 = alloc i32
+  store 0, @i_5
   jump %while_entry_0
 %while_entry_0:
-  %4 = load @i_1
-  %5 = lt %4, 10
-  br %5, %while_body_0, %while_end_0
+  %8 = load @i_5
+  %9 = lt %8, 2
+  br %9, %while_body_0, %while_end_0
 %while_body_0:
-  %6 = call @inc()
-  @a_2 = alloc i32
-  store 1, @a_2
-  %7 = load @a_2
-  %8 = add %7, 2
-  store %8, @a_2
-  %9 = load @a_2
-  call @putint(%9)
-  call @putch(10)
-  call @print_a()
-  %10 = load @i_1
-  %11 = add %10, 1
-  store %11, @i_1
+  @j_6 = alloc i32
+  store 0, @j_6
+  jump %while_entry_1
+%while_entry_1:
+  %10 = load @j_6
+  %11 = lt %10, 3
+  br %11, %while_body_1, %while_end_1
+%while_body_1:
+  %13 = load @i_5
+  %12 = getelemptr @gb_1, %13
+  %15 = load @j_6
+  %14 = getelemptr %12, %15
+  %17 = load @i_5
+  %16 = getelemptr @b_3, %17
+  %19 = load @j_6
+  %18 = getelemptr %16, %19
+  %20 = load %18
+  %21 = load @sum_4
+  %22 = add %21, %20
+  %23 = load %14
+  %24 = add %22, %23
+  store %24, @sum_4
+  %25 = load @j_6
+  %26 = add %25, 1
+  store %26, @j_6
+  jump %while_entry_1
+%while_end_1:
+  %27 = load @i_5
+  %28 = add %27, 1
+  store %28, @i_5
   jump %while_entry_0
 %while_end_0:
-  ret 0
+  store 0, @i_5
+  jump %while_entry_2
+%while_entry_2:
+  %29 = load @i_5
+  %30 = lt %29, 10
+  br %30, %while_body_2, %while_end_2
+%while_body_2:
+  %31 = load @i_5
+  %32 = load @sum_4
+  %33 = add %32, %31
+  store %33, 
+  %34 = load @i_5
+  %35 = load @sum_4
+  %36 = add %35, %34
+  %38 = load @i_5
+  %37 = getelemptr @ga_0, %38
+  store %36, %37
+  %39 = load @i_5
+  %40 = add %39, 1
+  store %40, @i_5
+  jump %while_entry_2
+%while_end_2:
+  %41 = load @sum_4
+  ret %41
 }

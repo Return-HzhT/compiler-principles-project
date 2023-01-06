@@ -243,18 +243,20 @@ class FuncFParamAST : public BaseAST {
 
   void pre_alloc_store(){
     std::string name=ident+"_"+std::to_string(var_def_id);
-    symbol_table[now_symbol_table_id][ident]=symbol(0,0,name,"0"); // 认为输入参数已被赋值
     if (op==1){
       koopa_ir+="  @"+name+" = alloc i32\n";
       koopa_ir+="  store @"+ident+", @"+name+"\n";
+      symbol_table[now_symbol_table_id][ident]=symbol(0,0,name,"0",1,0,0); // 认为输入参数已被赋值
     }
     else if (op==2){
       koopa_ir+="  @"+name+" = alloc *i32\n";
       koopa_ir+="  store @"+ident+", @"+name+"\n";
+      symbol_table[now_symbol_table_id][ident]=symbol(0,0,name,"0",1,0,1); // 认为输入参数已被赋值
     }
     else if (op==3){
-      koopa_ir+="  @"+name+" = alloc "+axis_str+"\n";
+      koopa_ir+="  @"+name+" = alloc *"+axis_str+"\n";
       koopa_ir+="  store @"+ident+", @"+name+"\n";
+      symbol_table[now_symbol_table_id][ident]=symbol(0,0,name,"0",1,0,axis_info.size()+1); // 认为输入参数已被赋值
     }
     var_def_id++;
   }
@@ -279,6 +281,13 @@ class FuncRParamsAST : public BaseAST {
       tmp_str+=exp[i]->Dump();
       std::string loaded_id="";
       tmp_str+=exp[i]->load(loaded_id);
+      if (func_arg_is_arr){
+        std::string tmp_id=loaded_id;
+        loaded_id="%"+std::to_string(koopa_tmp_id);
+        koopa_tmp_id++;
+        tmp_str+="  "+loaded_id+" = getelemptr "+tmp_id+", 0\n";
+        func_arg_is_arr=0;
+      }
       params+=loaded_id;
       if (i<n-1){
         params+=", ";
@@ -1390,8 +1399,7 @@ class ConstDefAST : public BaseAST {
       const_init_val->Dump();
 
       std::string name=ident+"_"+std::to_string(var_def_id);
-      symbol_table[now_symbol_table_id][ident]=symbol(0,0,name);
-      symbol_table[now_symbol_table_id][ident].is_arr=1;
+      symbol_table[now_symbol_table_id][ident]=symbol(0,0,name,"0",0,1,axis_info.size());
 
       int n=axis_info.size();
       std::string axis_str="";
@@ -1535,7 +1543,8 @@ class VarDefAST : public BaseAST {
     }
     else if (op==2){
       koopa_ir+=init_val->Dump();
-      std::string val=init_val->get_ir_id();
+      std::string val="";
+      koopa_ir+=init_val->load(val);
       std::string name=ident+"_"+std::to_string(var_def_id);
       symbol_table[now_symbol_table_id][ident]=symbol(0,0,name,val);
 
@@ -1557,8 +1566,7 @@ class VarDefAST : public BaseAST {
       }
 
       std::string name=ident+"_"+std::to_string(var_def_id);
-      symbol_table[now_symbol_table_id][ident]=symbol(0,0,name);
-      symbol_table[now_symbol_table_id][ident].is_arr=1;
+      symbol_table[now_symbol_table_id][ident]=symbol(0,0,name,"0",0,1,axis_info.size());
 
       std::string axis_str="";
       int n=axis_info.size();
@@ -1591,8 +1599,7 @@ class VarDefAST : public BaseAST {
       }
 
       std::string name=ident+"_"+std::to_string(var_def_id);
-      symbol_table[now_symbol_table_id][ident]=symbol(0,0,name);
-      symbol_table[now_symbol_table_id][ident].is_arr=1;
+      symbol_table[now_symbol_table_id][ident]=symbol(0,0,name,"0",0,1,axis_info.size());
       
       int n=axis_info.size();
       std::string axis_str="";
@@ -1803,6 +1810,13 @@ class InitValAST : public BaseAST {
     return tmp_str;
   }
 
+  std::string load(std::string &loaded_id){
+    if (op==1){
+      return exp->load(loaded_id);
+    }
+    return "";
+  }
+
   std::string get_ir_id(){
     return exp->get_ir_id();
   }
@@ -1885,6 +1899,10 @@ class ConstExpAST : public BaseAST {
     return exp->get_ir_id();
   }
 
+  std::string load(std::string &loaded_id){
+    return exp->load(loaded_id);
+  }
+
   int get_val(){
     return exp->get_val();
   }
@@ -1895,6 +1913,7 @@ class LValAST : public BaseAST {
   std::string ident;
   std::unique_ptr<BaseAST> axis;
   std::vector< unique_ptr<BaseAST> > axis_info;
+  int is_ptr;
 
   std::string Dump(){
     std::string tmp_str="";
@@ -1915,18 +1934,50 @@ class LValAST : public BaseAST {
     else if (op==2){
       for (int i=now_symbol_table_id;i>=0;i--){
         if (symbol_table[i].count(ident)){
-          for (int i=0;i<axis_info.size();i++){
-            tmp_str+=axis_info[i]->Dump();
+          for (int j=0;j<axis_info.size();j++){
+            tmp_str+=axis_info[j]->Dump();
           }
 
           std::string now_ptr_id="@"+symbol_table[i][ident].name;
-          for (int i=0;i<axis_info.size();i++){
-            std::string next_ptr_id="%"+std::to_string(koopa_tmp_id);
-            koopa_tmp_id++;
-            tmp_str+="  "+next_ptr_id+" = getelemptr "+now_ptr_id+", "+axis_info[i]->get_ir_id()+"\n";
-            now_ptr_id=next_ptr_id;
+          if (symbol_table[i][ident].is_ptr){
+            is_ptr=1;
+
+            int cnt=2;
+            for (int j=0;j<axis_info.size();j++){
+              std::string tmp_ptr_id="";
+              if (cnt){
+                tmp_ptr_id="%"+std::to_string(koopa_tmp_id);
+                koopa_tmp_id++;
+                tmp_str+="  "+tmp_ptr_id+" = load "+now_ptr_id+"\n";
+                cnt--;
+              }
+
+              std::string loaded_id="";
+              tmp_str+=axis_info[j]->load(loaded_id);
+              std::string next_ptr_id="%"+std::to_string(koopa_tmp_id);
+              koopa_tmp_id++;
+              if (cnt){
+                tmp_str+="  "+next_ptr_id+" = getptr "+tmp_ptr_id+", "+loaded_id+"\n";
+              }
+              else {
+                tmp_str+="  "+next_ptr_id+" = getelemptr "+now_ptr_id+", "+loaded_id+"\n";
+              }
+              now_ptr_id=next_ptr_id;
+            }
+            ir_id=now_ptr_id;
           }
-          ir_id=now_ptr_id;
+          else {
+            is_ptr=0;
+            for (int j=0;j<axis_info.size();j++){
+              std::string next_ptr_id="%"+std::to_string(koopa_tmp_id);
+              koopa_tmp_id++;
+              std::string loaded_id="";
+              tmp_str+=axis_info[j]->load(loaded_id);
+              tmp_str+="  "+next_ptr_id+" = getelemptr "+now_ptr_id+", "+loaded_id+"\n";
+              now_ptr_id=next_ptr_id;
+            }
+            ir_id=now_ptr_id;
+          }
           break;
         }
       }
@@ -1941,23 +1992,38 @@ class LValAST : public BaseAST {
         if (symbol_table[i].count(ident)){
           if (symbol_table[i][ident].is_const){
             loaded_id=ir_id;
-            return "";
+            break;
           }
           else {
-            loaded_id="%"+std::to_string(koopa_tmp_id);
-            koopa_tmp_id++;
-
-            tmp_str+="  "+loaded_id+" = load "+ir_id+"\n";
-            return tmp_str;
+            if (symbol_table[i][ident].is_arr){
+              loaded_id=ir_id;
+              func_arg_is_arr=1;
+              break;
+            }
+            else {
+              loaded_id="%"+std::to_string(koopa_tmp_id);
+              koopa_tmp_id++;
+              tmp_str+="  "+loaded_id+" = load "+ir_id+"\n";
+              break;
+            }
           }
         }
       }
     }
     else if (op==2){
-      loaded_id="%"+std::to_string(koopa_tmp_id);
-      koopa_tmp_id++;
-
-      tmp_str+="  "+loaded_id+" = load "+ir_id+"\n";
+      for (int i=now_symbol_table_id;i>=0;i--){
+        if (symbol_table[i].count(ident)){
+          if (axis_info.size()<symbol_table[i][ident].axis){
+            loaded_id=ir_id;
+            func_arg_is_arr=1;
+            break;
+          }
+          loaded_id="%"+std::to_string(koopa_tmp_id);
+          koopa_tmp_id++;
+          tmp_str+="  "+loaded_id+" = load "+ir_id+"\n";
+          break;
+        }
+      }
     }
     return tmp_str;
   }

@@ -13,6 +13,8 @@ int loop_num=0; // 当前循环嵌套层数
 int unreachable_tmp_id=0; // 用于不可到达的label号
 int var_def_id=0; // 用于变量定义的变量号(name_x)
 bool is_global_decl=0; // 是否为全局变量声明
+bool func_arg_is_arr=0; // 函数参数是否为数组
+
 std::vector< std::map< std::string, symbol > > symbol_table; // 符号表
 std::map< int, int > loop_label_table; // 当前循环嵌套层数对应的while号
 
