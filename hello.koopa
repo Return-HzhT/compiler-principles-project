@@ -6,90 +6,128 @@ decl @putch(i32)
 decl @putarray(i32, *i32)
 decl @starttime()
 decl @stoptime()
-global @ga_0 = alloc [i32, 10], zeroinit
-global @gb_1 = alloc [[i32, 3], 2], {{5, 6, 7}, {8, 0, 0}}
-fun @main(): i32 {
+global  @n_0 = alloc i32, zeroinit
+fun @insertsort(@a: *i32): i32 {
 %entry:
-  @a_2 = alloc [i32, 10]
-  @b_3 = alloc [[i32, 3], 2]
-  %0 = getelemptr @b_3, 0
-  %1 = getelemptr %0, 0
-  store 1, %1
-  %2 = getelemptr %0, 1
-  store 2, %2
-  %3 = getelemptr %0, 2
-  store 3, %3
-  %4 = getelemptr @b_3, 1
-  %5 = getelemptr %4, 0
-  store 4, %5
-  %6 = getelemptr %4, 1
-  store 0, %6
-  %7 = getelemptr %4, 2
-  store 0, %7
-  @sum_4 = alloc i32
-  store 0, @sum_4
-  @i_5 = alloc i32
-  store 0, @i_5
+  @a_1 = alloc *i32
+  store @a, @a_1
+  @i_2 = alloc i32
+  store 1, @i_2
   jump %while_entry_0
 %while_entry_0:
-  %8 = load @i_5
-  %9 = lt %8, 2
-  br %9, %while_body_0, %while_end_0
+  %0 = load @i_2
+  %1 = load @n_0
+  %2 = lt %0, %1
+  br %2, %while_body_0, %while_end_0
 %while_body_0:
-  @j_6 = alloc i32
-  store 0, @j_6
+  @temp_3 = alloc i32
+  %3 = load @a_1
+  %4 = load @i_2
+  %5 = getptr %3, %4
+  %6 = load %5
+  store %6, @temp_3
+  @j_4 = alloc i32
+  %7 = load @i_2
+  %8 = sub %7, 1
+  store %8, @j_4
   jump %while_entry_1
 %while_entry_1:
-  %10 = load @j_6
-  %11 = lt %10, 3
-  br %11, %while_body_1, %while_end_1
+  @result_0 = alloc i32
+  store 0, @result_0
+  %9 = sub 0, 1
+  %10 = load @j_4
+  %11 = gt %10, %9
+  br %11, %then_0, %end_0
+%then_0:
+  %12 = load @a_1
+  %13 = load @j_4
+  %14 = getptr %12, %13
+  %15 = load @temp_3
+  %16 = load %14
+  %17 = lt %15, %16
+  %18 = ne %17, 0
+  store %18,   @result_0
+  jump %end_0
+%end_0:
+  %19 = load @result_0
+  br %19, %while_body_1, %while_end_1
 %while_body_1:
-  %13 = load @i_5
-  %12 = getelemptr @gb_1, %13
-  %15 = load @j_6
-  %14 = getelemptr %12, %15
-  %17 = load @i_5
-  %16 = getelemptr @b_3, %17
-  %19 = load @j_6
-  %18 = getelemptr %16, %19
-  %20 = load %18
-  %21 = load @sum_4
-  %22 = add %21, %20
-  %23 = load %14
-  %24 = add %22, %23
-  store %24, @sum_4
-  %25 = load @j_6
-  %26 = add %25, 1
-  store %26, @j_6
+  %20 = load @a_1
+  %21 = load @j_4
+  %22 = getptr %20, %21
+  %23 = load @j_4
+  %24 = add %23, 1
+  %25 = load @a_1
+  %26 = getptr %25, %24
+  %27 = load %22
+  store %27, %26
+  %28 = load @j_4
+  %29 = sub %28, 1
+  store %29, @j_4
   jump %while_entry_1
 %while_end_1:
-  %27 = load @i_5
-  %28 = add %27, 1
-  store %28, @i_5
+  %30 = load @j_4
+  %31 = add %30, 1
+  %32 = load @a_1
+  %33 = getptr %32, %31
+  %34 = load @temp_3
+  store %34, %33
+  %35 = load @i_2
+  %36 = add %35, 1
+  store %36, @i_2
   jump %while_entry_0
 %while_end_0:
-  store 0, @i_5
+  ret 0
+}
+fun @main(): i32 {
+%entry:
+  store 10, @n_0
+  @a_5 = alloc [i32, 10]
+  %37 = getelemptr @a_5, 0
+  store 4, %37
+  %38 = getelemptr @a_5, 1
+  store 3, %38
+  %39 = getelemptr @a_5, 2
+  store 9, %39
+  %40 = getelemptr @a_5, 3
+  store 2, %40
+  %41 = getelemptr @a_5, 4
+  store 0, %41
+  %42 = getelemptr @a_5, 5
+  store 1, %42
+  %43 = getelemptr @a_5, 6
+  store 6, %43
+  %44 = getelemptr @a_5, 7
+  store 5, %44
+  %45 = getelemptr @a_5, 8
+  store 7, %45
+  %46 = getelemptr @a_5, 9
+  store 8, %46
+  @i_6 = alloc i32
+  %48 = getelemptr @a_5, 0
+  %47 = call @insertsort(%48)
+  store %47, @i_6
   jump %while_entry_2
 %while_entry_2:
-  %29 = load @i_5
-  %30 = lt %29, 10
-  br %30, %while_body_2, %while_end_2
+  %49 = load @i_6
+  %50 = load @n_0
+  %51 = lt %49, %50
+  br %51, %while_body_2, %while_end_2
 %while_body_2:
-  %31 = load @i_5
-  %32 = load @sum_4
-  %33 = add %32, %31
-  store %33, 
-  %34 = load @i_5
-  %35 = load @sum_4
-  %36 = add %35, %34
-  %38 = load @i_5
-  %37 = getelemptr @ga_0, %38
-  store %36, %37
-  %39 = load @i_5
-  %40 = add %39, 1
-  store %40, @i_5
+  @tmp_7 = alloc i32
+  %53 = load @i_6
+  %52 = getelemptr @a_5, %53
+  %54 = load %52
+  store %54, @tmp_7
+  %55 = load @tmp_7
+  call @putint(%55)
+  store 10, @tmp_7
+  %56 = load @tmp_7
+  call @putch(%56)
+  %57 = load @i_6
+  %58 = add %57, 1
+  store %58, @i_6
   jump %while_entry_2
 %while_end_2:
-  %41 = load @sum_4
-  ret %41
+  ret 0
 }

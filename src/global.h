@@ -22,7 +22,10 @@ void Visit_branch(const koopa_raw_branch_t &branch);
 void Visit_jump(const koopa_raw_jump_t &jump);
 void Visit_call(const koopa_raw_call_t &call);
 void Visit_global_alloc(const koopa_raw_value_t &value);
-
+int Visit_getelemptr(const koopa_raw_get_elem_ptr_t &get_elem_ptr);
+int Visit_getptr(const koopa_raw_get_ptr_t &get_ptr);
+int get_type_size(const koopa_raw_type_t &ty,bool get_whole_arr);
+void aggregate_init(const koopa_raw_aggregate_t &aggregate);
 
 int set_prologue(const koopa_raw_function_t &func);
 // void get_operand(const koopa_raw_value_t &t, std::string &operand_str);

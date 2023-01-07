@@ -85,28 +85,11 @@ void Visit(const koopa_raw_function_t &func) {
   stack_size=set_prologue(func);
 
   if (if_restore_ra){
-    stack_offset=stack_size-8;
-  }
-  else {
     stack_offset=stack_size-4;
   }
-
-  // int reg_args=8; // 存入寄存器的输入参数数量
-  // if (func->params.len<reg_args){
-  //   reg_args=func->params.len;
-  // }
-  // // 将寄存器中的输入参数存入栈中
-  // for (int i=0;i<reg_args;i++){
-  //   riscv_code+="  sw a"+std::to_string(i)+", "+std::to_string(4*i)+"(sp)\n";
-  //   stack_offset-=4;
-  // }
-  // // 将其他输入参数存入栈中
-  // for (int i=reg_args;i<func->params.len;i++){
-  //   int offset=stack_size+(i-8)*4;
-  //   riscv_code+="  lw t0, "+std::to_string(offset)+"(sp)\n";
-  //   riscv_code+="  sw t0, "+std::to_string(4*i)+"(sp)\n";
-  //   stack_offset-=4;
-  // }
+  else {
+    stack_offset=stack_size;
+  }
 
   // 访问所有基本块
   Visit(func->bbs);
@@ -160,7 +143,14 @@ int set_prologue(const koopa_raw_function_t &func){
 
   if (r){
     if_restore_ra=1;
-    riscv_code+="  sw ra, "+std::to_string(s-4)+"(sp)\n";
+    if (s-4>=2048){
+      riscv_code+="  li t0, "+std::to_string(s-4)+"\n";
+      riscv_code+="  add t0, t0, sp\n";
+      riscv_code+="  sw ra, 0(t0)\n";
+    }
+    else {
+      riscv_code+="  sw ra, "+std::to_string(s-4)+"(sp)\n";
+    }
   }
   return s;
 }
@@ -171,7 +161,8 @@ int get_value_size(const koopa_raw_value_t &value){
 
   const auto &kind = value->kind;
   if (kind.tag==KOOPA_RVT_ALLOC) {
-    s+=4;
+    int size=get_type_size(value->ty,1);
+    s+=size;
   }
   else if (kind.tag!=KOOPA_RVT_GLOBAL_ALLOC){
     const auto ty=value->ty;
@@ -202,39 +193,55 @@ void Visit(const koopa_raw_value_t &value) {
 
   const auto &kind = value->kind;
   switch (kind.tag) {
-    case KOOPA_RVT_RETURN:
-      // 访问 return 指令
+    case KOOPA_RVT_RETURN:{
       Visit_ret(kind.data.ret);
-      break;
-    case KOOPA_RVT_INTEGER:
-      // 访问 integer 指令
+      break;      
+    }
+    case KOOPA_RVT_INTEGER:{
       Visit_integer(kind.data.integer);
-      break;
-    case KOOPA_RVT_BINARY:
+      break;      
+    }
+    case KOOPA_RVT_BINARY:{
       dst=Visit_binary(kind.data.binary);
       break;
-    case KOOPA_RVT_ALLOC:
+    }
+    case KOOPA_RVT_ALLOC:{  
       Visit_alloc(value);
       break;
-    case KOOPA_RVT_LOAD:
+    }
+    case KOOPA_RVT_LOAD:{
       dst=Visit_load(kind.data.load);
       break;
-    case KOOPA_RVT_STORE:
+    }
+    case KOOPA_RVT_STORE:{
       Visit_store(kind.data.store);
       break;
-    case KOOPA_RVT_BRANCH:
+    }
+    case KOOPA_RVT_BRANCH:{
       Visit_branch(kind.data.branch);
       break;
-    case KOOPA_RVT_JUMP:
+    }
+    case KOOPA_RVT_JUMP:{
       Visit_jump(kind.data.jump);
       break;
-    case KOOPA_RVT_CALL:
+    }
+    case KOOPA_RVT_CALL:{
       Visit_call(kind.data.call);
       dst=7;
       break;
-    case KOOPA_RVT_GLOBAL_ALLOC:
+    }
+    case KOOPA_RVT_GLOBAL_ALLOC:{
       Visit_global_alloc(value);
       break;
+    }
+    case KOOPA_RVT_GET_ELEM_PTR:{
+      dst=Visit_getelemptr(kind.data.get_elem_ptr);
+      break;
+    }
+    case KOOPA_RVT_GET_PTR:{
+      dst=Visit_getptr(kind.data.get_ptr);
+      break;
+    }
     default:
       // 其他类型暂时遇不到
       std::cout<<kind.tag<<endl;
@@ -251,15 +258,229 @@ void Visit(const koopa_raw_value_t &value) {
     }
   }
   if (ty->tag!=KOOPA_RTT_UNIT&&dst>=0){
-    riscv_code+="  sw "+reg_name[dst]+", "+std::to_string(stack_offset)+"(sp)\n";
+    stack_offset-=4;
+    if (stack_offset>=2048){
+      std::string tmp_reg=reg_name[reg_cnt];
+      riscv_code+="  li "+tmp_reg+", "+std::to_string(stack_offset)+"\n";
+      riscv_code+="  add "+tmp_reg+", "+tmp_reg+", sp\n";
+      riscv_code+="  sw "+reg_name[dst]+", "+"0("+tmp_reg+")\n";
+    }
+    else {
+      riscv_code+="  sw "+reg_name[dst]+", "+std::to_string(stack_offset)+"(sp)\n";
+    }
     std::string var="%"+std::to_string(ins_cnt);
     ins2var[value]=var;
     ins_cnt++;
     stack_dic[var]=stack_offset;
-    stack_offset-=4;
   }
 
   reg_cnt=origin_cnt; // 释放执行此指令使用的临时寄存器
+}
+
+int Visit_getptr(const koopa_raw_get_ptr_t &get_ptr){
+  koopa_raw_value_t src=get_ptr.src,index=get_ptr.index;
+  koopa_raw_type_t ty=src->ty;
+  int ptr_size=get_type_size(ty,1);
+
+  int dst=reg_cnt;
+  std::string now_reg=reg_name[reg_cnt];
+  reg_cnt++;
+  
+  // 计算目标在栈上的地址
+  switch(src->kind.tag){
+    case KOOPA_RVT_LOAD:
+    case KOOPA_RVT_ALLOC:{
+      std::string var=ins2var[src];
+      int offset=stack_dic[var];
+      if (offset>=2048){
+        riscv_code+="  li "+now_reg+", "+std::to_string(offset)+"\n";
+        riscv_code+="  add "+now_reg+", sp, "+now_reg+"\n";
+      }
+      else {
+        riscv_code+="  addi "+now_reg+", sp, "+std::to_string(offset)+"\n";
+      }
+      riscv_code+="  lw "+now_reg+", 0("+now_reg+")\n";
+      break;
+    }
+    case KOOPA_RVT_GET_ELEM_PTR:{
+      std::string var=ins2var[src];
+      int offset=stack_dic[var];
+      if (offset>=2048){ 
+        riscv_code+="  li "+now_reg+", "+std::to_string(offset)+"\n";
+        riscv_code+="  add "+now_reg+", sp, "+now_reg+"\n";
+      }
+      else {
+        riscv_code+="  addi "+now_reg+", sp, "+std::to_string(offset)+"\n";
+      }
+      riscv_code+="  lw "+now_reg+", 0("+now_reg+")\n";
+      break;
+    }
+    case KOOPA_RVT_GLOBAL_ALLOC:{
+      std::string var_name=(src->name)+1;
+      riscv_code+="  la "+now_reg+", "+var_name+"\n";
+      break;
+    }
+    default:
+      std::cout<<src->kind.tag<<"\n";
+      assert(false);
+      break;
+  }
+
+  switch(index->kind.tag){
+    case KOOPA_RVT_INTEGER:{
+      int idx=index->kind.data.integer.value;
+      std::string tmp_reg1=reg_name[reg_cnt];
+      reg_cnt++;
+      std::string tmp_reg2=reg_name[reg_cnt];
+      reg_cnt++;
+      riscv_code+="  li "+tmp_reg1+", "+std::to_string(idx)+"\n";
+      riscv_code+="  li "+tmp_reg2+", "+std::to_string(ptr_size)+"\n";
+      riscv_code+="  mul "+tmp_reg1+", "+tmp_reg1+", "+tmp_reg2+"\n";
+      riscv_code+="  add "+now_reg+", "+now_reg+", "+tmp_reg1+"\n";
+      break;
+    }
+    case KOOPA_RVT_BINARY:
+    case KOOPA_RVT_LOAD:{
+      std::string var=ins2var[index];
+      int offset=stack_dic[var];
+      std::string tmp_reg1=reg_name[reg_cnt];
+      reg_cnt++;
+      std::string tmp_reg2=reg_name[reg_cnt];
+      reg_cnt++;
+      if (offset>=2048){
+        riscv_code+="  li "+tmp_reg1+", "+std::to_string(offset)+"\n";
+        riscv_code+="  add "+tmp_reg1+", "+tmp_reg1+", sp\n";
+        riscv_code+="  lw "+tmp_reg1+", "+"0("+tmp_reg1+")\n";
+      }
+      else {
+        riscv_code+="  lw "+tmp_reg1+", "+std::to_string(offset)+"(sp)\n";
+      }
+      riscv_code+="  li "+tmp_reg2+", "+std::to_string(ptr_size)+"\n";
+      riscv_code+="  mul "+tmp_reg1+", "+tmp_reg1+", "+tmp_reg2+"\n";
+      riscv_code+="  add "+now_reg+", "+now_reg+", "+tmp_reg1+"\n";
+      break;
+    }
+    default:
+      std::cout<<index->kind.tag<<"\n";
+      assert(false);
+      break;
+  }
+
+  return dst;
+}
+
+int Visit_getelemptr(const koopa_raw_get_elem_ptr_t &get_elem_ptr){
+  koopa_raw_value_t src=get_elem_ptr.src,index=get_elem_ptr.index;
+  koopa_raw_type_t ty=src->ty;
+  int ptr_size=get_type_size(ty,0);
+
+  int dst=reg_cnt;
+  std::string now_reg=reg_name[reg_cnt];
+  reg_cnt++;
+  
+  // 计算目标在栈上的地址
+  switch(src->kind.tag){
+    case KOOPA_RVT_ALLOC:{
+      std::string var=ins2var[src];
+      int offset=stack_dic[var];
+      if (offset>=2048){ 
+        riscv_code+="  li "+now_reg+", "+std::to_string(offset)+"\n";
+        riscv_code+="  add "+now_reg+", sp, "+now_reg+"\n";
+      }
+      else {
+        riscv_code+="  addi "+now_reg+", sp, "+std::to_string(offset)+"\n";
+      }
+      break;
+    }
+    case KOOPA_RVT_GET_PTR:
+    case KOOPA_RVT_GET_ELEM_PTR:{
+      std::string var=ins2var[src];
+      int offset=stack_dic[var];
+      if (offset>=2048){ 
+        riscv_code+="  li "+now_reg+", "+std::to_string(offset)+"\n";
+        riscv_code+="  add "+now_reg+", sp, "+now_reg+"\n";
+      }
+      else {
+        riscv_code+="  addi "+now_reg+", sp, "+std::to_string(offset)+"\n";
+      }
+      riscv_code+="  lw "+now_reg+", 0("+now_reg+")\n";
+      break;
+    }
+    case KOOPA_RVT_GLOBAL_ALLOC:{
+      std::string var_name=(src->name)+1;
+      riscv_code+="  la "+now_reg+", "+var_name+"\n";
+      break;
+    }
+    default:
+      std::cout<<src->kind.tag<<"\n";
+      assert(false);
+      break;
+  }
+
+  switch(index->kind.tag){
+    case KOOPA_RVT_INTEGER:{
+      int idx=index->kind.data.integer.value;
+      std::string tmp_reg1=reg_name[reg_cnt];
+      reg_cnt++;
+      std::string tmp_reg2=reg_name[reg_cnt];
+      reg_cnt++;
+      riscv_code+="  li "+tmp_reg1+", "+std::to_string(idx)+"\n";
+      riscv_code+="  li "+tmp_reg2+", "+std::to_string(ptr_size)+"\n";
+      riscv_code+="  mul "+tmp_reg1+", "+tmp_reg1+", "+tmp_reg2+"\n";
+      riscv_code+="  add "+now_reg+", "+now_reg+", "+tmp_reg1+"\n";
+      break;
+    }
+    case KOOPA_RVT_BINARY:
+    case KOOPA_RVT_LOAD:{
+      std::string var=ins2var[index];
+      int offset=stack_dic[var];
+      std::string tmp_reg1=reg_name[reg_cnt];
+      reg_cnt++;
+      std::string tmp_reg2=reg_name[reg_cnt];
+      reg_cnt++;
+      if (offset>=2048){
+        riscv_code+="  li "+tmp_reg1+", "+std::to_string(offset)+"\n";
+        riscv_code+="  add "+tmp_reg1+", "+tmp_reg1+", sp\n";
+        riscv_code+="  lw "+tmp_reg1+", "+"0("+tmp_reg1+")\n";
+      }
+      else {
+        riscv_code+="  lw "+tmp_reg1+", "+std::to_string(offset)+"(sp)\n";
+      }
+      riscv_code+="  li "+tmp_reg2+", "+std::to_string(ptr_size)+"\n";
+      riscv_code+="  mul "+tmp_reg1+", "+tmp_reg1+", "+tmp_reg2+"\n";
+      riscv_code+="  add "+now_reg+", "+now_reg+", "+tmp_reg1+"\n";
+      break;
+    }
+    default:
+      std::cout<<index->kind.tag<<"\n";
+      assert(false);
+      break;
+  }
+
+  return dst;
+}
+
+int get_type_size(const koopa_raw_type_t &ty,bool get_whole_arr){
+  switch(ty->tag){
+    case KOOPA_RTT_INT32:{
+      return 4;
+    }
+    case KOOPA_RTT_ARRAY:{
+      if (get_whole_arr){
+        return get_type_size(ty->data.array.base,1)*(ty->data.array.len);
+      }
+      else {
+        return get_type_size(ty->data.array.base,1);
+      }
+    }
+    case KOOPA_RTT_POINTER:{
+      return get_type_size(ty->data.pointer.base,get_whole_arr);
+    }
+    default:
+      std::cout<<ty->tag<<"\n";
+      assert(false);
+      break;
+  }
 }
 
 void Visit_global_alloc(const koopa_raw_value_t &value){ // 全局变量
@@ -275,12 +496,42 @@ void Visit_global_alloc(const koopa_raw_value_t &value){ // 全局变量
       break;
     }
     case KOOPA_RVT_ZERO_INIT:{ // 零初始化
-      riscv_code+="  .zero 4\n";
+      koopa_raw_type_t ty=value->ty;
+      int size=get_type_size(ty,1);
+      riscv_code+="  .zero "+std::to_string(size)+"\n";
+      break;
+    }
+    case KOOPA_RVT_AGGREGATE:{
+      koopa_raw_aggregate_t aggregate=init->kind.data.aggregate;
+      aggregate_init(aggregate);
       break;
     }
     default:
       std::cout<<init->kind.tag<<endl;
       assert(false);
+  }
+}
+
+void aggregate_init(const koopa_raw_aggregate_t &aggregate){
+  koopa_raw_slice_t elems=aggregate.elems;
+  for (size_t i = 0; i < elems.len; ++i) {
+    auto ptr = elems.buffer[i];
+    const koopa_raw_value_t value=reinterpret_cast<koopa_raw_value_t>(ptr);
+    switch (value->kind.tag)
+    {
+      case KOOPA_RVT_INTEGER:{
+        riscv_code+="  .word "+std::to_string(value->kind.data.integer.value)+"\n";
+        break;
+      }
+      case KOOPA_RVT_AGGREGATE:{
+        aggregate_init(value->kind.data.aggregate);
+        break;
+      }
+      default:
+        std::cout<<value->kind.tag<<"\n";
+        assert(false);
+        break;
+    }      
   }
 }
 
@@ -290,10 +541,11 @@ void Visit_alloc(const koopa_raw_value_t &value){ // 分配一个变量到栈上
     case KOOPA_RTT_POINTER:
     {
       std::string var="@"+std::to_string(var_cnt);
-      ins2var[value]=var;
       var_cnt++;
+      ins2var[value]=var;
+      int size=get_type_size(ty,1);
+      stack_offset-=size;
       stack_dic[var]=stack_offset;
-      stack_offset-=4;
       break;
     }
     default:
@@ -319,7 +571,15 @@ void Visit_store(const koopa_raw_store_t &store){
     case KOOPA_RVT_BINARY:{ // 保存值为一个指令返回值
       std::string var=ins2var[value];
       int offset=stack_dic[var];
-      riscv_code+="  lw "+now_reg+", "+std::to_string(offset)+"(sp)\n";
+      if (offset>=2048){
+        std::string tmp_reg=reg_name[reg_cnt];
+        riscv_code+="  li "+tmp_reg+", "+std::to_string(offset)+"\n";
+        riscv_code+="  add "+tmp_reg+", "+tmp_reg+", sp\n";
+        riscv_code+="  lw "+now_reg+", "+"0("+tmp_reg+")\n";
+      }
+      else {
+        riscv_code+="  lw "+now_reg+", "+std::to_string(offset)+"(sp)\n";
+      }
       break;
     }
     case KOOPA_RVT_FUNC_ARG_REF: { // 保存值为函数参数
@@ -342,10 +602,35 @@ void Visit_store(const koopa_raw_store_t &store){
 
   switch (dest->kind.tag)
   {
+    case KOOPA_RVT_GET_PTR:
+    case KOOPA_RVT_GET_ELEM_PTR:{
+      std::string var=ins2var[dest];
+      int offset=stack_dic[var];
+      std::string tmp_reg=reg_name[reg_cnt];
+      if (offset>=2048){
+        riscv_code+="  li "+tmp_reg+", "+std::to_string(offset)+"\n";
+        riscv_code+="  add "+tmp_reg+", "+tmp_reg+", sp\n";
+        riscv_code+="  lw "+tmp_reg+", "+"0("+tmp_reg+")\n";
+        riscv_code+="  sw "+now_reg+", "+"0("+tmp_reg+")\n";
+      }
+      else {
+        riscv_code+="  lw "+tmp_reg+", "+std::to_string(offset)+"(sp)\n";
+        riscv_code+="  sw "+now_reg+", "+"0("+tmp_reg+")\n";
+      }
+      break;
+    }
     case KOOPA_RVT_ALLOC: {
       std::string var=ins2var[dest];
       int offset=stack_dic[var];
-      riscv_code+="  sw "+now_reg+", "+std::to_string(offset)+"(sp)\n";
+      if (offset>=2048){
+        std::string tmp_reg=reg_name[reg_cnt];
+        riscv_code+="  li "+tmp_reg+", "+std::to_string(offset)+"\n";
+        riscv_code+="  add "+tmp_reg+", "+tmp_reg+", sp\n";
+        riscv_code+="  sw "+now_reg+", "+"0("+tmp_reg+")\n";
+      }
+      else {
+        riscv_code+="  sw "+now_reg+", "+std::to_string(offset)+"(sp)\n";
+      }
       break;
     }
     case KOOPA_RVT_GLOBAL_ALLOC: {
@@ -376,10 +661,34 @@ int Visit_load(const koopa_raw_load_t &load){
       riscv_code+="  lw "+now_reg+", "+"0("+now_reg+")\n";
       break;
     }
+    case KOOPA_RVT_GET_PTR:
+    case KOOPA_RVT_GET_ELEM_PTR:{
+      std::string var=ins2var[src];
+      int offset=stack_dic[var];
+      std::string tmp_reg=reg_name[reg_cnt];
+      if (offset>=2048){
+        riscv_code+="  li "+tmp_reg+", "+std::to_string(offset)+"\n";
+        riscv_code+="  add "+tmp_reg+", "+tmp_reg+", sp\n";
+        riscv_code+="  lw "+tmp_reg+", "+"0("+tmp_reg+")\n";
+      }
+      else {
+        riscv_code+="  lw "+tmp_reg+", "+std::to_string(offset)+"(sp)\n";
+      }
+      riscv_code+="  lw "+now_reg+", "+"0("+tmp_reg+")\n";
+      break;
+    }
     case KOOPA_RVT_ALLOC:{
       std::string var=ins2var[src];
       int offset=stack_dic[var];
-      riscv_code+="  lw "+now_reg+", "+std::to_string(offset)+"(sp)\n";
+      if (offset>=2048){
+        std::string tmp_reg=reg_name[reg_cnt];
+        riscv_code+="  li "+tmp_reg+", "+std::to_string(offset)+"\n";
+        riscv_code+="  add "+tmp_reg+", "+tmp_reg+", sp\n";
+        riscv_code+="  lw "+now_reg+", "+"0("+tmp_reg+")\n";
+      }
+      else {
+        riscv_code+="  lw "+now_reg+", "+std::to_string(offset)+"(sp)\n";
+      }
       break;
     }
     default:
@@ -408,7 +717,15 @@ void Visit_branch(const koopa_raw_branch_t &branch){
     case KOOPA_RVT_BINARY:{
       std::string var=ins2var[cond];
       int offset=stack_dic[var];
-      riscv_code+="  lw "+now_reg+", "+std::to_string(offset)+"(sp)\n";
+      if (offset>=2048){
+        std::string tmp_reg=reg_name[reg_cnt];
+        riscv_code+="  li "+tmp_reg+", "+std::to_string(offset)+"\n";
+        riscv_code+="  add "+tmp_reg+", "+tmp_reg+", sp\n";
+        riscv_code+="  lw "+now_reg+", "+"0("+tmp_reg+")\n";
+      }
+      else {
+        riscv_code+="  lw "+now_reg+", "+std::to_string(offset)+"(sp)\n";
+      }
       break;
     }
     default:
@@ -446,17 +763,20 @@ void Visit_call(const koopa_raw_call_t &call){
         riscv_code+="  li a"+std::to_string(i)+", "+(std::to_string(int_val))+"\n";
         break;
       }
+      case KOOPA_RVT_GET_ELEM_PTR:
       case KOOPA_RVT_CALL:
       case KOOPA_RVT_LOAD:
       case KOOPA_RVT_BINARY:{ // 变量
-        const auto ty=value->ty;
-        if (ty->tag!=KOOPA_RTT_UNIT){ 
-          if (ins2var.count(value)){
-            std::string var=ins2var[value];
-            int offset=stack_dic[var];
-            reg_cnt++;
-            riscv_code+="  lw a"+std::to_string(i)+", "+std::to_string(offset)+"(sp)\n";
-          }
+        std::string var=ins2var[value];
+        int offset=stack_dic[var];
+        if (offset>=2048){
+          std::string tmp_reg=reg_name[reg_cnt];
+          riscv_code+="  li "+tmp_reg+", "+std::to_string(offset)+"\n";
+          riscv_code+="  add "+tmp_reg+", "+tmp_reg+", sp\n";
+          riscv_code+="  lw a"+std::to_string(i)+", "+"0("+tmp_reg+")\n";
+        }
+        else {
+          riscv_code+="  lw a"+std::to_string(i)+", "+std::to_string(offset)+"(sp)\n";
         }
         break;
       }
@@ -480,12 +800,21 @@ void Visit_call(const koopa_raw_call_t &call){
         riscv_code+="  sw "+now_reg+", "+std::to_string(offset)+"(sp)\n";
         break;
       }
+      case KOOPA_RVT_GET_ELEM_PTR:
       case KOOPA_RVT_CALL:
       case KOOPA_RVT_LOAD:
       case KOOPA_RVT_BINARY:{ // 变量
         std::string var=ins2var[value];
         int offset=stack_dic[var];
-        riscv_code+="  lw "+now_reg+", "+std::to_string(offset)+"(sp)\n";
+        if (offset>=2048){
+          std::string tmp_reg=reg_name[reg_cnt];
+          riscv_code+="  li "+tmp_reg+", "+std::to_string(offset)+"\n";
+          riscv_code+="  add "+tmp_reg+", "+tmp_reg+", sp\n";
+          riscv_code+="  lw "+now_reg+", "+"0("+tmp_reg+")\n";
+        }
+        else {
+          riscv_code+="  lw "+now_reg+", "+std::to_string(offset)+"(sp)\n";
+        }
         offset=(i-8)*4;
         riscv_code+="  sw "+now_reg+", "+std::to_string(offset)+"(sp)\n";
         break;
@@ -625,8 +954,15 @@ void Visit_ret(const koopa_raw_return_t &ret){ // 返回指令
           if (ins2var.count(ret_value)){
             std::string var=ins2var[ret_value];
             int offset=stack_dic[var];
-            reg_cnt++;
-            riscv_code+="  lw a0, "+std::to_string(offset)+"(sp)\n";
+            if (offset>=2048){
+              std::string tmp_reg=reg_name[reg_cnt];
+              riscv_code+="  li "+tmp_reg+", "+std::to_string(offset)+"\n";
+              riscv_code+="  add "+tmp_reg+", "+tmp_reg+", sp\n";
+              riscv_code+="  lw a0, 0("+tmp_reg+")\n";
+            }
+            else {
+              riscv_code+="  lw a0, "+std::to_string(offset)+"(sp)\n";
+            }
           }
         }
         break;
@@ -639,7 +975,15 @@ void Visit_ret(const koopa_raw_return_t &ret){ // 返回指令
   }
 
   if (if_restore_ra){
-    riscv_code+="  lw ra, "+std::to_string(stack_size-4)+"(sp)\n";
+    if (stack_size-4>=2048){
+      std::string tmp_reg=reg_name[reg_cnt];
+      riscv_code+="  li "+tmp_reg+", "+std::to_string(stack_size-4)+"\n";
+      riscv_code+="  add "+tmp_reg+", "+tmp_reg+", sp\n";
+      riscv_code+="  lw ra, 0("+tmp_reg+")\n";
+    }
+    else {
+      riscv_code+="  lw ra, "+std::to_string(stack_size-4)+"(sp)\n";
+    }
   }
 
   if (stack_size){
@@ -664,11 +1008,20 @@ void get_operand_load_reg(const koopa_raw_value_t &t, std::string &operand_str){
   const auto ty=t->ty;
   if (ty->tag!=KOOPA_RTT_UNIT){
     if (ins2var.count(t)){
-      std::string var=ins2var[t];
-      int offset=stack_dic[var];
       std::string now_reg=reg_name[reg_cnt];
       reg_cnt++;
-      riscv_code+="  lw "+now_reg+", "+std::to_string(offset)+"(sp)\n";
+      std::string var=ins2var[t];
+      int offset=stack_dic[var];
+      if (offset>=2048){
+        std::string tmp_reg=reg_name[reg_cnt];
+        riscv_code+="  li "+tmp_reg+", "+std::to_string(offset)+"\n";
+        riscv_code+="  add "+tmp_reg+", "+tmp_reg+", sp\n";
+        riscv_code+="  lw "+now_reg+", "+"0("+tmp_reg+")\n";
+      }
+      else {
+        riscv_code+="  lw "+now_reg+", "+std::to_string(offset)+"(sp)\n";
+      }
+
       operand_str=now_reg;
       return;
     }
@@ -695,34 +1048,6 @@ void get_operand_load_reg(const koopa_raw_value_t &t, std::string &operand_str){
       break;
   }
 }
-
-// void get_operand(const koopa_raw_value_t &t, std::string &operand_str){ // 解析操作数，返回立即数或寄存器
-//   // 已保存在栈上的指令的返回值
-//   const auto ty=t->ty;
-//   if (ty->tag!=KOOPA_RTT_UNIT){
-//     if (ins2var.count(t)){
-//       std::string var=ins2var[t];
-//       int offset=stack_dic[var];
-//       std::string now_reg=reg_name[reg_cnt];
-//       reg_cnt++;
-//       riscv_code+="  lw "+now_reg+", "+std::to_string(offset)+"(sp)\n";
-//       operand_str=now_reg;
-//       return;
-//     }
-//   }
-
-//   switch(t->kind.tag){
-//     case KOOPA_RVT_INTEGER:
-//       if (t->kind.data.integer.value==0){
-//         operand_str="x0";
-//       }
-//       else operand_str=std::to_string(t->kind.data.integer.value);
-//       break;
-//     default:
-//       // 其他类型暂时遇不到
-//       assert(false);
-//   }
-// }
 
 // 访问对应类型指令的函数定义略
 // 视需求自行实现
