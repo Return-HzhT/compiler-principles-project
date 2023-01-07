@@ -33,6 +33,8 @@ class BaseAST {
   virtual void get_rest_of_init_val_vec(std::vector< std::unique_ptr<BaseAST> > &vec){return;}
   virtual void get_rest_of_init_vec(std::vector<int> &vec,std::vector<int> axis_length,int now_axis){return;}
   virtual std::string load(std::string &loaded_id){return "";} // 若目标为指针，则load并更新loaded_id，否则等同于get_ir_id()
+  virtual std::string get_func_type(){return "";}
+  virtual bool is_number(){return 0;}
 };
 
 class CompUnitAST : public BaseAST {
@@ -141,7 +143,12 @@ class FuncDefAST : public BaseAST {
     now_symbol_table_id--;
 
     if (!block->get_have_ret()){
-      koopa_ir+="  ret\n";
+      if (func_type->get_func_type()=="int"){
+        koopa_ir+="  ret 0\n";
+      }
+      else {
+        koopa_ir+="  ret\n";
+      }
     }
     koopa_ir+="}\n";
     return "";
@@ -164,6 +171,10 @@ class FuncTypeAST : public BaseAST {
       return 0;
     }
     return 1;
+  }
+
+  std::string get_func_type(){
+    return func_type;
   }
 };
 
@@ -714,6 +725,10 @@ class PrimaryExpAST : public BaseAST {
     return tmp_str;
   }
 
+  bool is_number(){
+    return op==3;
+  }
+
   int get_val(){
     if (op==1){
       return exp->get_val();
@@ -749,18 +764,29 @@ class UnaryExpAST : public BaseAST {
   std::unique_ptr<BaseAST> unary_exp;
   std::string ident;
   std::unique_ptr<BaseAST> func_r_params;
+  bool is_num;
 
   std::string Dump(){
+    is_num=0;
     std::string tmp_str="";
     if (op==1){
       tmp_str=primary_exp->Dump();
       ir_id=primary_exp->get_ir_id();
+      if (primary_exp->is_number()){
+        is_num=1;
+      }
     }
     else if (op==2){
       tmp_str+=unary_exp->Dump();
+      if (unary_exp->is_number()){
+        is_num=1;
+      }
       string opt=unary_op->get_opt();
-
       if (opt=="-"){
+        if (is_num){
+          ir_id=std::to_string(-(unary_exp->get_val()));
+          return tmp_str;
+        }
         std::string tmp_id="";
         tmp_str+=unary_exp->load(tmp_id);
         ir_id="%"+std::to_string(koopa_tmp_id);
@@ -768,6 +794,10 @@ class UnaryExpAST : public BaseAST {
         tmp_str+="  "+ir_id+" = sub 0, "+tmp_id+"\n";
       }
       else if (opt=="!"){
+        if (is_num){
+          ir_id=std::to_string(!(unary_exp->get_val()));
+          return tmp_str;
+        }
         std::string tmp_id="";
         tmp_str+=unary_exp->load(tmp_id);
         ir_id="%"+std::to_string(koopa_tmp_id);
@@ -777,7 +807,13 @@ class UnaryExpAST : public BaseAST {
         tmp_str+=", 0\n";
       }
       else {
-        ir_id=unary_exp->get_ir_id();
+          if (is_num){
+          ir_id=std::to_string(unary_exp->get_val());
+          return tmp_str;
+        }
+        std::string tmp_id="";
+        tmp_str+=unary_exp->load(tmp_id);
+        ir_id=tmp_id;
       }
     }
     else if (op==3){
@@ -809,6 +845,10 @@ class UnaryExpAST : public BaseAST {
       }
     }
     return tmp_str;
+  }
+
+  bool is_number(){
+    return is_num;
   }
 
   int get_val(){
@@ -1503,9 +1543,15 @@ class VarDefAST : public BaseAST {
       var_def_id++;
     }
     else if (op==2){
-      koopa_ir+=init_val->Dump();
       std::string val="";
-      koopa_ir+=init_val->load(val);
+      if (is_global_decl){
+        init_val->Dump();
+        init_val->load(val);
+      }
+      else {
+        koopa_ir+=init_val->Dump();
+        koopa_ir+=init_val->load(val);
+      }
       std::string name=ident+"_"+std::to_string(var_def_id);
       symbol_table[now_symbol_table_id][ident]=symbol(0,0,name,val);
 

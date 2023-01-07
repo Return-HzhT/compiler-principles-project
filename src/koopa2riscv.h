@@ -259,7 +259,7 @@ void Visit(const koopa_raw_value_t &value) {
   }
   if (ty->tag!=KOOPA_RTT_UNIT&&dst>=0){
     stack_offset-=4;
-    if (stack_offset>=2048){
+    if (stack_offset>=2048||stack_offset<=-2048){
       std::string tmp_reg=reg_name[reg_cnt];
       riscv_code+="  li "+tmp_reg+", "+std::to_string(stack_offset)+"\n";
       riscv_code+="  add "+tmp_reg+", "+tmp_reg+", sp\n";
@@ -292,7 +292,7 @@ int Visit_getptr(const koopa_raw_get_ptr_t &get_ptr){
     case KOOPA_RVT_ALLOC:{
       std::string var=ins2var[src];
       int offset=stack_dic[var];
-      if (offset>=2048){
+      if (offset>=2048||offset<=-2048){
         riscv_code+="  li "+now_reg+", "+std::to_string(offset)+"\n";
         riscv_code+="  add "+now_reg+", sp, "+now_reg+"\n";
       }
@@ -305,7 +305,7 @@ int Visit_getptr(const koopa_raw_get_ptr_t &get_ptr){
     case KOOPA_RVT_GET_ELEM_PTR:{
       std::string var=ins2var[src];
       int offset=stack_dic[var];
-      if (offset>=2048){ 
+      if (offset>=2048||offset<=-2048){ 
         riscv_code+="  li "+now_reg+", "+std::to_string(offset)+"\n";
         riscv_code+="  add "+now_reg+", sp, "+now_reg+"\n";
       }
@@ -347,7 +347,7 @@ int Visit_getptr(const koopa_raw_get_ptr_t &get_ptr){
       reg_cnt++;
       std::string tmp_reg2=reg_name[reg_cnt];
       reg_cnt++;
-      if (offset>=2048){
+      if (offset>=2048||offset<=-2048){
         riscv_code+="  li "+tmp_reg1+", "+std::to_string(offset)+"\n";
         riscv_code+="  add "+tmp_reg1+", "+tmp_reg1+", sp\n";
         riscv_code+="  lw "+tmp_reg1+", "+"0("+tmp_reg1+")\n";
@@ -383,7 +383,7 @@ int Visit_getelemptr(const koopa_raw_get_elem_ptr_t &get_elem_ptr){
     case KOOPA_RVT_ALLOC:{
       std::string var=ins2var[src];
       int offset=stack_dic[var];
-      if (offset>=2048){ 
+      if (offset>=2048||offset<=-2048){ 
         riscv_code+="  li "+now_reg+", "+std::to_string(offset)+"\n";
         riscv_code+="  add "+now_reg+", sp, "+now_reg+"\n";
       }
@@ -396,7 +396,7 @@ int Visit_getelemptr(const koopa_raw_get_elem_ptr_t &get_elem_ptr){
     case KOOPA_RVT_GET_ELEM_PTR:{
       std::string var=ins2var[src];
       int offset=stack_dic[var];
-      if (offset>=2048){ 
+      if (offset>=2048||offset<=-2048){ 
         riscv_code+="  li "+now_reg+", "+std::to_string(offset)+"\n";
         riscv_code+="  add "+now_reg+", sp, "+now_reg+"\n";
       }
@@ -438,7 +438,7 @@ int Visit_getelemptr(const koopa_raw_get_elem_ptr_t &get_elem_ptr){
       reg_cnt++;
       std::string tmp_reg2=reg_name[reg_cnt];
       reg_cnt++;
-      if (offset>=2048){
+      if (offset>=2048||offset<=-2048){
         riscv_code+="  li "+tmp_reg1+", "+std::to_string(offset)+"\n";
         riscv_code+="  add "+tmp_reg1+", "+tmp_reg1+", sp\n";
         riscv_code+="  lw "+tmp_reg1+", "+"0("+tmp_reg1+")\n";
@@ -571,7 +571,7 @@ void Visit_store(const koopa_raw_store_t &store){
     case KOOPA_RVT_BINARY:{ // 保存值为一个指令返回值
       std::string var=ins2var[value];
       int offset=stack_dic[var];
-      if (offset>=2048){
+      if (offset>=2048||offset<=-2048){
         std::string tmp_reg=reg_name[reg_cnt];
         riscv_code+="  li "+tmp_reg+", "+std::to_string(offset)+"\n";
         riscv_code+="  add "+tmp_reg+", "+tmp_reg+", sp\n";
@@ -607,7 +607,7 @@ void Visit_store(const koopa_raw_store_t &store){
       std::string var=ins2var[dest];
       int offset=stack_dic[var];
       std::string tmp_reg=reg_name[reg_cnt];
-      if (offset>=2048){
+      if (offset>=2048||offset<=-2048){
         riscv_code+="  li "+tmp_reg+", "+std::to_string(offset)+"\n";
         riscv_code+="  add "+tmp_reg+", "+tmp_reg+", sp\n";
         riscv_code+="  lw "+tmp_reg+", "+"0("+tmp_reg+")\n";
@@ -622,7 +622,7 @@ void Visit_store(const koopa_raw_store_t &store){
     case KOOPA_RVT_ALLOC: {
       std::string var=ins2var[dest];
       int offset=stack_dic[var];
-      if (offset>=2048){
+      if (offset>=2048||offset<=-2048){
         std::string tmp_reg=reg_name[reg_cnt];
         riscv_code+="  li "+tmp_reg+", "+std::to_string(offset)+"\n";
         riscv_code+="  add "+tmp_reg+", "+tmp_reg+", sp\n";
@@ -666,7 +666,7 @@ int Visit_load(const koopa_raw_load_t &load){
       std::string var=ins2var[src];
       int offset=stack_dic[var];
       std::string tmp_reg=reg_name[reg_cnt];
-      if (offset>=2048){
+      if (offset>=2048||offset<=-2048){
         riscv_code+="  li "+tmp_reg+", "+std::to_string(offset)+"\n";
         riscv_code+="  add "+tmp_reg+", "+tmp_reg+", sp\n";
         riscv_code+="  lw "+tmp_reg+", "+"0("+tmp_reg+")\n";
@@ -680,7 +680,7 @@ int Visit_load(const koopa_raw_load_t &load){
     case KOOPA_RVT_ALLOC:{
       std::string var=ins2var[src];
       int offset=stack_dic[var];
-      if (offset>=2048){
+      if (offset>=2048||offset<=-2048){
         std::string tmp_reg=reg_name[reg_cnt];
         riscv_code+="  li "+tmp_reg+", "+std::to_string(offset)+"\n";
         riscv_code+="  add "+tmp_reg+", "+tmp_reg+", sp\n";
@@ -717,7 +717,7 @@ void Visit_branch(const koopa_raw_branch_t &branch){
     case KOOPA_RVT_BINARY:{
       std::string var=ins2var[cond];
       int offset=stack_dic[var];
-      if (offset>=2048){
+      if (offset>=2048||offset<=-2048){
         std::string tmp_reg=reg_name[reg_cnt];
         riscv_code+="  li "+tmp_reg+", "+std::to_string(offset)+"\n";
         riscv_code+="  add "+tmp_reg+", "+tmp_reg+", sp\n";
@@ -769,7 +769,7 @@ void Visit_call(const koopa_raw_call_t &call){
       case KOOPA_RVT_BINARY:{ // 变量
         std::string var=ins2var[value];
         int offset=stack_dic[var];
-        if (offset>=2048){
+        if (offset>=2048||offset<=-2048){
           std::string tmp_reg=reg_name[reg_cnt];
           riscv_code+="  li "+tmp_reg+", "+std::to_string(offset)+"\n";
           riscv_code+="  add "+tmp_reg+", "+tmp_reg+", sp\n";
@@ -806,7 +806,7 @@ void Visit_call(const koopa_raw_call_t &call){
       case KOOPA_RVT_BINARY:{ // 变量
         std::string var=ins2var[value];
         int offset=stack_dic[var];
-        if (offset>=2048){
+        if (offset>=2048||offset<=-2048){
           std::string tmp_reg=reg_name[reg_cnt];
           riscv_code+="  li "+tmp_reg+", "+std::to_string(offset)+"\n";
           riscv_code+="  add "+tmp_reg+", "+tmp_reg+", sp\n";
@@ -954,7 +954,7 @@ void Visit_ret(const koopa_raw_return_t &ret){ // 返回指令
           if (ins2var.count(ret_value)){
             std::string var=ins2var[ret_value];
             int offset=stack_dic[var];
-            if (offset>=2048){
+            if (offset>=2048||offset<=-2048){
               std::string tmp_reg=reg_name[reg_cnt];
               riscv_code+="  li "+tmp_reg+", "+std::to_string(offset)+"\n";
               riscv_code+="  add "+tmp_reg+", "+tmp_reg+", sp\n";
@@ -1012,7 +1012,7 @@ void get_operand_load_reg(const koopa_raw_value_t &t, std::string &operand_str){
       reg_cnt++;
       std::string var=ins2var[t];
       int offset=stack_dic[var];
-      if (offset>=2048){
+      if (offset>=2048||offset<=-2048){
         std::string tmp_reg=reg_name[reg_cnt];
         riscv_code+="  li "+tmp_reg+", "+std::to_string(offset)+"\n";
         riscv_code+="  add "+tmp_reg+", "+tmp_reg+", sp\n";

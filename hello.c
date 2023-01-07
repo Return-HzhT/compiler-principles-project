@@ -1,10 +1,41 @@
-// test array define
+
+int a = -1, b = 1;
+
+int inc_a()
+{
+    int b = a;
+    b = b + 1;
+    a = b;
+    return a;
+}
+
 int main()
 {
-    int a[4][2] = {};
-    int b[4][2] = {1, 2, 3, 4, 5, 6, 7, 8};
-    int c[4][2] = {{1, 2}, {3, 4}, {5, 6}, {7, 8}};
-    int d[4][2] = {1, 2, {3}, {5}, 7, 8};
-    int e[4][2] = {{d[2][1], c[2][1]}, {3, 4}, {5, 6}, {7, 8}};
-    return e[3][1] + e[0][0] + e[0][1] + a[2][0];
+    int k = 5;
+    while (k >= 0)
+    {
+        if (inc_a() && inc_a() && inc_a())
+        {
+            putint(a);
+            putch(32);
+            putint(b);
+            putch(10);
+        }
+        if (inc_a() < 14 || inc_a() && inc_a() - inc_a() + 1)
+        {
+            putint(a);
+            putch(10);
+            b = b * 2;
+        }
+        else
+        {
+            inc_a();
+        }
+        k = k - 1;
+    }
+    putint(a);
+    putch(32);
+    putint(b);
+    putch(10);
+    return a;
 }
