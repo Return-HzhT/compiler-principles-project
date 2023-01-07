@@ -6,10 +6,161 @@ decl @putch(i32)
 decl @putarray(i32, *i32)
 decl @starttime()
 decl @stoptime()
+global @map_0 = alloc [[i32, 10], 10], zeroinit
+global @indegree_1 = alloc [i32, 10], zeroinit
+global @queue_2 = alloc [i32, 10], zeroinit
+fun @topo(@n: i32) {
+%entry:
+  @n_3 = alloc i32
+  store @n, @n_3
+  @m_4 = alloc i32
+  store 0, @m_4
+  @t_5 = alloc i32
+  store 0, @t_5
+  @i_6 = alloc i32
+  @j_7 = alloc i32
+  store 1, @i_6
+  store 1, @j_7
+  jump %while_entry_0
+%while_entry_0:
+  %0 = load @i_6
+  %1 = load @n_3
+  %2 = le %0, %1
+  br %2, %while_body_0, %while_end_0
+%while_body_0:
+  store 1, @j_7
+  jump %while_entry_1
+%while_entry_1:
+  %3 = load @j_7
+  %4 = load @n_3
+  %5 = le %3, %4
+  br %5, %while_body_1, %while_end_1
+%while_body_1:
+  %7 = load @j_7
+  %6 = getelemptr @indegree_1, %7
+  %8 = load %6
+  %9 = eq %8, 0
+  br %9, %then_0, %end_0
+%then_0:
+  %10 = load @j_7
+  store %10, @m_4
+  jump %while_end_1
+%unreachable_0:
+  jump %end_0
+%end_0:
+  %11 = load @j_7
+  %12 = add %11, 1
+  store %12, @j_7
+  jump %while_entry_1
+%while_end_1:
+  %14 = load @t_5
+  %13 = getelemptr @queue_2, %14
+  %15 = load @m_4
+  store %15, %13
+  %16 = load @t_5
+  %17 = add %16, 1
+  store %17, @t_5
+  %18 = sub 0, 1
+  %20 = load @m_4
+  %19 = getelemptr @indegree_1, %20
+  store %18, %19
+  store 1, @j_7
+  jump %while_entry_2
+%while_entry_2:
+  %21 = load @j_7
+  %22 = load @n_3
+  %23 = le %21, %22
+  br %23, %while_body_2, %while_end_2
+%while_body_2:
+  %25 = load @m_4
+  %24 = getelemptr @map_0, %25
+  %27 = load @j_7
+  %26 = getelemptr %24, %27
+  br %26, %then_1, %end_1
+%then_1:
+  %29 = load @j_7
+  %28 = getelemptr @indegree_1, %29
+  %30 = load %28
+  %31 = sub %30, 1
+  %33 = load @j_7
+  %32 = getelemptr @indegree_1, %33
+  store %31, %32
+  jump %end_1
+%end_1:
+  %34 = load @j_7
+  %35 = add %34, 1
+  store %35, @j_7
+  jump %while_entry_2
+%while_end_2:
+  %36 = load @i_6
+  %37 = add %36, 1
+  store %37, @i_6
+  jump %while_entry_0
+%while_end_0:
+  store 0, @i_6
+  jump %while_entry_3
+%while_entry_3:
+  %38 = load @i_6
+  %39 = load @n_3
+  %40 = lt %38, %39
+  br %40, %while_body_3, %while_end_3
+%while_body_3:
+  %42 = load @i_6
+  %41 = getelemptr @queue_2, %42
+  %43 = load %41
+  call @putint(%43)
+  call @putch(10)
+  %44 = load @i_6
+  %45 = add %44, 1
+  store %45, @i_6
+  jump %while_entry_3
+%while_end_3:
+  ret
+}
 fun @main(): i32 {
 %entry:
+  @n_8 = alloc i32
+  @p_9 = alloc i32
+  @i_10 = alloc i32
+  store 1, @i_10
+  store 5, @n_8
+  jump %while_entry_4
+%while_entry_4:
+  %46 = load @i_10
+  %47 = load @n_8
+  %48 = le %46, %47
+  br %48, %while_body_4, %while_end_4
+%while_body_4:
+  %49 = call @getint()
+  store %49, @p_9
+  jump %while_entry_5
+%while_entry_5:
+  %50 = load @p_9
+  %51 = ne %50, 0
+  br %51, %while_body_5, %while_end_5
+%while_body_5:
+  %53 = load @i_10
+  %52 = getelemptr @map_0, %53
+  %55 = load @p_9
+  %54 = getelemptr %52, %55
+  store 1, %54
+  %57 = load @p_9
+  %56 = getelemptr @indegree_1, %57
+  %58 = load %56
+  %59 = add %58, 1
+  %61 = load @p_9
+  %60 = getelemptr @indegree_1, %61
+  store %59, %60
+  %62 = call @getint()
+  store %62, @p_9
+  jump %while_entry_5
+%while_end_5:
+  %63 = load @i_10
+  %64 = add %63, 1
+  store %64, @i_10
+  jump %while_entry_4
+%while_end_4:
+  %65 = load @n_8
+  call @topo(%65)
   ret 0
-%unreachable_0:
-  ret
-%unreachable_1:
 }

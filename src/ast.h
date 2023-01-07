@@ -429,7 +429,8 @@ class OpenStmtAST : public BaseAST {
   std::string Dump(){
     if (op==1){
       koopa_ir+=exp->Dump();
-      std::string tmp_id=exp->get_ir_id();
+      std::string tmp_id="";
+      koopa_ir+=exp->load(tmp_id);
       std::string then_label="%then_"+std::to_string(if_tmp_id);
       std::string end_label="%end_"+std::to_string(if_tmp_id);
       if_tmp_id++;
@@ -449,7 +450,8 @@ class OpenStmtAST : public BaseAST {
       bool need_end=0; // 是否需要跳转到end
 
       koopa_ir+=exp->Dump();
-      std::string tmp_id=exp->get_ir_id();
+      std::string tmp_id="";
+      koopa_ir+=exp->load(tmp_id);
       std::string then_label="%then_"+std::to_string(if_tmp_id);
       std::string else_label="%else_"+std::to_string(if_tmp_id);
       std::string end_label="%end_"+std::to_string(if_tmp_id);
@@ -489,7 +491,8 @@ class OpenStmtAST : public BaseAST {
       koopa_ir+=while_entry_label+":\n";
 
       koopa_ir+=exp->Dump();
-      std::string tmp_id=exp->get_ir_id();
+      std::string tmp_id="";
+      koopa_ir+=exp->load(tmp_id);
       koopa_ir+="  br "+tmp_id+", "+while_body_label+", "+while_end_label+"\n";
 
       koopa_ir+=while_body_label+":\n";
@@ -522,7 +525,8 @@ class ClosedStmtAST : public BaseAST {
       bool need_end=0; // 是否需要跳转到end
 
       koopa_ir+=exp->Dump();
-      std::string tmp_id=exp->get_ir_id();
+      std::string tmp_id="";
+      koopa_ir+=exp->load(tmp_id);
       std::string then_label="%then_"+std::to_string(if_tmp_id);
       std::string else_label="%else_"+std::to_string(if_tmp_id);
       std::string end_label="%end_"+std::to_string(if_tmp_id);
@@ -561,7 +565,8 @@ class ClosedStmtAST : public BaseAST {
       koopa_ir+=while_entry_label+":\n";
 
       koopa_ir+=exp->Dump();
-      std::string tmp_id=exp->get_ir_id();
+      std::string tmp_id="";
+      koopa_ir+=exp->load(tmp_id);
       koopa_ir+="  br "+tmp_id+", "+while_body_label+", "+while_end_label+"\n";
 
       koopa_ir+=while_body_label+":\n";
