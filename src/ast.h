@@ -598,34 +598,22 @@ class SimpleStmtAST : public BaseAST {
   std::string Dump(){
     if (op==1){
       std::string ident=lval->get_ident();
-      bool flag=0; // 是否找到此变量的定义
       for (int i=now_symbol_table_id;i>=0;i--){
         if (symbol_table[i].count(ident)){
-          if (symbol_table[i][ident].is_const){
-            std::cout<<"error: const value being modified.\n";
-            exit(0);
+          koopa_ir+=exp->Dump();
+          koopa_ir+=lval->Dump();
+          std::string tmp_id="";
+          koopa_ir+=exp->load(tmp_id);
+          if (lval->op==1){
+            symbol_table[i][ident].val=exp->get_ir_id();
+            koopa_ir+="  store "+tmp_id+", @"+symbol_table[i][ident].name+"\n";
+            symbol_table[i][ident].is_assigned=1;
           }
-          else {
-            koopa_ir+=exp->Dump();
-            koopa_ir+=lval->Dump();
-            std::string tmp_id="";
-            koopa_ir+=exp->load(tmp_id);
-            if (lval->op==1){
-              symbol_table[i][ident].val=exp->get_ir_id();
-              koopa_ir+="  store "+tmp_id+", @"+symbol_table[i][ident].name+"\n";
-              symbol_table[i][ident].is_assigned=1;
-            }
-            else if (lval->op==2){
-              koopa_ir+="  store "+tmp_id+", "+lval->get_ir_id()+"\n";
-            }
+          else if (lval->op==2){
+            koopa_ir+="  store "+tmp_id+", "+lval->get_ir_id()+"\n";
           }
-          flag=1;
           break;
         }
-      }
-      if (!flag){
-        std::cout<<"error: undeclared variable.\n";
-        exit(0);
       }
     }
     else if (op==2){} // Do nothing
@@ -651,10 +639,6 @@ class SimpleStmtAST : public BaseAST {
       koopa_ir+="  ret "+ret_val+"\n";
     }
     else if (op==7){ // break
-      if (!loop_num){
-        std::cout<<"error: break not in a loop.\n";
-        exit(0);
-      }
       std::string end_label="%while_end_"+std::to_string(loop_label_table[loop_num]);
       koopa_ir+="  jump "+end_label+"\n";
 
@@ -663,10 +647,6 @@ class SimpleStmtAST : public BaseAST {
       koopa_ir+=unreachable_label+":\n";
     }
     else if (op==8){ // continue
-      if (!loop_num){
-        std::cout<<"error: continue not in a loop.\n";
-        exit(0);
-      }
       std::string entry_label="%while_entry_"+std::to_string(loop_label_table[loop_num]);
       koopa_ir+="  jump "+entry_label+"\n";
       
@@ -797,10 +777,6 @@ class UnaryExpAST : public BaseAST {
     }
     else if (op==3){
       if (symbol_table[0].count(ident)){
-        if (!symbol_table[0][ident].is_func){
-          std::cout<<"error: undefined function: "+ident+" .\n";
-          exit(0);
-        }
         if (symbol_table[0][ident].is_void){
           tmp_str+="  call @"+ident+"()\n";
         }
@@ -810,17 +786,9 @@ class UnaryExpAST : public BaseAST {
           tmp_str+="  "+ir_id+" = call @"+ident+"()\n";
         }
       }
-      else {
-        std::cout<<"error: undefined function: "+ident+" .\n";
-        exit(0);
-      }
     }
     else if (op==4){
       if (symbol_table[0].count(ident)){
-        if (!symbol_table[0][ident].is_func){
-          std::cout<<"error: undefined function: "+ident+" .\n";
-          exit(0);
-        }
         if (symbol_table[0][ident].is_void){
           tmp_str+=func_r_params->Dump();
           std::string params=func_r_params->get_params();
@@ -833,10 +801,6 @@ class UnaryExpAST : public BaseAST {
           std::string params=func_r_params->get_params();
           tmp_str+="  "+ir_id+" = call @"+ident+"("+params+")\n";
         }
-      }
-      else {
-        std::cout<<"error: undefined function: "+ident+" .\n";
-        exit(0);
       }
     }
     return tmp_str;
@@ -1376,10 +1340,6 @@ class ConstDefAST : public BaseAST {
   std::vector<int> init_vec;
 
   std::string Dump(){
-    if (symbol_table[now_symbol_table_id].count(ident)){
-      std::cout<<"error: redefined.\n";
-      exit(0);
-    }
     if (op==1){
       if (is_global_decl){
         const_init_val->Dump();
@@ -1522,10 +1482,6 @@ class VarDefAST : public BaseAST {
   std::vector<int> init_vec;
 
   std::string Dump(){
-    if (symbol_table[now_symbol_table_id].count(ident)){
-      std::cout<<"error: redefined.\n";
-      exit(0);
-    }
     if (op==1){
       std::string name=ident+"_"+std::to_string(var_def_id);
       symbol_table[now_symbol_table_id][ident]=symbol(0,0,name);
@@ -2033,22 +1989,16 @@ class LValAST : public BaseAST {
   }
 
   int get_val(){
+    int val=0;
     for (int i=now_symbol_table_id;i>=0;i--){
       if (symbol_table[i].count(ident)){
         if (symbol_table[i][ident].is_assigned){
-          int val=stoi(symbol_table[i][ident].val);
-          return val;
-        }
-        else {
-          std::cout<<"error: unassigned variable.\n";
-          exit(0);
+          val=stoi(symbol_table[i][ident].val);
+          break;
         }
       }
     }
-    
-    // 运行到这里说明未找到此变量的定义
-    std::cout<<"error: undeclared variable.\n";
-    exit(0);
+    return val;
   }
 
   void get_axis_info_vec(){
