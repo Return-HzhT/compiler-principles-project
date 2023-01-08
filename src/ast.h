@@ -31,7 +31,7 @@ class BaseAST {
   virtual void get_rest_of_axis_info_vec(std::vector< std::unique_ptr<BaseAST> > &vec){return;} // 获取数组各维信息
   virtual void get_rest_of_const_init_val_vec(std::vector< std::unique_ptr<BaseAST> > &vec){return;}
   virtual void get_rest_of_init_val_vec(std::vector< std::unique_ptr<BaseAST> > &vec){return;}
-  virtual void get_rest_of_init_vec(std::vector<int> &vec,std::vector<int> axis_length,int now_axis){return;}
+  virtual std::string get_rest_of_init_vec(std::vector<std::string> &vec,std::vector<int> axis_length,int now_axis){return "";}
   virtual std::string load(std::string &loaded_id){return "";} // 若目标为指针，则load并更新loaded_id，否则等同于get_ir_id()
   virtual std::string get_func_type(){return "";}
   virtual bool is_number(){return 0;}
@@ -701,6 +701,10 @@ class ExpAST : public BaseAST {
   int get_val(){
     return lor_exp->get_val();
   }
+
+  bool is_number(){
+    return  lor_exp->is_number();
+  }
 };
 
 class PrimaryExpAST : public BaseAST {
@@ -938,6 +942,16 @@ class AddExpAST : public BaseAST {
     return 0;
   }
 
+  bool is_number(){
+    if (op==1){
+      return mul_exp->is_number();
+    }
+    else if (op==2){
+      return add_exp->is_number()&&mul_exp->is_number();
+    }
+    return 0;
+  }
+
   std::string load(std::string &loaded_id){
     std::string tmp_str="";
     if (op==1){
@@ -1013,6 +1027,16 @@ class MulExpAST : public BaseAST {
     }
     return tmp_str;
   }
+
+  bool is_number(){
+    if (op==1){
+      return unary_exp->is_number();
+    }
+    else if (op==2){
+      return mul_exp->is_number()&&unary_exp->is_number();
+    }
+    return 0;
+  }
 };
 
 class LOrExpAST : public BaseAST {
@@ -1081,6 +1105,16 @@ class LOrExpAST : public BaseAST {
     }
     return tmp_str;
   }
+
+  bool is_number(){
+    if (op==1){
+      return land_exp->is_number();
+    }
+    else if (op==2){
+      return lor_exp->is_number()&&land_exp->is_number();
+    }
+    return 0;
+  }
 };
 
 class LAndExpAST : public BaseAST {
@@ -1135,6 +1169,16 @@ class LAndExpAST : public BaseAST {
     }
     else if (op==2){
       return (land_exp->get_val())&&(eq_exp->get_val());
+    }
+    return 0;
+  }
+
+  bool is_number(){
+    if (op==1){
+      return eq_exp->is_number();
+    }
+    else if (op==2){
+      return land_exp->is_number()&&eq_exp->is_number();
     }
     return 0;
   }
@@ -1208,6 +1252,16 @@ class EqExpAST : public BaseAST {
     }
     return tmp_str;
   }
+
+  bool is_number(){
+    if (op==1){
+      return rel_exp->is_number();
+    }
+    else if (op==2){
+      return eq_exp->is_number()&&rel_exp->is_number();
+    }
+    return 0;
+  }
 };
 
 class RelExpAST : public BaseAST {
@@ -1265,6 +1319,16 @@ class RelExpAST : public BaseAST {
       else if (rel_op==">="){
         return (rel_exp->get_val())>=(add_exp->get_val());
       }
+    }
+    return 0;
+  }
+
+  bool is_number(){
+    if (op==1){
+      return add_exp->is_number();
+    }
+    else if (op==2){
+      return rel_exp->is_number()&&add_exp->is_number();
     }
     return 0;
   }
@@ -1382,7 +1446,7 @@ class ConstDefAST : public BaseAST {
   std::unique_ptr<BaseAST> axis;
   std::unique_ptr<BaseAST> const_init_val;
   std::vector< unique_ptr<BaseAST> > axis_info;
-  std::vector<int> init_vec;
+  std::vector<std::string> init_vec;
 
   std::string Dump(){
     if (op==1){
@@ -1401,7 +1465,13 @@ class ConstDefAST : public BaseAST {
       for (int i=0;i<axis_info.size();i++){
         axis_info[i]->Dump();
       }
-      const_init_val->Dump();
+
+      if (is_global_decl){
+        const_init_val->Dump();
+      }
+      else {
+        koopa_ir+=const_init_val->Dump();
+      }
 
       std::string name=ident+"_"+std::to_string(var_def_id);
       symbol_table[now_symbol_table_id][ident]=symbol(0,0,name,"0",0,1,axis_info.size());
@@ -1418,7 +1488,12 @@ class ConstDefAST : public BaseAST {
         }
       }
 
-      get_init_vec();
+      if (is_global_decl){
+        get_init_vec();
+      }
+      else {
+        koopa_ir+=get_init_vec();
+      }
       // std::cout<<init_vec.size()<<"\n";
       // for (int i=0;i<init_vec.size();i++){
       //   std::cout<<init_vec[i]<<" ";
@@ -1446,10 +1521,10 @@ class ConstDefAST : public BaseAST {
     if (now_axis==axis_info.size()-1){
       for (int i=0;i<axis_info[now_axis]->get_val();i++){
         if (i==0){
-          koopa_ir+=std::to_string(init_vec[cnt+i]);
+          koopa_ir+=init_vec[cnt+i];
         }
         else {
-          koopa_ir+=", "+std::to_string(init_vec[cnt+i]);
+          koopa_ir+=", "+init_vec[cnt+i];
         }
       }
       return;
@@ -1483,7 +1558,7 @@ class ConstDefAST : public BaseAST {
       koopa_ir+="  "+tmp_ptr_id+" = getelemptr "+pre_ptr+", "+std::to_string(i)+"\n";
 
       if (now_axis==axis_info.size()-1){
-        koopa_ir+="  store "+std::to_string(init_vec[cnt+i])+", "+tmp_ptr_id+"\n";
+        koopa_ir+="  store "+init_vec[cnt+i]+", "+tmp_ptr_id+"\n";
       }
       else {
         arr_init(tmp_ptr_id,now_axis+1,cnt+i*axis_sum);
@@ -1492,12 +1567,12 @@ class ConstDefAST : public BaseAST {
     }
   }
 
-  void get_init_vec(){
+  std::string get_init_vec(){
     std::vector<int> axis_length=std::vector<int>();
     for (int i=0;i<axis_info.size();i++){
       axis_length.push_back(axis_info[i]->get_val());
     }
-    const_init_val->get_rest_of_init_vec(init_vec,axis_length,0);
+    return const_init_val->get_rest_of_init_vec(init_vec,axis_length,0);
   }
 
   void get_axis_info_vec(){
@@ -1524,7 +1599,7 @@ class VarDefAST : public BaseAST {
   std::unique_ptr<BaseAST> init_val;
   std::unique_ptr<BaseAST> axis;
   std::vector< unique_ptr<BaseAST> > axis_info;
-  std::vector<int> init_vec;
+  std::vector<std::string> init_vec;
 
   std::string Dump(){
     if (op==1){
@@ -1620,12 +1695,17 @@ class VarDefAST : public BaseAST {
         }
       }
 
-      get_init_vec();
-      // std::cout<<init_vec.size()<<"\n";
-      // for (int i=0;i<init_vec.size();i++){
-      //   std::cout<<init_vec[i]<<" ";
-      // }
-      // std::cout<<"\n";
+      if (is_global_decl){
+        get_init_vec();
+      }
+      else {
+        koopa_ir+=get_init_vec();
+      }
+      std::cout<<init_vec.size()<<"\n";
+      for (int i=0;i<init_vec.size();i++){
+        std::cout<<init_vec[i]<<" ";
+      }
+      std::cout<<"\n";
 
       if (is_global_decl){
         koopa_ir+="global @"+name+" = alloc "+axis_str;
@@ -1647,10 +1727,10 @@ class VarDefAST : public BaseAST {
     if (now_axis==axis_info.size()-1){
       for (int i=0;i<axis_info[now_axis]->get_val();i++){
         if (i==0){
-          koopa_ir+=std::to_string(init_vec[cnt+i]);
+          koopa_ir+=init_vec[cnt+i];
         }
         else {
-          koopa_ir+=", "+std::to_string(init_vec[cnt+i]);
+          koopa_ir+=", "+init_vec[cnt+i];
         }
       }
       return;
@@ -1683,7 +1763,7 @@ class VarDefAST : public BaseAST {
       koopa_tmp_id++;
       koopa_ir+="  "+tmp_ptr_id+" = getelemptr "+pre_ptr+", "+std::to_string(i)+"\n";
       if (now_axis==axis_info.size()-1){
-        koopa_ir+="  store "+std::to_string(init_vec[cnt+i])+", "+tmp_ptr_id+"\n";
+        koopa_ir+="  store "+init_vec[cnt+i]+", "+tmp_ptr_id+"\n";
       }
       else {
         arr_init(tmp_ptr_id,now_axis+1,cnt+i*axis_sum);
@@ -1691,12 +1771,12 @@ class VarDefAST : public BaseAST {
     }
   }
 
-  void get_init_vec(){
+  std::string get_init_vec(){
     std::vector<int> axis_length=std::vector<int>();
     for (int i=0;i<axis_info.size();i++){
       axis_length.push_back(axis_info[i]->get_val());
     }
-    init_val->get_rest_of_init_vec(init_vec,axis_length,0);
+    return init_val->get_rest_of_init_vec(init_vec,axis_length,0);
   }
 
   void get_axis_info_vec(){
@@ -1738,9 +1818,17 @@ class ConstInitValAST : public BaseAST {
     rest_of_const_init_val->get_rest_of_const_init_val_vec(const_init_val_vec);
   }
 
-  virtual void get_rest_of_init_vec(std::vector<int> &vec,std::vector<int> axis_length,int now_axis){
+  virtual std::string get_rest_of_init_vec(std::vector<std::string> &vec,std::vector<int> axis_length,int now_axis){
+    std::string tmp_str="";
     if (op==1){
-      vec.push_back(const_exp->get_val());
+      if (const_exp->is_number()){
+        vec.push_back(std::to_string(const_exp->get_val()));
+      }
+      else {
+        std::string tmp_id="";
+        tmp_str+=const_exp->load(tmp_id);
+        vec.push_back(tmp_id);
+      }
     }
     else if (op==2){
       int tot=1;
@@ -1748,7 +1836,7 @@ class ConstInitValAST : public BaseAST {
         tot*=axis_length[i];
       }
       for (int i=0;i<tot;i++){
-        vec.push_back(0);
+        vec.push_back("0");
       }
     }
     else if (op==3){
@@ -1763,7 +1851,7 @@ class ConstInitValAST : public BaseAST {
             break;
           }
         }
-        const_init_val_vec[i]->get_rest_of_init_vec(vec,axis_length,tmp_axis);
+        tmp_str+=const_init_val_vec[i]->get_rest_of_init_vec(vec,axis_length,tmp_axis);
       }
       
       int tot=1;
@@ -1773,10 +1861,11 @@ class ConstInitValAST : public BaseAST {
       int rest=vec.size()%tot;
       if (rest){
         for (int i=rest;i<tot;i++){
-          vec.push_back(0);
+          vec.push_back("0");
         }
       }
     }
+    return tmp_str;
   }
 };
 
@@ -1837,9 +1926,17 @@ class InitValAST : public BaseAST {
     rest_of_init_val->get_rest_of_init_val_vec(init_val_vec);
   }
 
-  virtual void get_rest_of_init_vec(std::vector<int> &vec,std::vector<int> axis_length,int now_axis){
+  virtual std::string get_rest_of_init_vec(std::vector<std::string> &vec,std::vector<int> axis_length,int now_axis){
+    std::string tmp_str="";
     if (op==1){
-      vec.push_back(exp->get_val());
+      if (exp->is_number()){
+        vec.push_back(std::to_string(exp->get_val()));
+      }
+      else {
+        std::string tmp_id="";
+        tmp_str+=exp->load(tmp_id);
+        vec.push_back(tmp_id);
+      }
     }
     else if (op==2){
       int tot=1;
@@ -1847,7 +1944,7 @@ class InitValAST : public BaseAST {
         tot*=axis_length[i];
       }
       for (int i=0;i<tot;i++){
-        vec.push_back(0);
+        vec.push_back("0");
       }
     }
     else if (op==3){
@@ -1862,7 +1959,7 @@ class InitValAST : public BaseAST {
             break;
           }
         }
-        init_val_vec[i]->get_rest_of_init_vec(vec,axis_length,tmp_axis);
+        tmp_str+=init_val_vec[i]->get_rest_of_init_vec(vec,axis_length,tmp_axis);
       }
       
       int tot=1;
@@ -1872,10 +1969,11 @@ class InitValAST : public BaseAST {
       int rest=vec.size()%tot;
       if (rest){
         for (int i=rest;i<tot;i++){
-          vec.push_back(0);
+          vec.push_back("0");
         }
       }
     }
+    return tmp_str;
   }
 };
 
@@ -1912,6 +2010,10 @@ class ConstExpAST : public BaseAST {
 
   int get_val(){
     return exp->get_val();
+  }
+
+  bool is_number(){
+    return exp->is_number();
   }
 };
 
