@@ -1450,16 +1450,20 @@ class ConstDefAST : public BaseAST {
 
   std::string Dump(){
     if (op==1){
+      std::string val="";
       if (is_global_decl){
         const_init_val->Dump();
+        const_init_val->load(val);
       }
       else {
         koopa_ir+=const_init_val->Dump();
+        koopa_ir+=const_init_val->load(val);
       }
-    
-      std::string val=const_init_val->get_ir_id();
+
       int digit_val=const_init_val->get_val();
-      symbol_table[now_symbol_table_id][ident]=symbol(0,1,val,std::to_string(digit_val));
+
+      std::string name=ident+"_"+std::to_string(var_def_id);
+      symbol_table[now_symbol_table_id][ident]=symbol(0,1,name,std::to_string(digit_val));
     }
     else if (op==2){
       for (int i=0;i<axis_info.size();i++){
