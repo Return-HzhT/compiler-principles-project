@@ -40,7 +40,7 @@ fun @main(): i32 {
 %then_1:
   %8 = call @inc_a()
   %9 = ne %8, 0
-  store %9,   @result_1
+  store %9, @result_1
   jump %end_1
 %end_1:
   %10 = load @result_1
@@ -48,7 +48,7 @@ fun @main(): i32 {
 %then_0:
   %11 = call @inc_a()
   %12 = ne %11, 0
-  store %12,   @result_0
+  store %12, @result_0
   jump %end_0
 %end_0:
   %13 = load @result_0
@@ -78,7 +78,7 @@ fun @main(): i32 {
   %21 = sub %20, %19
   %22 = add %21, 1
   %23 = ne %22, 0
-  store %23,   @result_4
+  store %23, @result_4
   jump %end_4
 %end_4:
   %24 = load @result_4

@@ -908,11 +908,11 @@ class AddExpAST : public BaseAST {
       ir_id=mul_exp->get_ir_id();
     }
     else if (op==2){
-      tmp_str+=mul_exp->Dump();
       tmp_str+=add_exp->Dump();
+      tmp_str+=mul_exp->Dump();
       std::string mul_id="",add_id="";
-      tmp_str+=mul_exp->load(mul_id);
       tmp_str+=add_exp->load(add_id);
+      tmp_str+=mul_exp->load(mul_id);
       
       ir_id="%"+std::to_string(koopa_tmp_id);
       koopa_tmp_id++;
@@ -977,11 +977,11 @@ class MulExpAST : public BaseAST {
       ir_id=unary_exp->get_ir_id();
     }
     else if (op==2){
-      tmp_str+=unary_exp->Dump();
       tmp_str+=mul_exp->Dump();
+      tmp_str+=unary_exp->Dump();
       std::string unary_id="",mul_id="";
-      tmp_str+=unary_exp->load(unary_id);
       tmp_str+=mul_exp->load(mul_id);
+      tmp_str+=unary_exp->load(unary_id);
       
       ir_id="%"+std::to_string(koopa_tmp_id);
       koopa_tmp_id++;
@@ -1151,7 +1151,7 @@ class LAndExpAST : public BaseAST {
       std::string tmp_id="%"+std::to_string(koopa_tmp_id);
       koopa_tmp_id++;
       tmp_str+="  "+tmp_id+" = ne "+eq_id+", 0"+"\n";
-      tmp_str+="  store "+tmp_id+", "+"  @"+res_var+"\n";
+      tmp_str+="  store "+tmp_id+", @"+res_var+"\n";
       tmp_str+="  jump "+end_label+"\n";
 
       tmp_str+=end_label+":\n";
